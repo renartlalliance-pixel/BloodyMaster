@@ -1,13 +1,13 @@
-Version 0.3.2 de test — nettoyage dynamique ajouté.
+BloodyMaster 0.3.3 — édition de test.
 
-- De-Harsh ciblé autour de sa fréquence, Mud Trap et Ring Trap dynamiques.
-- Dosages et activations indépendants pour les deux Traps, désactivés par défaut.
-- Profondeur maximale visée de 12 dB avec budget partagé lorsque les bandes se recouvrent.
-- Spike Listen : écoute du signal retiré par les trois nettoyages, alignée sur la latence du plugin.
-- Quatre nouveaux paramètres ajoutés après les 42 existants pour préserver leurs index.
-- HTML original et copie de référence conservés ; seuls les contrôles de dosage/activation autorisés sont ajoutés à la page générée.
+THD dispose de deux couleurs sélectionnables : Warm (asymétrique, harmoniques paires) et Dense (symétrique, harmoniques impaires). Son échelle en dB est un dosage de coloration, pas une mesure du THD de sortie ; −60 dB désactive cet étage.
 
-Les modules THD, XL, Stereo Enhance/profils, la coloration Valve/Tape et la mesure LUFS restent à compléter. Cette version ne prétend pas reproduire les circuits des machines de référence.
+XL utilise le dosage existant et un sélecteur rotatif Densité / Présence / Impact. Densité préserve davantage le grave, Présence travaille le haut du spectre et Impact agit sur toute la bande.
 
-Fermer FL Studio, lancer le setup, puis scanner les plugins et ouvrir Bloody Master.
-WebView2 est installé si nécessaire (connexion nécessaire dans ce cas). Le setup est non signé. La validation audio et ergonomique dans FL Studio sur la machine de l’utilisateur reste à faire.
+Valve combine la récupération optical du compresseur et une légère coloration asymétrique. Ces traitements originaux utilisent le suréchantillonnage 2/4/8x existant avant le clipper/limiteur, sans latence supplémentaire. Les modes et dosages sont lissés et les résidus générés sont filtrés contre le DC.
+
+Les ajouts précédents sont conservés : De-Harsh ciblé, Mud/Ring dynamiques avec activations/dosages indépendants, écoute du signal retiré alignée en latence. Les fichiers HTML originaux restent identiques ; les choix supplémentaires sont intégrés à la page générée.
+
+Restent à développer : coloration Tape, Stereo Enhance/profils et vrai Mid pan, mesures LUFS/true peak et comparaison à volume compensé. Aucune émulation exacte de circuit ni validation FL Studio sur la machine de l’utilisateur n’est revendiquée.
+
+Fermer FL Studio, lancer le setup, rescanner les plugins. WebView2 est installé si nécessaire avec une connexion Internet dans ce cas. Installateur non signé, version de test.

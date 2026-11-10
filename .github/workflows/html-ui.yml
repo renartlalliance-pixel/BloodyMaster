@@ -31,7 +31,7 @@ jobs:
           cmake -S html-integration -B C:/bm-html-build -G "Visual Studio 17 2022" -A x64 -DBM_HTML_UI=ON -DBM_DEPS_DIR=C:/bm-html-deps -DJUCE_WEBVIEW2_PACKAGE_LOCATION="$env:RUNNER_TEMP/bm-webview" -DBM_WEBVIEW2_BOOTSTRAPPER="$env:RUNNER_TEMP/WebView2Setup.exe" '-DBM_MAKENSIS=C:/Program Files (x86)/NSIS/makensis.exe'
       - name: Build VST3 and HTML tests
         shell: pwsh
-        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterTests BloodyMasterTest bm_webview_probe bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_test_cleanup bm_vst3_smoke
+        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterTests BloodyMasterTest bm_webview_probe bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_test_cleanup bm_test_color bm_vst3_smoke
       - name: Ensure WebView2 runtime for native integration tests
         shell: pwsh
         run: |
@@ -49,14 +49,14 @@ jobs:
         run: cmake --build C:/bm-html-build --config Release --target BloodyMasterInstaller
       - name: Installer integration tests
         shell: pwsh
-        run: ./html-integration/packaging/test-installer.ps1 -Setup C:/bm-html-build/installer/BloodyMaster-0.3.2-Test-Setup.exe -ExpectedPlugin 'C:/bm-html-build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3/Contents/x86_64-win/Bloody Master.vst3'
+        run: ./html-integration/packaging/test-installer.ps1 -Setup C:/bm-html-build/installer/BloodyMaster-0.3.3-Test-Setup.exe -ExpectedPlugin 'C:/bm-html-build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3/Contents/x86_64-win/Bloody Master.vst3'
       - name: Package source and verification
         shell: pwsh
         run: |
           $destination = 'C:/bm-html-build/installer'
-          Compress-Archive -Path html-integration -DestinationPath "$destination/BloodyMaster-0.3.2-HTML-Sources.zip"
+          Compress-Archive -Path html-integration -DestinationPath "$destination/BloodyMaster-0.3.3-HTML-Sources.zip"
           Copy-Item C:/bm-html-build/Tests/web-ui-report.json "$destination/web-ui-report.json"
-          Get-FileHash "$destination/BloodyMaster-0.3.2-Test-Setup.exe" -Algorithm SHA256 | Format-List | Out-File "$destination/SHA256.txt"
+          Get-FileHash "$destination/BloodyMaster-0.3.3-Test-Setup.exe" -Algorithm SHA256 | Format-List | Out-File "$destination/SHA256.txt"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -74,11 +74,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
-          $tag = "bloodymaster-html-0.3.2-test-$env:GITHUB_RUN_ID"
+          $tag = "bloodymaster-html-0.3.3-test-$env:GITHUB_RUN_ID"
           gh release view $tag 2>$null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag C:/bm-html-build/installer/* --clobber
           } else {
-            gh release create $tag C:/bm-html-build/installer/* --target $env:GITHUB_SHA --title 'BloodyMaster 0.3.2 — Interface HTML (test)' --notes-file html-integration/docs/HTML_RELEASE_NOTES.md --prerelease
+            gh release create $tag C:/bm-html-build/installer/* --target $env:GITHUB_SHA --title 'BloodyMaster 0.3.3 — Interface HTML (test)' --notes-file html-integration/docs/HTML_RELEASE_NOTES.md --prerelease
           }
           if ($LASTEXITCODE -ne 0) { throw 'Release upload failed.' }

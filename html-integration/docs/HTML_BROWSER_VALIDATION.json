@@ -1,15 +1,18 @@
 {
   "passed": true,
-  "knobs": 36,
-  "reference_knob_sizes_and_horizontal_alignment_preserved": true,
+  "knobs": 37,
+  "reference_knob_sizes_preserved": true,
+  "harmonic_footer_wrapped_to_prevent_overflow": true,
   "trap_controls_added": 2,
+  "xl_rotary_mode_checked": true,
+  "thd_color_selection_checked": true,
   "independent_trap_activation_checked": true,
   "delta_listen_control_checked": true,
   "reference_colors_materials_preserved": true,
   "native_event_gestures": true,
   "all_rotary_controls_checked": {
-    "active": 33,
-    "inactive": 3
+    "active": 36,
+    "inactive": 1
   },
   "eq_toggle_checked": true,
   "automation_updates": true,

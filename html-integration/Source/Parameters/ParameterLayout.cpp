@@ -70,6 +70,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     addBool(id::mudActive, "Mud Trap Active", false);
     addFloat(id::ringAmount, "Ring Trap Amount", 0.0f, 100.0f, 25.0f, "%");
     addBool(id::ringActive, "Ring Trap Active", false);
+    p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::thdMode, v }, "THD Color", StringArray{ "Warm", "Dense" }, 0));
+    p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::xlMode, v }, "XL Mode", StringArray{ "Density", "Presence", "Impact" }, 0));
     return { p.begin(), p.end() };
 }
 } // namespace bm

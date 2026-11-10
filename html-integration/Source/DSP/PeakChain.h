@@ -1,5 +1,6 @@
 #pragma once
 #include "Dynamics.h"
+#include "Coloration.h"
 #include <vector>
 #include <cstdint>
 
@@ -77,6 +78,7 @@ inline double softClip(double x) {
     return std::copysign(.75+.5*(u-.5*u*u),x);
 }
 struct PeakSettings {
+    ColorSettings color{};
     double clipDb=0,pushDb=0,ceilingDb=-1,releaseMs=100,link=100;
     bool isp=true,clipEnabled=true,limiterEnabled=true;
     bool operator==(const PeakSettings&) const = default;
@@ -86,6 +88,7 @@ class PeakChain {
     PeakSettings last{};
     Interpolator up,analysis;
     Decimator down;
+    Coloration color;
     StereoDelay align,delay;
     std::array<SlidingMaximum,2> max;
     std::array<double,2> gain{1,1},memory{};
@@ -96,6 +99,7 @@ public:
         fs=rate; factor=oversampling==2?2:oversampling==4?4:8;
         lookahead=static_cast<int>(std::ceil(fs*.003));
         up.prepare(factor); down.prepare(up.coefficients()); analysis.prepare(8);
+        color.prepare(fs*factor);
         align.prepare(64); delay.prepare(lookahead);
         for(auto& m:max) m.prepare(lookahead);
         gain={1,1}; memory={}; initial=true; clipGr=limiterGr=0;
@@ -104,6 +108,7 @@ public:
     void update(const PeakSettings& s) {
         if(!initial && s==last) return;
         last=s;
+        color.update(s.color);
         int n=static_cast<int>(fs*.02);
         clipDrive.set(dbGain(std::clamp(s.clipDb,0.,10.)),n,initial);
         clipMix.set(s.clipEnabled?std::clamp(s.clipDb/.1,0.,1.):0.,n,initial);
@@ -119,6 +124,7 @@ public:
         up.push(l,r); std::array<double,2> native{}; double reduction=0;
         for(int phase=0;phase<factor;++phase) {
             std::array<double,2> x{up.phase(0,phase),up.phase(1,phase)};
+            color.process(x[0],x[1]);
             for(auto& v:x) {
                 const double clipped=softClip(v*drive)/drive;
                 const double y=v+cm*(clipped-v);

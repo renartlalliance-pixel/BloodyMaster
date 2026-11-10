@@ -59,6 +59,7 @@ inline const std::array<FactoryPreset,9>& factoryPresets() {
         c.dynamics.ratio=2;c.dynamics.releaseMs=80;c.dynamics.mix=85;
         c.dynamics.glue=.5;c.dynamics.optical=false;c.peaks.clipDb=3;
         c.peaks.pushDb=1.8;c.peaks.releaseMs=60;
+        for(auto& preset:p)preset.settings.peaks.color.valve=preset.settings.dynamics.optical;
         return p;
     }();
     return bank;
@@ -68,7 +69,7 @@ inline const FactoryPreset* findPreset(std::string_view slug) {
     return nullptr;
 }
 // Physical APVTS values. This mapping also documents the CLI/plugin agreement.
-inline std::array<std::pair<const char*,float>,41> presetParameters(const dsp::EngineSettings& s) {
+inline std::array<std::pair<const char*,float>,45> presetParameters(const dsp::EngineSettings& s) {
     const auto& t=s.tone;const auto& d=s.dynamics;const auto& p=s.peaks;
     return {{{id::hpf,float(t.hpf)},{id::lpf,float(t.lpf/1000)},
       {id::bass,float(t.bass)},{id::mid,float(t.mid)},{id::high,float(t.high)},
@@ -86,6 +87,8 @@ inline std::array<std::pair<const char*,float>,41> presetParameters(const dsp::E
       {id::lowres,float(s.cleanup.mudHz)},{id::hires,float(s.cleanup.ringHz/1000)},
       {id::spikeListen,float(s.cleanup.listen)},{id::mudAmount,float(s.cleanup.mudAmount)},
       {id::mudActive,float(s.cleanup.mudEnabled)},{id::ringAmount,float(s.cleanup.ringAmount)},
-      {id::ringActive,float(s.cleanup.ringEnabled)}}};
+      {id::ringActive,float(s.cleanup.ringEnabled)},
+      {id::thd,float(p.color.thdDb)},{id::xl,float(p.color.xl)},
+      {id::thdMode,float(p.color.thdMode)},{id::xlMode,float(p.color.xlMode)}}};
 }
 }

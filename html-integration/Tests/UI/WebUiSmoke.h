@@ -26,7 +26,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         return capture->value;
     };
     if(!verify(wait([&]{return static_cast<bool>(evaluate("!!window.bloodyMasterUi?.getState()"));}),"Native state reaches HTML"))return 2;
-    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===36 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
+    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===37 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
     evaluate("document.querySelector('#knob-drive').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::drive)->load()>1.1f;}),"HTML knob updates APVTS"))return 4;
     auto* drive=p.apvts.getParameter(bm::id::drive);drive->setValueNotifyingHost(drive->convertTo0to1(6.3f));
@@ -54,6 +54,10 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::ringActive)->load()>.5f && p.apvts.getRawParameterValue(bm::id::spikeListen)->load()>.5f;}),"Ring activation and delta listen reach APVTS"))return 13;
     auto* ring=p.apvts.getParameter(bm::id::ringAmount);ring->setValueNotifyingHost(ring->convertTo0to1(61.f));
     if(!verify(wait([&]{return static_cast<bool>(evaluate("Math.abs(Number(document.querySelector('#knob-ring-amount').dataset.val)-61)<.001"));}),"Host automation updates new Ring amount"))return 14;
+    evaluate("document.querySelector('#thdColorBtn').click();document.querySelector('#knob-xl-mode').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::thdMode)->load()>.5f && p.apvts.getRawParameterValue(bm::id::xlMode)->load()==1.f;}),"THD color and discrete XL mode reach APVTS"))return 15;
+    auto* xlMode=p.apvts.getParameter(bm::id::xlMode);xlMode->setValueNotifyingHost(xlMode->convertTo0to1(2.f));
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("document.querySelector('#val-xl_mode').textContent==='Impact'"));}),"XL mode automation updates rotary label"))return 16;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

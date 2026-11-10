@@ -10,6 +10,7 @@
   const active = id => !!state?.parameters?.[id]?.active;
   const send = (id, value, phase = 'value') => emit('bmParam', {id: 'bm_' + id, value, phase});
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const snap = (knob,value) => knob.dataset.step ? Math.round(value/Number(knob.dataset.step))*Number(knob.dataset.step) : value;
   function updateKnob(knob, value, updateLabel = true) {
     const min = Number(knob.dataset.min), max = Number(knob.dataset.max);
     knob.dataset.val = String(value);
@@ -19,13 +20,16 @@
     const label = document.getElementById('val-' + knob.dataset.param);
     if (!label) return;
     const unit = knob.dataset.unit || '', param = knob.dataset.param;
-    label.textContent = param === 'pan' ? (Math.abs(value) < .01 ? 'C' : `${value<0?'L':'R'}${Math.round(Math.abs(value))}`)
+    label.textContent = param === 'xl_mode' ? ['Densité','Présence','Impact'][Math.round(value)]
+      : param==='thd' && value<=-60 ? 'OFF'
+      : param === 'pan' ? (Math.abs(value) < .01 ? 'C' : `${value<0?'L':'R'}${Math.round(Math.abs(value))}`)
       : unit === 'dB' ? `${value>0?'+':''}${value.toFixed(1)} dB`
       : unit === '%' ? `${Math.round(value)}%`
       : unit === ':1' ? `${value.toFixed(1)}:1`
       : unit === 'Hz' || unit === 'ms' ? `${Math.round(value)} ${unit}`
       : `${value.toFixed(1)}${unit ? ' ' + unit : ''}`;
     knob.setAttribute('aria-valuenow', String(value));
+    if(param==='xl_mode')knob.setAttribute('aria-valuetext',label.textContent);
   }
   function finishDrag() {
     if (!dragging) return;
@@ -51,7 +55,7 @@
     knob.addEventListener('pointermove', e => {
       if (dragging?.knob !== knob) return;
       const range = Number(knob.dataset.max)-Number(knob.dataset.min);
-      queued = clamp(dragging.startVal + (dragging.startY-e.clientY)*range/(e.shiftKey?1500:150), Number(knob.dataset.min),Number(knob.dataset.max));
+      queued = snap(knob,clamp(dragging.startVal + (dragging.startY-e.clientY)*range/(e.shiftKey?1500:150), Number(knob.dataset.min),Number(knob.dataset.max)));
       updateKnob(knob, queued);
       if (frame === null) frame = requestAnimationFrame(() => {frame=null;if(dragging && queued!==null){send(id,queued);queued=null;}});
     });
@@ -63,13 +67,13 @@
     knob.addEventListener('keydown', e => {
       if (!active(id) || !['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) return;
       e.preventDefault(); const direction=['ArrowUp','ArrowRight'].includes(e.key)?1:-1;
-      const step=(Number(knob.dataset.max)-Number(knob.dataset.min))/(e.shiftKey?1000:100);
+      const step=Number(knob.dataset.step)||(Number(knob.dataset.max)-Number(knob.dataset.min))/(e.shiftKey?1000:100);
       const v=clamp(Number(knob.dataset.val)+direction*step,Number(knob.dataset.min),Number(knob.dataset.max));
       send(id,v,'begin');send(id,v);send(id,v,'end');updateKnob(knob,v);
     });
   });
   window.addEventListener('blur',finishDrag);
-  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eq_active',deSoloBtn:'spike_listen',mudActiveBtn:'mud_active',ringActiveBtn:'ring_active'};
+  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eq_active',deSoloBtn:'spike_listen',mudActiveBtn:'mud_active',ringActiveBtn:'ring_active',thdColorBtn:'thd_mode'};
   for (const [element,id] of Object.entries(toggleMap)) document.getElementById(element)?.addEventListener('click', () => {
     if(!active(id)) return;
     const v=state.parameters[id].value>.5?0:1;send(id,v,'begin');send(id,v);send(id,v,'end');
@@ -105,6 +109,7 @@
         knob.setAttribute('aria-disabled',String(!p.active));
         knob.style.cursor=p.active?'ns-resize':'not-allowed';
         knob.title=p.active?(id==='lpf'?`Fréquence effective : ${next.lpfEffective.toFixed(0)} Hz (selon Fs)`:'Glisser verticalement ; Maj = réglage fin ; double-clic = défaut'):'Fonction non raccordée au DSP dans cette version';
+        if(id==='thd')knob.title='Dosage de coloration : OFF à −60 dB ; cette échelle ne mesure pas le THD de sortie';
         if(dragging?.id!==id && p.active)updateKnob(knob,p.value);
       }
     }
@@ -114,6 +119,11 @@
       button.classList.toggle(element==='modeToggle'?'toggle-active':'btn-active',p.value>.5);
       button.setAttribute('aria-pressed',String(p.value>.5));
       if(element==='deSoloBtn')button.title='Écouter le signal retiré par De-Harsh, Mud Trap et Ring Trap';
+      if(element==='modeToggle')button.title='Valve : récupération optical du compresseur et légère coloration à lampes';
+      if(element==='thdColorBtn'){
+        button.textContent=p.value>.5?'THD : Dense':'THD : Warm';
+        button.title=p.value>.5?'Symétrique : harmoniques impaires':'Asymétrique : harmoniques paires';
+      }
       if(element==='mudActiveBtn'||element==='ringActiveBtn'){
         button.textContent=p.value>.5?'ON':'OFF';
         button.setAttribute('aria-label',`${element==='mudActiveBtn'?'Mud Trap':'Ring Trap'} : ${p.value>.5?'actif':'désactivé'}`);
@@ -139,7 +149,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.2';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.3';
     }
     draw();
   }

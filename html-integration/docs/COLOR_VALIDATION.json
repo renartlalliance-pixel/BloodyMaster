@@ -1,0 +1,134 @@
+{
+  "passed": true,
+  "cases": 18,
+  "minimum_alias_reduction_db": 135.72799112556953,
+  "note": "Isolated coloration, clipper/limiter disabled. Specific coherent tones, not a universal aliasing bound.",
+  "results": [
+    {
+      "mode": 0,
+      "oversampling": 2,
+      "alias_hz": 20000,
+      "alias_reduction_db": 136.24920017157055,
+      "reconstructed_peak": 0.8371983782299435
+    },
+    {
+      "mode": 0,
+      "oversampling": 4,
+      "alias_hz": 20000,
+      "alias_reduction_db": 140.1612694467228,
+      "reconstructed_peak": 0.8369004965032567
+    },
+    {
+      "mode": 0,
+      "oversampling": 8,
+      "alias_hz": 20000,
+      "alias_reduction_db": 142.0410245913656,
+      "reconstructed_peak": 0.8369004910127918
+    },
+    {
+      "mode": 1,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 146.9269772193655,
+      "reconstructed_peak": 0.725751375669181
+    },
+    {
+      "mode": 1,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 138.74822206521176,
+      "reconstructed_peak": 0.7257579200614698
+    },
+    {
+      "mode": 1,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 137.86225471032327,
+      "reconstructed_peak": 0.7257643497514761
+    },
+    {
+      "mode": 2,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 146.43490757179475,
+      "reconstructed_peak": 0.7203195643998526
+    },
+    {
+      "mode": 2,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 138.55821910520876,
+      "reconstructed_peak": 0.7196787292747571
+    },
+    {
+      "mode": 2,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 137.65492801055242,
+      "reconstructed_peak": 0.7193586174658919
+    },
+    {
+      "mode": 3,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 146.86540068441593,
+      "reconstructed_peak": 0.7310587297348539
+    },
+    {
+      "mode": 3,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 136.98137949737094,
+      "reconstructed_peak": 0.7250275194487288
+    },
+    {
+      "mode": 3,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 135.72799112556953,
+      "reconstructed_peak": 0.7219115756590888
+    },
+    {
+      "mode": 4,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 150.26562200311201,
+      "reconstructed_peak": 0.4478280224662706
+    },
+    {
+      "mode": 4,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 138.22639880113434,
+      "reconstructed_peak": 0.44783903159800265
+    },
+    {
+      "mode": 4,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 137.1229330670616,
+      "reconstructed_peak": 0.44786283423191864
+    },
+    {
+      "mode": 5,
+      "oversampling": 2,
+      "alias_hz": 20000,
+      "alias_reduction_db": 136.2492137483036,
+      "reconstructed_peak": 0.8347928885373105
+    },
+    {
+      "mode": 5,
+      "oversampling": 4,
+      "alias_hz": 20000,
+      "alias_reduction_db": 140.1612886575062,
+      "reconstructed_peak": 0.8347562963670349
+    },
+    {
+      "mode": 5,
+      "oversampling": 8,
+      "alias_hz": 20000,
+      "alias_reduction_db": 142.04105117508962,
+      "reconstructed_peak": 0.8347564657924651
+    }
+  ]
+}
