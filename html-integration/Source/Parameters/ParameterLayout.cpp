@@ -66,6 +66,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::oversampling, v }, "Oversampling", StringArray{ "2x", "4x", "8x" }, 1));
     p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::lufsTarget, v }, "LUFS Target", StringArray{ "-8", "-9", "-11", "-14", "-6" }, 0));
 
+    addFloat(id::mudAmount, "Mud Trap Amount", 0.0f, 100.0f, 25.0f, "%");
+    addBool(id::mudActive, "Mud Trap Active", false);
+    addFloat(id::ringAmount, "Ring Trap Amount", 0.0f, 100.0f, 25.0f, "%");
+    addBool(id::ringActive, "Ring Trap Active", false);
     return { p.begin(), p.end() };
 }
 } // namespace bm

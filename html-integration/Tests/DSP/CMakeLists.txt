@@ -25,3 +25,7 @@ add_test(NAME analog_behaviors COMMAND bm_test_analog_behaviors)
 add_executable(bm_test_presets test_presets.cpp)
 target_include_directories(bm_test_presets PRIVATE ../../Source)
 add_test(NAME presets COMMAND bm_test_presets)
+
+add_executable(bm_test_cleanup test_cleanup.cpp)
+target_include_directories(bm_test_cleanup PRIVATE ../../Source)
+add_test(NAME dynamic_cleanup COMMAND bm_test_cleanup)

@@ -46,4 +46,8 @@ namespace bm::id
     inline constexpr const char* profile = "bm_profile";
     inline constexpr const char* oversampling = "bm_oversampling";
     inline constexpr const char* lufsTarget = "bm_lufs_target";
+    inline constexpr const char* mudAmount = "bm_mud_amount";
+    inline constexpr const char* mudActive = "bm_mud_active";
+    inline constexpr const char* ringAmount = "bm_ring_amount";
+    inline constexpr const char* ringActive = "bm_ring_active";
 }

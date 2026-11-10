@@ -62,14 +62,16 @@ BloodyMasterProcessor::BloodyMasterProcessor()
       apvts(*this, nullptr, "BloodyMasterState", bm::createParameterLayout())
 {
     (void) bm::factoryPresets();
-    const std::array<const char*,32> ids {
+    const std::array<const char*,41> ids {
         bm::id::hpf, bm::id::lpf, bm::id::bass, bm::id::mid, bm::id::high,
         bm::id::presence, bm::id::foundation, bm::id::p1f, bm::id::p2f, bm::id::p3f,
         bm::id::p1g, bm::id::p2g, bm::id::p3g, bm::id::monomaker, bm::id::width,
         bm::id::pan, bm::id::eqActive, bm::id::bypass,
         bm::id::drive, bm::id::squash, bm::id::recovery, bm::id::link, bm::id::mix,
         bm::id::glue, bm::id::valve, bm::id::clipper, bm::id::turbo, bm::id::trim,
-        bm::id::limrel, bm::id::limlink, bm::id::isp, bm::id::oversampling
+        bm::id::limrel, bm::id::limlink, bm::id::isp, bm::id::oversampling,
+        bm::id::defreq,bm::id::deamount,bm::id::lowres,bm::id::hires,bm::id::spikeListen,
+        bm::id::mudAmount,bm::id::mudActive,bm::id::ringAmount,bm::id::ringActive
     };
     for (size_t i=0; i<ids.size(); ++i)
         dspParameters[i]=apvts.getRawParameterValue(ids[i]);
@@ -90,6 +92,8 @@ bm::dsp::EngineSettings BloodyMasterProcessor::readDspSettings() const
     d.drive=v(18); d.ratio=v(19); d.releaseMs=v(20); d.link=v(21); d.mix=v(22); d.glue=v(23); d.optical=v(24)>.5;
     auto& p=settings.peaks;
     p.clipDb=v(25); p.pushDb=v(26); p.ceilingDb=v(27); p.releaseMs=v(28); p.link=v(29); p.isp=v(30)>.5;
+    auto& c=settings.cleanup;c.enabled=true;c.harshHz=v(32)*1000;c.amount=v(33);c.mudHz=v(34);c.ringHz=v(35)*1000;
+    c.listen=v(36)>.5;c.mudAmount=v(37);c.mudEnabled=v(38)>.5;c.ringAmount=v(39);c.ringEnabled=v(40)>.5;
     return settings;
 }
 

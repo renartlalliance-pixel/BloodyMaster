@@ -54,7 +54,7 @@ private:
     void captureScope(const juce::AudioBuffer<float>&,bool input);
     void publishMeters();
     bm::dsp::Engine mastering;
-    std::array<std::atomic<float>*, 32> dspParameters{};
+    std::array<std::atomic<float>*, 41> dspParameters{};
     bm::dsp::EngineSettings readDspSettings() const;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BloodyMasterProcessor)
 };

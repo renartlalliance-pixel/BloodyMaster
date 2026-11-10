@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "knobs": 36,
+  "reference_knob_sizes_and_horizontal_alignment_preserved": true,
+  "trap_controls_added": 2,
+  "independent_trap_activation_checked": true,
+  "delta_listen_control_checked": true,
+  "reference_colors_materials_preserved": true,
+  "native_event_gestures": true,
+  "all_rotary_controls_checked": {
+    "active": 33,
+    "inactive": 3
+  },
+  "eq_toggle_checked": true,
+  "automation_updates": true,
+  "preset_recall": true,
+  "inactive_controls_identified": true,
+  "no_audio_simulation": true,
+  "offline": true,
+  "page_errors": []
+}

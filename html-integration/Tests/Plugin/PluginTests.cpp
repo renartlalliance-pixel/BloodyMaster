@@ -94,7 +94,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         beginTest("Parametres : nombre, IDs uniques/versionnes, automatisables");
         BloodyMasterProcessor p;
         const auto& params = p.getParameters();
-        expectEquals(params.size(), 42); // 34 float + 5 bool + 3 choix
+        expectEquals(params.size(), 46); // Existing 42 parameters followed by four trap controls.
 
         std::set<juce::String> ids;
         for (auto* prm : params)
@@ -230,7 +230,7 @@ struct BloodyMasterTests final : public juce::UnitTest
                 }
             }
             if(auto* viewport=dynamic_cast<juce::Viewport*>(child)) {
-                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),32);foundControls=true;
+                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),41);foundControls=true;
             }
         }
         expect(foundPresets && foundControls);

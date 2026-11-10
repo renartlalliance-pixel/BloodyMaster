@@ -1,12 +1,13 @@
-Votre interface HTML approuvée est intégrée au VST3 Windows via Microsoft WebView2.
+Version 0.3.2 de test — nettoyage dynamique ajouté.
 
-- Disposition et style de référence conservés ; CSS embarqué, sans dépendance réseau pour afficher l'interface.
-- Potentiomètres actifs, gestes d'automation, retour des paramètres hôte, neuf presets, bypass et comparaison A/B.
-- Oscilloscope et crêtes issus des échantillons réels ; courbe EQ calculée avec les coefficients du moteur.
-- Fréquence d'échantillonnage et latence réelles. Les LUFS et true peak non mesurés ne sont pas simulés.
-- Les fonctions DSP encore absentes sont indiquées comme inactives ; l'intégration graphique ne les implémente pas.
-- WebView2 est installé si nécessaire par le setup (connexion Internet nécessaire uniquement dans ce cas).
+- De-Harsh ciblé autour de sa fréquence, Mud Trap et Ring Trap dynamiques.
+- Dosages et activations indépendants pour les deux Traps, désactivés par défaut.
+- Profondeur maximale visée de 12 dB avec budget partagé lorsque les bandes se recouvrent.
+- Spike Listen : écoute du signal retiré par les trois nettoyages, alignée sur la latence du plugin.
+- Quatre nouveaux paramètres ajoutés après les 42 existants pour préserver leurs index.
+- HTML original et copie de référence conservés ; seuls les contrôles de dosage/activation autorisés sont ajoutés à la page générée.
+
+Les modules THD, XL, Stereo Enhance/profils, la coloration Valve/Tape et la mesure LUFS restent à compléter. Cette version ne prétend pas reproduire les circuits des machines de référence.
 
 Fermer FL Studio, lancer le setup, puis scanner les plugins et ouvrir Bloody Master.
-Cette édition est compilée avec MSVC et JUCE 8.0.4. Les sources correspondantes sont dans l'archive jointe et dans le dossier `html-integration` du commit ; JUCE est récupéré depuis son tag officiel 8.0.4 : https://github.com/juce-framework/JUCE/archive/refs/tags/8.0.4.zip
-Installateur non signé, édition de test. La validation FL Studio sur la machine de l'utilisateur reste à effectuer.
+WebView2 est installé si nécessaire (connexion nécessaire dans ce cas). Le setup est non signé. La validation audio et ergonomique dans FL Studio sur la machine de l’utilisateur reste à faire.

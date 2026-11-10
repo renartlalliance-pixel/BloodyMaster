@@ -68,7 +68,7 @@ inline const FactoryPreset* findPreset(std::string_view slug) {
     return nullptr;
 }
 // Physical APVTS values. This mapping also documents the CLI/plugin agreement.
-inline std::array<std::pair<const char*,float>,32> presetParameters(const dsp::EngineSettings& s) {
+inline std::array<std::pair<const char*,float>,41> presetParameters(const dsp::EngineSettings& s) {
     const auto& t=s.tone;const auto& d=s.dynamics;const auto& p=s.peaks;
     return {{{id::hpf,float(t.hpf)},{id::lpf,float(t.lpf/1000)},
       {id::bass,float(t.bass)},{id::mid,float(t.mid)},{id::high,float(t.high)},
@@ -81,6 +81,11 @@ inline std::array<std::pair<const char*,float>,32> presetParameters(const dsp::E
       {id::link,float(d.link)},{id::mix,float(d.mix)},{id::glue,float(d.glue)},
       {id::valve,float(d.optical)},{id::clipper,float(p.clipDb)},{id::turbo,float(p.pushDb)},
       {id::trim,float(p.ceilingDb)},{id::limrel,float(p.releaseMs)},{id::limlink,float(p.link)},
-      {id::isp,float(p.isp)},{id::oversampling,float(s.oversampling==2?0:s.oversampling==4?1:2)}}};
+      {id::isp,float(p.isp)},{id::oversampling,float(s.oversampling==2?0:s.oversampling==4?1:2)},
+      {id::defreq,float(s.cleanup.harshHz/1000)},{id::deamount,float(s.cleanup.amount)},
+      {id::lowres,float(s.cleanup.mudHz)},{id::hires,float(s.cleanup.ringHz/1000)},
+      {id::spikeListen,float(s.cleanup.listen)},{id::mudAmount,float(s.cleanup.mudAmount)},
+      {id::mudActive,float(s.cleanup.mudEnabled)},{id::ringAmount,float(s.cleanup.ringAmount)},
+      {id::ringActive,float(s.cleanup.ringEnabled)}}};
 }
 }

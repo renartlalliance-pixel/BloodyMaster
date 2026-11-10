@@ -26,7 +26,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         return capture->value;
     };
     if(!verify(wait([&]{return static_cast<bool>(evaluate("!!window.bloodyMasterUi?.getState()"));}),"Native state reaches HTML"))return 2;
-    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===34 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
+    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===36 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
     evaluate("document.querySelector('#knob-drive').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::drive)->load()>1.1f;}),"HTML knob updates APVTS"))return 4;
     auto* drive=p.apvts.getParameter(bm::id::drive);drive->setValueNotifyingHost(drive->convertTo0to1(6.3f));
@@ -47,7 +47,13 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         p.processBlock(audio,midi);
     }
     if(!verify(wait([&]{return static_cast<bool>(evaluate("(()=>{const s=window.bloodyMasterUi.getState();return s.meters.outputL>0 && s.scope.out[0].some(v=>Math.abs(v)>.001) && s.latency===336 && s.sampleRate===48000;})()"));}),"Real audio samples, meters, Fs and latency reach HTML"))return 10;
-    if(!verify(static_cast<bool>(evaluate("document.querySelector('#knob-de-amount').getAttribute('aria-disabled')==='true' && window.bloodyMasterUi.getState().parameters.deamount.active===false")),"Inactive control is identified"))return 11;
+    if(!verify(static_cast<bool>(evaluate("document.querySelector('#knob-de-amount').getAttribute('aria-disabled')==='false' && window.bloodyMasterUi.getState().parameters.mud_active.value===0")),"Cleanup controls active and traps off by default"))return 11;
+    evaluate("document.querySelector('#mudActiveBtn').click();document.querySelector('#knob-mud-amount').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::mudActive)->load()>.5f && p.apvts.getRawParameterValue(bm::id::mudAmount)->load()>25.f && p.apvts.getRawParameterValue(bm::id::ringActive)->load()<.5f;}),"Independent Mud activation and amount reach APVTS"))return 12;
+    evaluate("document.querySelector('#ringActiveBtn').click();document.querySelector('#deSoloBtn').click();true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::ringActive)->load()>.5f && p.apvts.getRawParameterValue(bm::id::spikeListen)->load()>.5f;}),"Ring activation and delta listen reach APVTS"))return 13;
+    auto* ring=p.apvts.getParameter(bm::id::ringAmount);ring->setValueNotifyingHost(ring->convertTo0to1(61.f));
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("Math.abs(Number(document.querySelector('#knob-ring-amount').dataset.val)-61)<.001"));}),"Host automation updates new Ring amount"))return 14;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

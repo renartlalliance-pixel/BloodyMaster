@@ -69,7 +69,7 @@
     });
   });
   window.addEventListener('blur',finishDrag);
-  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eq_active',deSoloBtn:'spike_listen'};
+  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eq_active',deSoloBtn:'spike_listen',mudActiveBtn:'mud_active',ringActiveBtn:'ring_active'};
   for (const [element,id] of Object.entries(toggleMap)) document.getElementById(element)?.addEventListener('click', () => {
     if(!active(id)) return;
     const v=state.parameters[id].value>.5?0:1;send(id,v,'begin');send(id,v);send(id,v,'end');
@@ -113,6 +113,11 @@
       button.disabled=!p.active;button.title=p.active?'':'Fonction non raccordée au DSP';
       button.classList.toggle(element==='modeToggle'?'toggle-active':'btn-active',p.value>.5);
       button.setAttribute('aria-pressed',String(p.value>.5));
+      if(element==='deSoloBtn')button.title='Écouter le signal retiré par De-Harsh, Mud Trap et Ring Trap';
+      if(element==='mudActiveBtn'||element==='ringActiveBtn'){
+        button.textContent=p.value>.5?'ON':'OFF';
+        button.setAttribute('aria-label',`${element==='mudActiveBtn'?'Mud Trap':'Ring Trap'} : ${p.value>.5?'actif':'désactivé'}`);
+      }
     }
     for (let band=1;band<=3;band++) {
       const f=next.parameters[`p${band}f`]?.value,g=next.parameters[`p${band}g`]?.value;
@@ -134,7 +139,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.1';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.2';
     }
     draw();
   }

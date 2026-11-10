@@ -1,10 +1,12 @@
 #pragma once
 #include "PeakChain.h"
+#include "DynamicCleanup.h"
 namespace bm::dsp {
 struct EngineSettings {
     Settings tone{};
     DynamicsSettings dynamics{};
     PeakSettings peaks{};
+    CleanupSettings cleanup{};
     bool bypass=false;
     int oversampling=0; // 0 keeps the mode selected by prepare.
 };
@@ -15,8 +17,11 @@ struct MeterValues {
 class Engine {
     MasteringCore tone;
     Dynamics dynamics;
+    DynamicCleanup cleanup;
     SwitchablePeakChain peaks;
     StereoDelay dry;
+    StereoDelay deltaDelay;
+    Ramp audition;
     Ramp wet;
     double fs=48000;
     bool initial=true;
@@ -24,12 +29,15 @@ public:
     MeterValues meters{};
     void prepare(double sampleRate,int oversampling=8) {
         fs=std::clamp(sampleRate,8000.,384000.);
-        tone.prepare(fs); dynamics.prepare(fs); peaks.prepare(fs,oversampling);
+        tone.prepare(fs); dynamics.prepare(fs); cleanup.prepare(fs); peaks.prepare(fs,oversampling);
         dry.prepare(peaks.latency()); initial=true; meters={};
+        deltaDelay.prepare(peaks.latency());
     }
     int latency() const { return peaks.latency(); }
     void update(EngineSettings s) {
         s.tone.bypass=false; tone.update(s.tone); dynamics.update(s.dynamics); peaks.update(s.peaks);
+        cleanup.update(s.cleanup);
+        audition.set(s.cleanup.enabled && s.cleanup.listen?1.:0.,static_cast<int>(fs*.005),initial);
         if(s.oversampling==2 || s.oversampling==4 || s.oversampling==8) peaks.select(s.oversampling);
         wet.set(s.bypass?0:1,static_cast<int>(fs*.005),initial); initial=false;
     }
@@ -45,11 +53,14 @@ public:
             meters.inputPeak=std::max({meters.inputPeak,std::abs(l),std::abs(r)});
             meters.inputL=std::max(meters.inputL,std::abs(l));
             meters.inputR=std::max(meters.inputR,std::abs(r));
+            cleanup.process(l,r);
+            const auto delta=deltaDelay.push(cleanup.removed[0],cleanup.removed[1]);
             const double drive=dynamics.inputGain();
             float left=static_cast<float>(l*drive),right=static_cast<float>(r*drive);
             float* frame[]{&left,&right}; tone.process(frame,channels,1);
             l=left; r=channels==2?right:left;
             dynamics.process(l,r); peaks.process(l,r);
+            const double listen=audition.next();l+=listen*(delta[0]-l);r+=listen*(delta[1]-r);
             double w=wet.next(); l=bypass[0]+w*(l-bypass[0]); r=bypass[1]+w*(r-bypass[1]);
             data[0][i]=static_cast<float>(l); if(channels==2) data[1][i]=static_cast<float>(r);
             meters.outputPeak=std::max({meters.outputPeak,std::abs(l),std::abs(r)});

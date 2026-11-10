@@ -54,3 +54,7 @@ if(WIN32)
     add_dependencies(bm_vst3_smoke BloodyMaster_VST3)
     add_test(NAME vst3_binary_smoke COMMAND bm_vst3_smoke "$<TARGET_FILE:BloodyMaster_VST3>")
 endif()
+
+add_executable(bm_test_cleanup DSP/test_cleanup.cpp)
+target_include_directories(bm_test_cleanup PRIVATE ${CMAKE_SOURCE_DIR}/Source)
+add_test(NAME dynamic_cleanup COMMAND bm_test_cleanup)
