@@ -1,6 +1,6 @@
 # Bloody Master — B.R.I Audio Systems
 
-Processeur de mastering VST3 (JUCE 8, C++20, CMake). **Etat : M1 (squelette). Aucun traitement DSP n'est encore implemente.**
+Processeur de mastering VST3 (JUCE 8, C++20, CMake). Il comprend une chaine DSP temps reel, bypass, sauvegarde d'etat et une interface native a onglets.
 Voir `docs/STATUS.md` pour l'etat reel, fonction par fonction.
 
 ## Compiler (Windows x64, Visual Studio 2022 + CMake >= 3.22 + Git)

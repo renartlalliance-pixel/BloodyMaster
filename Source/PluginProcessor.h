@@ -1,9 +1,8 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "DSP/MasteringChain.h"
 
-/** Processeur Bloody Master.
- *  Etape M1 : passthrough transparent (bit-exact), bypass hote, 34 parametres + 8 globaux.
- *  Aucun traitement DSP n'est encore implemente : voir docs/STATUS.md. */
+/** Processeur de mastering Bloody Master. */
 class BloodyMasterProcessor final : public juce::AudioProcessor
 {
 public:
@@ -37,5 +36,6 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
 private:
+    bm::MasteringChain masteringChain;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BloodyMasterProcessor)
 };

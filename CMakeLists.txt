@@ -39,6 +39,7 @@ endif()
 juce_add_plugin(BloodyMaster
     COMPANY_NAME "B.R.I Audio Systems"
     PRODUCT_NAME "Bloody Master"
+    BUNDLE_ID "com.briaudiosystems.bloodymaster"
     PLUGIN_MANUFACTURER_CODE BRIA
     PLUGIN_CODE BlMa
     FORMATS VST3 Standalone
@@ -52,6 +53,7 @@ juce_add_plugin(BloodyMaster
 target_sources(BloodyMaster PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginEditor.cpp
+    Source/DSP/MasteringChain.cpp
     Source/Parameters/ParameterLayout.cpp)
 
 target_include_directories(BloodyMaster PRIVATE Source Source/Parameters Source/Utilities)

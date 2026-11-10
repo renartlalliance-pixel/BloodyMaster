@@ -7,9 +7,12 @@ class BloodyMasterEditor final : public juce::AudioProcessorEditor
 {
 public:
     explicit BloodyMasterEditor(BloodyMasterProcessor&);
+    ~BloodyMasterEditor() override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
-    juce::GenericAudioProcessorEditor generic;
+    juce::TabbedComponent tabs;
+    juce::LookAndFeel_V4 lookAndFeel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BloodyMasterEditor)
 };

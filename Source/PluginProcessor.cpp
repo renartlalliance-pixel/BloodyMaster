@@ -7,13 +7,14 @@ BloodyMasterProcessor::BloodyMasterProcessor()
     : AudioProcessor(BusesProperties()
                          .withInput("Input", juce::AudioChannelSet::stereo(), true)
                          .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
-      apvts(*this, nullptr, "BloodyMasterState", bm::createParameterLayout())
+      apvts(*this, nullptr, "BloodyMasterState", bm::createParameterLayout()),
+      masteringChain(apvts)
 {
 }
 
-void BloodyMasterProcessor::prepareToPlay(double, int)
+void BloodyMasterProcessor::prepareToPlay(double sampleRate, int)
 {
-    // M1 : aucun etat DSP a preparer. Latence = 0.
+    masteringChain.prepare(sampleRate);
     setLatencySamples(0);
 }
 
@@ -29,12 +30,13 @@ void BloodyMasterProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 {
     juce::ScopedNoDenormals noDenormals;
 
-    // Les canaux de sortie sans entree correspondante sont mis a zero (pas de bruit residuel).
+    if (apvts.getRawParameterValue(bm::id::bypass)->load(std::memory_order_relaxed) > 0.5f)
+        return;
+
     for (int ch = getTotalNumInputChannels(); ch < getTotalNumOutputChannels(); ++ch)
         buffer.clear(ch, 0, buffer.getNumSamples());
 
-    // M1 : le buffer est traite sur place et laisse inchange (passthrough bit-exact).
-    // Le bypass hote (getBypassParameter) sera relie au rendu dry/wet des qu'un traitement existera.
+    masteringChain.process(buffer);
 }
 
 juce::AudioProcessorEditor* BloodyMasterProcessor::createEditor()

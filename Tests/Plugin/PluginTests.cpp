@@ -1,6 +1,7 @@
-// Tests M1 du plugin. Critere global : code retour 0 si et seulement si aucun test n'echoue ET au moins un test a tourne.
+// Tests du plugin. Le code retour est non nul en cas d'echec ou si aucun test ne tourne.
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <set>
 #include "PluginProcessor.h"
@@ -25,8 +26,11 @@ struct BloodyMasterTests final : public juce::UnitTest
     void runTest() override
     {
         testLayouts();
-        testPassthrough();
+        testProcessing();
+        testFilterResponse();
+        testBypass();
         testParameters();
+        testEditor();
         testDefaults();
         testState();
     }
@@ -50,9 +54,9 @@ struct BloodyMasterTests final : public juce::UnitTest
         expectEquals(p.getTotalNumOutputChannels(), 2);
     }
 
-    void testPassthrough()
+    void testProcessing()
     {
-        beginTest("Passthrough bit-exact (mono/stereo, SR et tailles de bloc varies)");
+        beginTest("Traitement stable et limite (mono/stereo, SR et tailles de bloc varies)");
         const std::array<AudioChannelSet, 2> sets { AudioChannelSet::mono(), AudioChannelSet::stereo() };
         const std::array<double, 4> rates { 44100.0, 48000.0, 96000.0, 192000.0 };
         const std::array<int, 5> blocks { 1, 32, 480, 1024, 4096 };
@@ -81,14 +85,85 @@ struct BloodyMasterTests final : public juce::UnitTest
                     juce::MidiBuffer midi;
                     p.processBlock(buf, midi);
 
-                    bool same = true;
                     for (int ch = 0; ch < nch; ++ch)
-                        same = same && std::memcmp(ref.getReadPointer(ch), buf.getReadPointer(ch), sizeof(float) * (size_t) bs) == 0;
-                    expect(same, "sortie differente de l'entree : canaux=" + juce::String(nch) + " sr=" + juce::String(sr)
-                                     + " bloc=" + juce::String(bs));
+                    {
+                        bool valid = true;
+                        for (int i = 0; i < bs; ++i)
+                        {
+                            const auto sample = buf.getSample(ch, i);
+                            valid = valid && std::isfinite(sample) && std::abs(sample) <= 1.0f;
+                        }
+                        expect(valid, "sortie non finie ou hors plage");
+                    }
                 }
             }
         }
+    }
+
+    void testFilterResponse()
+    {
+        beginTest("Le passe-haut modifie effectivement le signal");
+        BloodyMasterProcessor p;
+        expect(p.setBusesLayout(layoutOf(AudioChannelSet::mono(), AudioChannelSet::mono())));
+        p.setRateAndBufferSizeDetails(48000.0, 512);
+        p.prepareToPlay(48000.0, 512);
+        auto set = [&p](const char* id, float value)
+        {
+            auto* parameter = p.apvts.getParameter(id);
+            parameter->setValueNotifyingHost(parameter->convertTo0to1(value));
+        };
+        set(bm::id::hpf, 100.0f);
+        set(bm::id::valve, 0.0f);
+        set(bm::id::drive, 0.0f);
+        set(bm::id::clipper, 0.0f);
+        set(bm::id::turbo, 0.0f);
+        set(bm::id::mix, 100.0f);
+
+        constexpr int sampleCount = 24000;
+        juce::AudioBuffer<float> filtered(1, sampleCount);
+        for (int i = 0; i < sampleCount; ++i)
+            filtered.setSample(0, i, 0.1f * std::sin(2.0f * juce::MathConstants<float>::pi * 40.0f * i / 48000.0f));
+        juce::MidiBuffer midi;
+        p.processBlock(filtered, midi);
+
+        double filteredEnergy = 0.0;
+        for (int i = sampleCount / 2; i < sampleCount; ++i)
+            filteredEnergy += std::pow(filtered.getSample(0, i), 2.0);
+        const auto filteredRms = std::sqrt(filteredEnergy / (sampleCount / 2));
+        expect(filteredRms < 0.04, "100 Hz passe-haut doit attenuer une tonalite a 40 Hz");
+
+        set(bm::id::eqActive, 0.0f);
+        p.prepareToPlay(48000.0, 512);
+        juce::AudioBuffer<float> unfiltered(1, sampleCount);
+        for (int i = 0; i < sampleCount; ++i)
+            unfiltered.setSample(0, i, 0.1f * std::sin(2.0f * juce::MathConstants<float>::pi * 40.0f * i / 48000.0f));
+        p.processBlock(unfiltered, midi);
+        double unfilteredEnergy = 0.0;
+        for (int i = sampleCount / 2; i < sampleCount; ++i)
+            unfilteredEnergy += std::pow(unfiltered.getSample(0, i), 2.0);
+        const auto unfilteredRms = std::sqrt(unfilteredEnergy / (sampleCount / 2));
+        expect(unfilteredRms > filteredRms * 2.0, "desactiver l'EQ doit retablir le grave");
+    }
+
+    void testBypass()
+    {
+        beginTest("Bypass bit-exact");
+        BloodyMasterProcessor p;
+        p.setRateAndBufferSizeDetails(48000.0, 128);
+        p.prepareToPlay(48000.0, 128);
+        p.apvts.getParameter(bm::id::bypass)->setValueNotifyingHost(1.0f);
+        juce::AudioBuffer<float> buffer(2, 128), reference(2, 128);
+        juce::Random random(654321);
+        for (int ch = 0; ch < 2; ++ch)
+            for (int i = 0; i < buffer.getNumSamples(); ++i)
+                buffer.setSample(ch, i, random.nextFloat() * 2.0f - 1.0f);
+        reference.makeCopyOf(buffer);
+        juce::MidiBuffer midi;
+        p.processBlock(buffer, midi);
+        for (int ch = 0; ch < 2; ++ch)
+            expect(std::memcmp(reference.getReadPointer(ch), buffer.getReadPointer(ch),
+                               sizeof(float) * static_cast<size_t>(buffer.getNumSamples())) == 0,
+                   "le bypass doit conserver les echantillons d'origine");
     }
 
     void testParameters()
@@ -126,6 +201,19 @@ struct BloodyMasterTests final : public juce::UnitTest
                 prm->setValueNotifyingHost(0.37f);
                 expectWithinAbsoluteError(prm->getValue(), 0.37f, 1.0e-4f);
             }
+        }
+    }
+
+    void testEditor()
+    {
+        beginTest("Creation de l'editeur natif et de ses controles");
+        BloodyMasterProcessor p;
+        auto* editor = p.createEditor();
+        expect(editor != nullptr, "editeur non cree");
+        if (editor != nullptr)
+        {
+            expect(editor->getWidth() >= 850, "taille minimale de l'editeur");
+            delete editor;
         }
     }
 
