@@ -1,0 +1,31 @@
+BLOODYMASTER 0.3.1 - VERSION DE TEST WINDOWS X64
+
+1. Fermer FL Studio puis lancer l'installateur.
+2. Le VST3 est copie dans :
+   C:\Program Files\Common Files\VST3\Bloody Master.vst3
+3. Ouvrir FL Studio, Options > Manage plugins > Find installed plugins.
+4. Rechercher Bloody Master et le charger sur un insert du Mixer.
+5. Commencer avec le volume de monitoring habituel et un mix non limite.
+   Choisir un preset puis ajuster le niveau entrant, Drive, Clip et Hammer.
+
+DSP disponibles : HPF/LPF, EQ de couleur, 3 bandes parametriques, Gravity,
+largeur, grave mono, balance, compresseur et Glue, clipper, limiteur, bypass
+aligne et suréchantillonnage 2/4/8x modifiable pendant la lecture.
+Banque : Clean, Glue, Punch, Rap Sub Focus, Rap Forward, Pop Open, Pop Dense,
+Electro Punch, Electro Club. Reglages originaux, non approuves par les ingenieurs cites.
+
+Votre interface HTML approuvee est integree ; son fichier original reste inchange.
+Le moteur WebView2 est installe automatiquement si necessaire (Internet requis dans ce cas).
+Le mode Valve agit sur le relachement optical ; pas de modele de lampe.
+XL/THD, de-harsh, resonance traps, Enhance, profils, LUFS et Spike Listen ne
+sont pas encore raccordes au son : commandes signalees comme inactives dans l'interface.
+Cette version sert a tester le moteur et le VST3, pas a certifier une emulation analogique.
+
+Verifier : chargement, mono/stereo, bypass sans decalage, automatisation,
+sauvegarde/reouverture de session, presets et absence de craquements.
+Le plafond ISP est teste sur des signaux numeriques ; verifier le master final
+avec un mesureur de true peak/LUFS independant. Aucun niveau LUFS n'est garanti.
+
+Desinstallation : Parametres Windows > Applications > BloodyMaster - Test VST3 x64.
+L'outil WAV optionnel est installe dans Program Files\BRI Audio Systems\BloodyMaster.
+Il cree une sortie a cote du WAV source, sans modifier celui-ci.

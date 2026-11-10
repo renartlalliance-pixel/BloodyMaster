@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.22)
+project(BloodyMasterCoreTests LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+enable_testing()
+add_executable(bm_test_dbutils test_dbutils.cpp)
+target_include_directories(bm_test_dbutils PRIVATE ../../Source/Utilities)
+add_test(NAME dbutils COMMAND bm_test_dbutils)
+add_executable(bm_test_mastering test_mastering.cpp)
+target_include_directories(bm_test_mastering PRIVATE ../../Source)
+add_test(NAME mastering_core COMMAND bm_test_mastering)
+
+add_executable(bm_test_dynamics test_dynamics.cpp)
+target_include_directories(bm_test_dynamics PRIVATE ../../Source)
+add_test(NAME dynamics_peak COMMAND bm_test_dynamics)
+
+add_executable(bm_test_switching test_switching.cpp)
+target_include_directories(bm_test_switching PRIVATE ../../Source)
+add_test(NAME oversampling_switching COMMAND bm_test_switching)
+
+add_executable(bm_test_analog_behaviors test_analog_behaviors.cpp)
+target_include_directories(bm_test_analog_behaviors PRIVATE ../../Source)
+add_test(NAME analog_behaviors COMMAND bm_test_analog_behaviors)
+
+add_executable(bm_test_presets test_presets.cpp)
+target_include_directories(bm_test_presets PRIVATE ../../Source)
+add_test(NAME presets COMMAND bm_test_presets)

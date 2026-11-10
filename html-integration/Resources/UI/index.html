@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bloody Master — Tactile Mastering Console</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Texture Bois Tascam Model 12 */
+    .wood-panel {
+      background: linear-gradient(180deg, #381a10 0%, #241008 20%, #462215 45%, #241008 70%, #170a05 100%);
+      box-shadow: inset 2px 0 5px rgba(255,255,255,0.1), inset -3px 0 8px rgba(0,0,0,0.8);
+      position: relative;
+    }
+    .wood-panel::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(0,0,0,0.06) 3px, transparent 6px);
+      pointer-events: none;
+    }
+
+    /* Châssis Métal Anthracite Tascam */
+    .console-chassis {
+      background: radial-gradient(circle at 50% 30%, #202225 0%, #141517 80%, #0d0e10 100%);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.12), 0 20px 40px rgba(0,0,0,0.85);
+    }
+
+    /* Plaque Champagne Or / Gold Section Master Tascam */
+    .gold-accent-plate {
+      background: linear-gradient(165deg, #d8bc79 0%, #a88d4d 30%, #c5a963 55%, #886f34 100%);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4);
+      color: #1a160d;
+    }
+
+    /* Écran LCD Rétro Cyan / Teal */
+    .retro-lcd {
+      background: #061e22;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), 0 0 15px rgba(18, 203, 196, 0.25);
+      border: 2px solid #0e3b43;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Potentiomètres Tactiles Cannelés */
+    .knob-base {
+      border-radius: 50%;
+      position: relative;
+      cursor: ns-resize;
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.05s ease-out;
+    }
+
+    .knob-cap {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -3px 5px rgba(0,0,0,0.7), 0 4px 8px rgba(0,0,0,0.6);
+    }
+
+    .knob-indicator {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 10px;
+      background: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 0 3px rgba(255,255,255,0.8);
+    }
+
+    /* Couleurs de boutons inspirées Tascam */
+    .knob-red {
+      background: linear-gradient(145deg, #2b1111, #120505);
+      border: 2px solid #1a0808;
+    }
+    .knob-red .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #e63946 0%, #b51724 60%, #5e0b12 100%);
+    }
+
+    .knob-green {
+      background: linear-gradient(145deg, #0e2417, #05120a);
+      border: 2px solid #091a10;
+    }
+    .knob-green .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #2ec4b6 0%, #1b8a7f 60%, #0d4a44 100%);
+    }
+
+    .knob-blue {
+      background: linear-gradient(145deg, #0e1e2d, #060e17);
+      border: 2px solid #081724;
+    }
+    .knob-blue .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #48cae4 0%, #0096c7 60%, #023e8a 100%);
+    }
+
+    .knob-orange {
+      background: linear-gradient(145deg, #2c1d0b, #140d04);
+      border: 2px solid #1c1205;
+    }
+    .knob-orange .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #fb8500 0%, #d46b08 60%, #7c3a00 100%);
+    }
+
+    .knob-grey {
+      background: linear-gradient(145deg, #33363a, #1a1b1d);
+      border: 2px solid #232528;
+    }
+    .knob-grey .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #e0e1dd 0%, #9fa09d 60%, #505255 100%);
+    }
+    .knob-grey .knob-indicator {
+      background: #111;
+      box-shadow: none;
+    }
+
+    .knob-gold {
+      background: linear-gradient(145deg, #3b3012, #1a1506);
+      border: 2px solid #282109;
+    }
+    .knob-gold .knob-cap {
+      background: radial-gradient(circle at 40% 35%, #ffd166 0%, #cca33c 60%, #7a5c10 100%);
+    }
+    .knob-gold .knob-indicator {
+      background: #000;
+      box-shadow: none;
+    }
+
+    /* LED Segment Ladder */
+    .led-segment {
+      width: 100%;
+      height: 4px;
+      margin-bottom: 2px;
+      border-radius: 1px;
+      opacity: 0.18;
+      transition: opacity 0.08s ease, filter 0.08s ease;
+    }
+    .led-green { background: #22c55e; box-shadow: 0 0 4px #22c55e; }
+    .led-yellow { background: #eab308; box-shadow: 0 0 5px #eab308; }
+    .led-red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    .led-active { opacity: 1 !important; filter: brightness(1.3); }
+
+    /* Custom Checkbox / Push switch */
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 22px;
+      background: #111315;
+      border: 1px solid #33383f;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .toggle-lever {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: linear-gradient(180deg, #d1d5db 0%, #6b7280 100%);
+      border-radius: 50%;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+    .toggle-active .toggle-lever {
+      left: 24px;
+      background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    }
+
+    /* Bouton poussoir Tascam avec LED */
+    .tascam-btn {
+      background: linear-gradient(180deg, #2a2d32 0%, #1a1b1e 100%);
+      border: 1px solid #3e444e;
+      border-radius: 4px;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2);
+      transition: all 0.1s ease;
+    }
+    .tascam-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    }
+    .btn-led-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #333;
+      transition: all 0.2s ease;
+    }
+    .btn-active .btn-led-dot {
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444, 0 0 14px #ef4444;
+    }
+
+    /* Cadre de module sérigraphié */
+    .module-box {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(18, 20, 23, 0.55);
+      border-radius: 6px;
+      position: relative;
+    }
+    .module-title {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 min-h-screen p-4 flex flex-col items-center justify-center font-sans antialiased select-none">
+
+  <!-- EN-TÊTE DE PRÉSENTATION -->
+  <div class="w-full max-w-6xl mb-3 flex items-center justify-between px-3 text-xs text-neutral-400">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+      <span class="font-bold tracking-widest text-neutral-200">B.R.I AUDIO SYSTEMS</span>
+      <span class="text-neutral-600">|</span>
+      <span>bloody Master v1.0.0</span>
+      <span class="bg-red-950/80 text-red-400 border border-red-800/60 px-2 py-0.5 rounded text-[10px] font-mono">TASCAM MODEL 12 EDITION</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-neutral-400">Preset:</span>
+      <select id="presetSelector" class="bg-neutral-900 border border-neutral-700 text-neutral-200 text-xs rounded px-2 py-1 outline-none cursor-pointer hover:border-red-500 transition">
+        <option value="modern_loud">01: Modern Club Loud (-8 LUFS)</option>
+        <option value="streaming_safe">02: Streaming Precision (-14 LUFS / Safe ISP)</option>
+        <option value="warm_tape">03: Warm Tape & Fat Low (-9.5 LUFS)</option>
+        <option value="air_acoustic">04: Open Air & Silk Acoustic</option>
+        <option value="punch_trap">05: Hard Trap & 808 Anchor</option>
+      </select>
+      <button id="bypassBtn" class="tascam-btn px-3 py-1 flex items-center gap-1.5 text-xs font-bold text-neutral-300">
+        <span class="btn-led-dot"></span>
+        <span>BYPASS</span>
+      </button>
+      <button id="abBtn" class="tascam-btn px-3 py-1 text-xs font-bold text-neutral-300">A / B</button>
+    </div>
+  </div>
+
+  <!-- CHÂSSIS PRINCIPAL AVEC FLANCS EN BOIS DU TASCAM MODEL 12 -->
+  <div class="w-full max-w-6xl console-chassis rounded-xl overflow-hidden flex flex-row border border-neutral-800 shadow-2xl relative">
+    
+    <!-- FLANC GAUCHE EN BOIS (TASCAM WOOD CHEEK) -->
+    <div class="w-7 sm:w-10 wood-panel flex-shrink-0 flex flex-col items-center justify-between py-6 border-r border-neutral-900">
+      <div class="w-2.5 h-2.5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner"></div>
+      <div class="text-[9px] font-bold text-amber-800/40 uppercase rotate-90 tracking-widest whitespace-nowrap">B.R.I ANALOG</div>
+      <div class="w-2.5 h-2.5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner"></div>
+    </div>
+
+    <!-- SURFACE CENTRALE DU CONSOLE MASTERING -->
+    <div class="flex-1 p-4 flex flex-col gap-3">
+
+      <!-- ================= ETAGE SUPERIEUR (STAGE 01 & STAGE 02) ================= -->
+      <div class="grid grid-cols-12 gap-3">
+
+        <!-- 1. STAGE 01 : PRE-CLEAN & RESONANCE TRAPS (COL 1-4) -->
+        <div class="col-span-12 lg:col-span-4 module-box p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between border-b border-neutral-800 pb-1 mb-2">
+            <span class="module-title text-amber-500 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              DE-HARSH & RESONANCE TRAPS
+            </span>
+            <span class="text-[9px] font-mono bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded text-amber-400 font-bold">STAGE 01</span>
+          </div>
+
+          <!-- DE-HARSH SECTION -->
+          <div class="grid grid-cols-3 gap-2 items-center bg-neutral-900/60 p-2 rounded border border-neutral-800/80 mb-2">
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-amber-400 mb-0.5">HARSH FREQ</div>
+              <div class="knob-base knob-orange w-10 h-10" id="knob-de-freq" data-param="defreq" data-min="4.0" data-max="12.0" data-val="7.5" data-unit="kHz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-amber-300" id="val-defreq">7.5 kHz</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-amber-400 mb-0.5">DE-HARSH</div>
+              <div class="knob-base knob-orange w-10 h-10" id="knob-de-amount" data-param="deamount" data-min="0" data-max="100" data-val="25" data-unit="%">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-amber-300" id="val-deamount">25%</div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center">
+              <div class="text-[8px] font-bold text-neutral-400 mb-1">SPIKE LISTEN</div>
+              <button id="deSoloBtn" class="tascam-btn px-2 py-1 text-[9px] font-bold text-neutral-300 flex items-center gap-1">
+                <span class="btn-led-dot"></span>
+                <span>LISTEN</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- PIÈGES À RÉSONANCES (MUD TRAP & RING TRAP) & FILTRES GUARDS -->
+          <div class="grid grid-cols-4 gap-2 text-center pt-1">
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-amber-400 mb-0.5">MUD TRAP</div>
+              <div class="knob-base knob-orange w-9 h-9" id="knob-lowres" data-param="lowres" data-min="80" data-max="400" data-val="160" data-unit="Hz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-amber-300" id="val-lowres">160 Hz</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-amber-400 mb-0.5">RING TRAP</div>
+              <div class="knob-base knob-orange w-9 h-9" id="knob-hires" data-param="hires" data-min="2.0" data-max="10.0" data-val="4.2" data-unit="kHz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-amber-300" id="val-hires">4.2 kHz</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-400 mb-0.5">SUB BARRIER</div>
+              <div class="knob-base knob-grey w-9 h-9" id="knob-hpf" data-param="hpf" data-min="15" data-max="100" data-val="28" data-unit="Hz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-neutral-400" id="val-hpf">28 Hz</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-400 mb-0.5">RADIO CEIL</div>
+              <div class="knob-base knob-grey w-9 h-9" id="knob-lpf" data-param="lpf" data-min="18" data-max="45" data-val="38" data-unit="kHz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-neutral-400" id="val-lpf">38 kHz</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. CENTRAL HUD & PRECISION METERING (COL 5-8) -->
+        <div class="col-span-12 lg:col-span-4 module-box p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between border-b border-neutral-800 pb-1 mb-2">
+            <span class="module-title text-cyan-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
+              PRECISION HUD & OSCILLOSCOPE
+            </span>
+            <div class="flex items-center gap-1.5">
+              <!-- COMMUTATEUR VUE : SCOPE / EQ CURVE / METERS -->
+              <div class="flex bg-neutral-900 border border-neutral-700 rounded p-0.5 text-[9px] font-mono">
+                <button id="viewScopeBtn" class="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300 font-bold transition">SCOPE</button>
+                <button id="viewEqBtn" class="px-2 py-0.5 rounded text-neutral-400 hover:text-white transition">EQ CURVE</button>
+                <button id="viewMetersBtn" class="px-2 py-0.5 rounded text-neutral-400 hover:text-white transition">METERS</button>
+              </div>
+              <button id="meterSourceBtn" class="text-[9px] font-mono bg-neutral-900 border border-cyan-900 px-1.5 py-0.5 rounded text-cyan-400 font-bold">OUT</button>
+            </div>
+          </div>
+
+          <!-- ÉCRAN LCD PHOSPHORE TASCAM : OSCILLOSCOPE & COURBE FORME D'ONDE -->
+          <div class="retro-lcd rounded p-1.5 text-cyan-300 flex flex-col justify-between h-56 min-h-[225px] relative overflow-hidden">
+            <canvas id="precisionMeterCanvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- BARRE DE SELECTION TARGET & COMMANDES INFERIEURES DU VUMETRE -->
+          <div class="flex items-center justify-between pt-2 px-1 text-[10px] font-mono border-t border-neutral-800/80 mt-1">
+            <div class="flex items-center gap-1.5">
+              <span class="text-neutral-400 text-[9px] font-bold">TARGET:</span>
+              <select id="lufsTargetSelector" class="bg-neutral-900 border border-cyan-900/60 text-cyan-300 text-[9px] font-bold rounded px-1.5 py-0.5 outline-none cursor-pointer hover:border-cyan-500 transition">
+                <option value="-8">-8.0 LUFS (Club Loud)</option>
+                <option value="-9">-9.0 LUFS (CD / Pop)</option>
+                <option value="-11">-11.0 LUFS (Dynamic)</option>
+                <option value="-14">-14.0 LUFS (Streaming Safe)</option>
+                <option value="-6">-6.0 LUFS (Hard Crush)</option>
+              </select>
+            </div>
+
+            <!-- CONTROLES BITE / XL & VALVE WARMTH MINI DIALS -->
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1">
+                <span class="text-[8px] text-red-400 font-bold">XL</span>
+                <div class="knob-base knob-red w-6 h-6" id="knob-xl" data-param="xl" data-min="0" data-max="100" data-val="12" data-unit="%">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+                <span class="text-[8px] font-mono text-neutral-400" id="val-xl">12%</span>
+              </div>
+
+              <div class="flex items-center gap-1">
+                <span class="text-[8px] text-red-400 font-bold">THD</span>
+                <div class="knob-base knob-red w-6 h-6" id="knob-thd" data-param="thd" data-min="-60" data-max="-20" data-val="-42" data-unit="dB">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+                <span class="text-[8px] font-mono text-neutral-400" id="val-thd">-42dB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. STAGE 02 : CONSOLE TONE & MATRIX EQUALIZER (COL 9-12) -->
+        <div class="col-span-12 lg:col-span-4 module-box p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between border-b border-neutral-800 pb-1 mb-2">
+            <span class="module-title text-sky-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+              CONSOLE TONE & MATRIX EQUALIZER
+            </span>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] font-mono bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded text-sky-400 font-bold">STAGE 02</span>
+              <button id="eqActiveBtn" class="btn-active text-[9px] font-mono bg-neutral-900 border border-sky-900 px-2 py-0.5 rounded text-sky-400 flex items-center gap-1">
+                <span class="btn-led-dot !bg-sky-400 !shadow-[0_0_6px_#38bdf8]"></span>
+                <span>EQ ON</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4-BAND CONSOLE TONE (TASCAM BLUE) -->
+          <div class="grid grid-cols-4 gap-2 text-center pb-2 border-b border-neutral-800/70">
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-sky-400 mb-0.5">SUB WEIGHT</div>
+              <div class="knob-base knob-blue w-10 h-10" id="knob-bass" data-param="bass" data-min="-6" data-max="6" data-val="0.8" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-sky-300" id="val-bass">+0.8 dB</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-sky-400 mb-0.5">PUNCH BODY</div>
+              <div class="knob-base knob-blue w-10 h-10" id="knob-mid" data-param="mid" data-min="-6" data-max="6" data-val="-0.4" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-sky-300" id="val-mid">-0.4 dB</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-sky-400 mb-0.5">SILK SHINE</div>
+              <div class="knob-base knob-blue w-10 h-10" id="knob-high" data-param="high" data-min="-6" data-max="6" data-val="1.2" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-sky-300" id="val-high">+1.2 dB</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-sky-400 mb-0.5">AIR DIFFUSE</div>
+              <div class="knob-base knob-blue w-10 h-10" id="knob-presence" data-param="presence" data-min="-6" data-max="6" data-val="0.6" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-sky-300" id="val-presence">+0.6 dB</div>
+            </div>
+          </div>
+
+          <!-- 3-BAND CHIRURGICAL PARAMETRIC MATRIX -->
+          <div class="grid grid-cols-3 gap-2 pt-2 text-center">
+            <!-- BAND I (LOW) -->
+            <div class="bg-neutral-900/40 p-1.5 rounded border border-neutral-800">
+              <div class="text-[8px] font-bold text-neutral-400 mb-1">BAND I : LOW</div>
+              <div class="flex justify-around items-center">
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p1-f" data-param="p1f" data-min="30" data-max="400" data-val="120" data-unit="Hz">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p1-g" data-param="p1g" data-min="-6" data-max="6" data-val="0.0" data-unit="dB">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+              </div>
+              <div class="text-[8px] font-mono text-sky-300 mt-1">120Hz / 0.0dB</div>
+            </div>
+
+            <!-- BAND II (MID) -->
+            <div class="bg-neutral-900/40 p-1.5 rounded border border-neutral-800">
+              <div class="text-[8px] font-bold text-neutral-400 mb-1">BAND II : MID</div>
+              <div class="flex justify-around items-center">
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p2-f" data-param="p2f" data-min="400" data-max="4000" data-val="1800" data-unit="Hz">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p2-g" data-param="p2g" data-min="-6" data-max="6" data-val="-0.8" data-unit="dB">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+              </div>
+              <div class="text-[8px] font-mono text-sky-300 mt-1">1.8kHz / -0.8dB</div>
+            </div>
+
+            <!-- BAND III (TOP) -->
+            <div class="bg-neutral-900/40 p-1.5 rounded border border-neutral-800">
+              <div class="text-[8px] font-bold text-neutral-400 mb-1">BAND III : AIR</div>
+              <div class="flex justify-around items-center">
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p3-f" data-param="p3f" data-min="4000" data-max="18000" data-val="12000" data-unit="Hz">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+                <div class="knob-base knob-blue w-8 h-8" id="knob-p3-g" data-param="p3g" data-min="-6" data-max="6" data-val="0.5" data-unit="dB">
+                  <div class="knob-cap"><div class="knob-indicator"></div></div>
+                </div>
+              </div>
+              <div class="text-[8px] font-mono text-sky-300 mt-1">12kHz / +0.5dB</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BANDEAU DE ROUTING DU SIGNAL AUDIO (DU HAUT VERS LE BAS) -->
+      <div class="w-full flex items-center justify-between px-3 py-1.5 bg-black/60 border border-neutral-800 rounded text-[10px] font-mono text-neutral-400 shadow-inner">
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500 font-bold tracking-wider uppercase">ROUTING FLOW:</span>
+          <span class="text-amber-400 font-bold">STAGE 01 [PRE-CLEAN]</span>
+          <span class="text-neutral-600">➔</span>
+          <span class="text-sky-400 font-bold">STAGE 02 [TONE & EQ]</span>
+          <span class="text-neutral-600">➔</span>
+          <span class="text-red-400 font-bold">STAGE 03 [BLOOD DYNAMICS]</span>
+          <span class="text-neutral-600">➔</span>
+          <span class="text-orange-400 font-bold">STAGE 04 [SPATIAL M/S]</span>
+          <span class="text-neutral-600">➔</span>
+          <span class="text-amber-300 font-bold">STAGE 05 [FINAL WALL & OUT]</span>
+        </div>
+        <div class="flex items-center gap-2 text-neutral-500">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>MASTER CHAIN ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- ================= ETAGE INFERIEUR (STAGE 03, 04, 05) ================= -->
+      <div class="grid grid-cols-12 gap-3">
+
+        <!-- 4. STAGE 03 : BLOOD DRIVE & DYNAMICS (COL 1-4) -->
+        <div class="col-span-12 lg:col-span-4 module-box p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between border-b border-neutral-800 pb-2 mb-2">
+            <span class="module-title text-red-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-red-600"></span>
+              BLOOD DRIVE & DYNAMICS
+            </span>
+            <span class="text-[9px] font-mono text-neutral-500 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded text-red-400 font-bold">STAGE 03</span>
+          </div>
+
+          <!-- GROS BOUTON BLOOD DRIVE CENTRAL -->
+          <div class="flex items-center justify-around my-2">
+            <div class="flex flex-col items-center">
+              <div class="text-[10px] font-bold tracking-wider text-red-400 mb-1">1. BLOOD DRIVE</div>
+              <div class="knob-base knob-red w-20 h-20" id="knob-drive" data-param="drive" data-min="0" data-max="12" data-val="2.5" data-unit="dB">
+                <div class="knob-cap">
+                  <div class="knob-indicator"></div>
+                </div>
+              </div>
+              <div class="mt-1.5 font-mono text-xs text-red-300 font-bold" id="val-drive">+2.5 dB</div>
+            </div>
+
+            <!-- DUAL LINK & DENSITY BLEND -->
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center gap-3">
+                <div class="flex flex-col items-center">
+                  <div class="text-[9px] text-neutral-400 font-semibold mb-0.5">DUAL LINK</div>
+                  <div class="knob-base knob-grey w-11 h-11" id="knob-link" data-param="link" data-min="0" data-max="100" data-val="100" data-unit="%">
+                    <div class="knob-cap"><div class="knob-indicator"></div></div>
+                  </div>
+                  <div class="text-[10px] font-mono text-neutral-400" id="val-link">100%</div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                  <div class="text-[9px] text-neutral-400 font-semibold mb-0.5">DENSITY BLEND</div>
+                  <div class="knob-base knob-grey w-11 h-11" id="knob-mix" data-param="mix" data-min="0" data-max="100" data-val="100" data-unit="%">
+                    <div class="knob-cap"><div class="knob-indicator"></div></div>
+                  </div>
+                  <div class="text-[10px] font-mono text-neutral-400" id="val-mix">100%</div>
+                </div>
+              </div>
+
+              <!-- VALVE / CRYSTAL TOGGLE -->
+              <div class="flex items-center justify-between bg-neutral-900/80 p-1.5 rounded border border-neutral-800">
+                <span class="text-[10px] text-neutral-300 font-medium">MODE</span>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                  <span class="text-neutral-500" id="modePureLbl">PURE</span>
+                  <div class="toggle-switch toggle-active" id="modeToggle">
+                    <div class="toggle-lever"></div>
+                  </div>
+                  <span class="text-red-400 font-bold" id="modeValveLbl">VALVE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RANGÉE DES BOUTONS DE COMPRESSION TASCAM GREEN -->
+          <div class="grid grid-cols-4 gap-2 pt-2 border-t border-neutral-800/80 text-center">
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-teal-400 mb-0.5">SQUASH</div>
+              <div class="knob-base knob-green w-10 h-10" id="knob-squash" data-param="squash" data-min="1.2" data-max="8.0" data-val="2.4" data-unit=":1">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-teal-300" id="val-squash">2.4:1</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-teal-400 mb-0.5">RECOVERY</div>
+              <div class="knob-base knob-green w-10 h-10" id="knob-recovery" data-param="recovery" data-min="10" data-max="1200" data-val="85" data-unit="ms">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-teal-300" id="val-recovery">85 ms</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-teal-400 mb-0.5">TAPE GLUE</div>
+              <div class="knob-base knob-green w-10 h-10" id="knob-glue" data-param="glue" data-min="0" data-max="6" data-val="1.5" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-teal-300" id="val-glue">+1.5 dB</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-red-400 mb-0.5">CRUSH CLIP</div>
+              <div class="knob-base knob-red w-10 h-10" id="knob-clipper" data-param="clipper" data-min="0" data-max="10" data-val="2.0" data-unit="">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-red-300" id="val-clipper">2.0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. STAGE 04 : SPATIAL HORIZON & M/S (COL 5-8) -->
+        <div class="col-span-12 lg:col-span-4 module-box p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between border-b border-neutral-800 pb-1 mb-2">
+            <span class="module-title text-orange-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+              SPATIAL HORIZON & M/S
+            </span>
+            <span class="text-[9px] font-mono text-neutral-500 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded text-orange-400 font-bold">STAGE 04</span>
+          </div>
+
+          <!-- PROFILES SELECTOR (1, 2, 3, 4) -->
+          <div class="flex items-center justify-between bg-neutral-900/60 p-1.5 rounded border border-neutral-800 mb-2">
+            <span class="text-[9px] font-bold text-neutral-400">WARP PROFILE</span>
+            <div class="flex gap-1.5">
+              <button class="profile-btn px-2.5 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-400 hover:text-white" data-prof="1">1</button>
+              <button class="profile-btn px-2.5 py-0.5 rounded text-[9px] font-bold bg-amber-600 text-white shadow" data-prof="2">2</button>
+              <button class="profile-btn px-2.5 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-400 hover:text-white" data-prof="3">3</button>
+              <button class="profile-btn px-2.5 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-400 hover:text-white" data-prof="4">4</button>
+            </div>
+          </div>
+
+          <!-- HORIZON & MONO BASE -->
+          <div class="grid grid-cols-2 gap-2 text-center my-1">
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-orange-400 mb-0.5">MONO BASE</div>
+              <div class="knob-base knob-orange w-11 h-11" id="knob-monomaker" data-param="monomaker" data-min="0" data-max="400" data-val="135" data-unit="Hz">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-orange-300" id="val-monomaker">135 Hz</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[9px] font-bold text-orange-400 mb-0.5">HORIZON WIDTH</div>
+              <div class="knob-base knob-orange w-11 h-11" id="knob-width" data-param="width" data-min="0" data-max="200" data-val="110" data-unit="%">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-orange-300" id="val-width">110%</div>
+            </div>
+          </div>
+
+          <!-- ATMOSPHERE & MID BIAS -->
+          <div class="grid grid-cols-2 gap-2 text-center pt-2 border-t border-neutral-800">
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-400 mb-0.5">ATMOSPHERE</div>
+              <div class="knob-base knob-orange w-9 h-9" id="knob-enhance" data-param="enhance" data-min="0" data-max="100" data-val="15" data-unit="%">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[8px] font-mono text-neutral-300" id="val-enhance">15%</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-400 mb-0.5">MID BIAS</div>
+              <div class="knob-base knob-grey w-9 h-9" id="knob-pan" data-param="pan" data-min="-50" data-max="50" data-val="0" data-unit="">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[8px] font-mono text-neutral-300" id="val-pan">C</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. STAGE 05 : FINAL WALL & MASTER — PLAQUE OR CHAMPAGNE (COL 9-12) -->
+        <div class="col-span-12 lg:col-span-4 gold-accent-plate p-3 rounded-lg flex flex-col justify-between border border-amber-500/40">
+          <div class="flex items-center justify-between border-b border-amber-900/30 pb-1 mb-2">
+            <span class="text-xs font-bold tracking-widest text-neutral-900 flex items-center gap-1.5 uppercase">
+              <span class="w-2.5 h-2.5 rounded-sm bg-neutral-900"></span>
+              FINAL WALL & MASTER
+            </span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[9px] font-bold bg-neutral-900 text-amber-300 px-1.5 py-0.5 rounded">STAGE 05</span>
+              <span class="text-[9px] font-bold bg-neutral-900/70 text-neutral-300 px-1 py-0.5 rounded">TASCAM GOLD</span>
+            </div>
+          </div>
+
+          <!-- GROS BOUTON GRAVITY & CEILING OUT -->
+          <div class="flex items-center justify-around my-1">
+            <div class="flex flex-col items-center">
+              <div class="text-[10px] font-bold tracking-wider text-neutral-900 mb-1">2. GRAVITY</div>
+              <div class="knob-base knob-red w-16 h-16" id="knob-foundation" data-param="foundation" data-min="-10" data-max="10" data-val="0.0" data-unit="">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="mt-1 font-mono text-xs text-neutral-900 font-bold" id="val-foundation">0.0</div>
+            </div>
+
+            <!-- CEILING OUT POTENTIOMÈTRE / FADER DE SORTIE -->
+            <div class="flex flex-col items-center">
+              <div class="text-[10px] font-bold tracking-wider text-neutral-900 mb-1">CEILING OUT</div>
+              <div class="knob-base knob-gold w-16 h-16" id="knob-trim" data-param="trim" data-min="-6" data-max="0" data-val="-0.2" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="mt-1 font-mono text-xs text-neutral-900 font-bold" id="val-trim">-0.2 dB</div>
+            </div>
+          </div>
+
+          <!-- LIMITER FINE CONTROLS -->
+          <div class="grid grid-cols-4 gap-2 pt-2 border-t border-amber-900/30 text-center">
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-900 mb-0.5">HAMMER</div>
+              <div class="knob-base knob-red w-9 h-9" id="knob-turbo" data-param="turbo" data-min="0" data-max="6" data-val="1.2" data-unit="dB">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-neutral-900 font-bold" id="val-turbo">+1.2 dB</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-900 mb-0.5">RELEASE</div>
+              <div class="knob-base knob-grey w-9 h-9" id="knob-limrel" data-param="limrel" data-min="1" data-max="500" data-val="12" data-unit="ms">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-neutral-900 font-bold" id="val-limrel">12 ms</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[8px] font-bold text-neutral-900 mb-0.5">LR UNIFY</div>
+              <div class="knob-base knob-grey w-9 h-9" id="knob-limlink" data-param="limlink" data-min="0" data-max="100" data-val="100" data-unit="%">
+                <div class="knob-cap"><div class="knob-indicator"></div></div>
+              </div>
+              <div class="text-[9px] font-mono text-neutral-900 font-bold" id="val-limlink">100%</div>
+            </div>
+
+            <!-- ISP GUARD TOGGLE -->
+            <div class="flex flex-col items-center justify-center">
+              <div class="text-[8px] font-bold text-neutral-900 mb-1">ISP GUARD</div>
+              <button id="ispBtn" class="btn-active w-8 h-8 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center shadow">
+                <span class="btn-led-dot"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BANDEAU INFERIEUR DE CERTIFICATION TASCAM / B.R.I -->
+      <div class="flex items-center justify-between pt-2 px-1 border-t border-neutral-800 text-[10px] text-neutral-500 font-mono">
+        <div class="flex items-center gap-3">
+          <span>SAMPLE RATE: 96 kHz / 64-BIT DUAL PRECISION</span>
+          <span class="text-neutral-700">|</span>
+          <span>LATENCY: 0 SAMPLES (REAL-TIME ENGINE)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-400 font-bold tracking-wider">bloody Master</span>
+          <span class="text-red-600 font-bold">● VST3 / AU / AAX</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FLANC DROIT EN BOIS (TASCAM WOOD CHEEK) -->
+    <div class="w-7 sm:w-10 wood-panel flex-shrink-0 flex flex-col items-center justify-between py-6 border-l border-neutral-900">
+      <div class="w-2.5 h-2.5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner"></div>
+      <div class="text-[9px] font-bold text-amber-800/40 uppercase -rotate-90 tracking-widest whitespace-nowrap">MODEL 12 INSPIRED</div>
+      <div class="w-2.5 h-2.5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner"></div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT INTERACTIF DE PILOTAGE DES POTENTIOMÈTRES & SIMULATION AUDIO -->
+  <script>
+    // Écouteur et gestion des potentiomètres rotatifs (Drag vertical)
+    const knobs = document.querySelectorAll('.knob-base');
+
+    knobs.forEach(knob => {
+      let isDragging = false;
+      let startY = 0;
+      let startVal = parseFloat(knob.dataset.val);
+      const min = parseFloat(knob.dataset.min);
+      const max = parseFloat(knob.dataset.max);
+      const unit = knob.dataset.unit || '';
+      const param = knob.dataset.param;
+
+      function updateKnobVisual(val) {
+        // Normalisation entre 0 et 1
+        const norm = (val - min) / (max - min);
+        // Angle de rotation : de -135deg à +135deg (270 degrés de course)
+        const angle = -135 + norm * 270;
+        const cap = knob.querySelector('.knob-cap');
+        if (cap) {
+          cap.style.transform = `rotate(${angle}deg)`;
+        }
+
+        // Mise à jour de l'affichage texte
+        const valElem = document.getElementById(`val-${param}`);
+        if (valElem) {
+          if (unit === 'dB') {
+            valElem.textContent = (val > 0 ? '+' : '') + val.toFixed(1) + ' dB';
+          } else if (unit === '%') {
+            valElem.textContent = Math.round(val) + '%';
+          } else if (unit === 'ms') {
+            valElem.textContent = Math.round(val) + ' ms';
+          } else if (unit === 'Hz') {
+            valElem.textContent = Math.round(val) + ' Hz';
+          } else if (unit === 'kHz') {
+            valElem.textContent = val.toFixed(1) + ' kHz';
+          } else if (unit === ':1') {
+            valElem.textContent = val.toFixed(1) + ':1';
+          } else if (param === 'pan') {
+            valElem.textContent = val === 0 ? 'C' : (val < 0 ? `L${Math.abs(Math.round(val))}` : `R${Math.round(val)}`);
+          } else {
+            valElem.textContent = val.toFixed(1);
+          }
+        }
+      }
+
+      // Initialiser la position visuelle au chargement
+      updateKnobVisual(startVal);
+
+      knob.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startY = e.clientY;
+        startVal = parseFloat(knob.dataset.val);
+        document.body.style.cursor = 'ns-resize';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaY = startY - e.clientY;
+        const range = max - min;
+        // 150px de glissement pour balayer toute la plage
+        let newVal = startVal + (deltaY / 150) * range;
+        newVal = Math.max(min, Math.min(max, newVal));
+        knob.dataset.val = newVal;
+        updateKnobVisual(newVal);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          document.body.style.cursor = 'default';
+        }
+      });
+    });
+
+    // Toggle switch Valve / Pure
+    const modeToggle = document.getElementById('modeToggle');
+    const modePureLbl = document.getElementById('modePureLbl');
+    const modeValveLbl = document.getElementById('modeValveLbl');
+    let isValve = true;
+
+    modeToggle.addEventListener('click', () => {
+      isValve = !isValve;
+      if (isValve) {
+        modeToggle.classList.add('toggle-active');
+        modeValveLbl.className = 'text-red-400 font-bold';
+        modePureLbl.className = 'text-neutral-500';
+      } else {
+        modeToggle.classList.remove('toggle-active');
+        modeValveLbl.className = 'text-neutral-500';
+        modePureLbl.className = 'text-sky-400 font-bold';
+      }
+    });
+
+    // ISP Guard Button Toggle
+    const ispBtn = document.getElementById('ispBtn');
+    ispBtn.addEventListener('click', () => {
+      ispBtn.classList.toggle('btn-active');
+    });
+
+    // EQ Active Toggle
+    const eqActiveBtn = document.getElementById('eqActiveBtn');
+    eqActiveBtn.addEventListener('click', () => {
+      eqActiveBtn.classList.toggle('btn-active');
+    });
+
+    // Spike Listen Toggle
+    const deSoloBtn = document.getElementById('deSoloBtn');
+    deSoloBtn.addEventListener('click', () => {
+      deSoloBtn.classList.toggle('btn-active');
+    });
+
+    // Profils M/S
+    const profBtns = document.querySelectorAll('.profile-btn');
+    profBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        profBtns.forEach(b => {
+          b.className = 'profile-btn px-2 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-400 hover:text-white';
+        });
+        btn.className = 'profile-btn px-2 py-0.5 rounded text-[9px] font-bold bg-amber-600 text-white shadow';
+      });
+    });
+
+    // =========================================================================
+    // MOTEUR D'AFFICHAGE MULTI-MODE : OSCILLOSCOPE / ÉGALISEUR / VUMÈTRES
+    // =========================================================================
+    const canvas = document.getElementById('precisionMeterCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Mode d'affichage par défaut : 'scope' (Oscilloscope demandé par l'utilisateur)
+    let viewMode = 'scope'; 
+    const viewScopeBtn = document.getElementById('viewScopeBtn');
+    const viewEqBtn = document.getElementById('viewEqBtn');
+    const viewMetersBtn = document.getElementById('viewMetersBtn');
+    const lufsTargetSelector = document.getElementById('lufsTargetSelector');
+    let selectedTargetLufs = parseFloat(lufsTargetSelector ? lufsTargetSelector.value : -8.0);
+
+    if (lufsTargetSelector) {
+      lufsTargetSelector.addEventListener('change', (e) => {
+        selectedTargetLufs = parseFloat(e.target.value);
+      });
+    }
+
+    function setView(mode) {
+      viewMode = mode;
+      const activeCls = 'px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300 font-bold transition';
+      const inactCls = 'px-2 py-0.5 rounded text-neutral-400 hover:text-white transition';
+      
+      if (viewScopeBtn) viewScopeBtn.className = mode === 'scope' ? activeCls : inactCls;
+      if (viewEqBtn) viewEqBtn.className = mode === 'eq' ? activeCls : inactCls;
+      if (viewMetersBtn) viewMetersBtn.className = mode === 'meters' ? activeCls : inactCls;
+    }
+
+    if (viewScopeBtn) viewScopeBtn.addEventListener('click', () => setView('scope'));
+    if (viewEqBtn) viewEqBtn.addEventListener('click', () => setView('eq'));
+    if (viewMetersBtn) viewMetersBtn.addEventListener('click', () => setView('meters'));
+
+    // Gestion du Retina/High-DPI Canvas
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Variables balistiques des vumètres
+    let peakHoldL = -30;
+    let peakHoldR = -30;
+    let peakHoldTimerL = 0;
+    let peakHoldTimerR = 0;
+    let time = 0;
+
+    function renderAudioSimulation() {
+      time += 0.045;
+
+      const rect = canvas.getBoundingClientRect();
+      const W = rect.width;
+      const H = rect.height;
+
+      // Lecture dynamique des potentiomètres
+      const getVal = (id, def) => {
+        const el = document.getElementById(id);
+        return el ? parseFloat(el.dataset.val || def) : def;
+      };
+
+      const driveVal = getVal('knob-drive', 2.5);
+      const turboVal = getVal('knob-turbo', 1.2);
+      const trimVal = getVal('knob-trim', -0.2);
+      const squashVal = getVal('knob-squash', 2.4);
+      const glueVal = getVal('knob-glue', 1.5);
+      const clipperVal = getVal('knob-clipper', 2.0);
+      const widthVal = getVal('knob-width', 110);
+      
+      // Paramètres EQ & Filtres
+      const hpfVal = getVal('knob-hpf', 28);
+      const lpfVal = getVal('knob-lpf', 38);
+      const bassVal = getVal('knob-bass', 0.8);
+      const midVal = getVal('knob-mid', -0.4);
+      const highVal = getVal('knob-high', 1.2);
+      const presVal = getVal('knob-presence', 0.6);
+      const lowresVal = getVal('knob-lowres', 160);
+      const hiresVal = getVal('knob-hires', 4.2);
+      const p1f = getVal('knob-p1-f', 120);
+      const p1g = getVal('knob-p1-g', 0.0);
+      const p2f = getVal('knob-p2-f', 1800);
+      const p2g = getVal('knob-p2-g', -0.8);
+      const p3f = getVal('knob-p3-f', 12000);
+      const p3g = getVal('knob-p3-g', 0.5);
+
+      // Fond de l'écran CRT Phosphor
+      ctx.fillStyle = '#041619';
+      ctx.fillRect(0, 0, W, H);
+
+      // =========================================================================
+      // VUE 1 : OSCILLOSCOPE ANALOGIQUE TEMPS RÉEL (PHOSPHOR DUAL BEAM)
+      // =========================================================================
+      if (viewMode === 'scope') {
+        // 1. Grille CRT de laboratoire (Réticule divisions 10x6)
+        ctx.strokeStyle = 'rgba(18, 85, 96, 0.45)';
+        ctx.lineWidth = 1;
+        const gridCols = 10;
+        const gridRows = 6;
+        for (let i = 1; i < gridCols; i++) {
+          const gx = (W / gridCols) * i;
+          ctx.beginPath();
+          ctx.setLineDash([2, 4]);
+          ctx.moveTo(gx, 0);
+          ctx.lineTo(gx, H);
+          ctx.stroke();
+        }
+        for (let j = 1; j < gridRows; j++) {
+          const gy = (H / gridRows) * j;
+          ctx.beginPath();
+          ctx.setLineDash([2, 4]);
+          ctx.moveTo(0, gy);
+          ctx.lineTo(W, gy);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]); // Reset
+
+        // Axe central horizontal (Zéro volt / référence)
+        const centerY = H / 2;
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(W, centerY);
+        ctx.stroke();
+
+        // 2. Lignes de Plafond Brickwall (Ceiling Limiter Out)
+        const ceilingRatio = Math.pow(10, trimVal / 20); // 0dB = 1.0, -6dB = 0.5
+        const maxAmp = (H * 0.40);
+        const ceilLimitPx = maxAmp * Math.min(1.0, ceilingRatio * 1.05);
+        const ceilTopY = centerY - ceilLimitPx;
+        const ceilBotY = centerY + ceilLimitPx;
+
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, ceilTopY);
+        ctx.lineTo(W, ceilTopY);
+        ctx.moveTo(0, ceilBotY);
+        ctx.lineTo(W, ceilBotY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineWidth = 1;
+
+        // Label Plafond Limiteur bien lisible
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText(`CEILING OUT: ${trimVal.toFixed(1)} dBFS`, 12, ceilTopY - 5);
+
+        // 3. Synthèse de la Forme d'Onde Audio (Sub Bass 808 + Punch + Saturateur)
+        const gainFactor = 0.52 + (driveVal * 0.16) + (turboVal * 0.12) + (glueVal * 0.08);
+        const stereoSpread = (widthVal / 100) * 0.25;
+
+        // Tracé Canal Droit (Vert Émeraude phosphorescent)
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(52, 211, 153, 0.65)';
+        ctx.lineWidth = 1.8;
+        for (let x = 0; x < W; x += 2) {
+          const tNorm = (x / W) * 8.0 * Math.PI;
+          let s = Math.sin(tNorm - time * 6.0) * 0.7 
+                + Math.sin(tNorm * 2.0 - time * 12.0 + stereoSpread) * 0.25 
+                + Math.sin(tNorm * 4.0 - time * 24.0) * 0.12;
+          s *= gainFactor;
+
+          if (s * maxAmp > ceilLimitPx) {
+            s = (ceilLimitPx / maxAmp) + Math.tanh((s * maxAmp - ceilLimitPx) / (30 / (clipperVal + 1))) * 0.06;
+          } else if (s * maxAmp < -ceilLimitPx) {
+            s = (-ceilLimitPx / maxAmp) - Math.tanh((-s * maxAmp - ceilLimitPx) / (30 / (clipperVal + 1))) * 0.06;
+          }
+
+          const y = centerY + (s * maxAmp);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Tracé Canal Gauche (Cyan Électrique brillant avec lueur de faisceau)
+        ctx.shadowColor = '#22d3ee';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.strokeStyle = '#22d3ee';
+        ctx.lineWidth = 2.2;
+        let clipCount = 0;
+
+        for (let x = 0; x < W; x += 2) {
+          const tNorm = (x / W) * 8.0 * Math.PI;
+          let s = Math.sin(tNorm - time * 6.0) * 0.7 
+                + Math.sin(tNorm * 2.0 - time * 12.0) * 0.25 
+                + Math.sin(tNorm * 4.0 - time * 24.0) * 0.12;
+          s *= gainFactor;
+
+          if (s * maxAmp > ceilLimitPx) {
+            s = (ceilLimitPx / maxAmp) + Math.tanh((s * maxAmp - ceilLimitPx) / (30 / (clipperVal + 1))) * 0.06;
+            clipCount++;
+          } else if (s * maxAmp < -ceilLimitPx) {
+            s = (-ceilLimitPx / maxAmp) - Math.tanh((-s * maxAmp - ceilLimitPx) / (30 / (clipperVal + 1))) * 0.06;
+            clipCount++;
+          }
+
+          const y = centerY + (s * maxAmp);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Reset lueur
+
+        // 4. Télémétrie en surimpression (HUD Oscilloscope Haute Lisibilité)
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText('OSCILLOSCOPE 2.0ms/DIV', 12, 16);
+        ctx.fillStyle = '#67e8f9';
+        ctx.fillText('TRIG: AUTO (55Hz 808)', W / 2 - 58, 16);
+        
+        // Indicateur de Clipping
+        if (clipCount > 10) {
+          ctx.fillStyle = '#ef4444';
+          ctx.fillText('● BRICKWALL CLIP', W - 118, 16);
+        } else {
+          ctx.fillStyle = '#10b981';
+          ctx.fillText('● LINEAR HEADROOM', W - 124, 16);
+        }
+
+        // Pied d'écran Oscillo
+        ctx.fillStyle = '#14b8a6';
+        ctx.fillText('CH1: L (CYAN)  CH2: R (MINT)', 12, H - 8);
+        ctx.fillText(`DRIVE: +${driveVal.toFixed(1)}dB`, W / 2 - 40, H - 8);
+        ctx.fillStyle = '#67e8f9';
+        ctx.fillText(`PEAK: ${(trimVal + (clipCount > 0 ? 0.0 : -0.8)).toFixed(1)} dBFS`, W - 118, H - 8);
+
+      // =========================================================================
+      // VUE 2 : COURBE D'ÉGALISEUR & FORME D'ONDE SPECTRALE ACTIVE (EQ MATRIX)
+      // =========================================================================
+      } else if (viewMode === 'eq') {
+        const topY = 24;
+        const botY = H - 22;
+        const eqH = botY - topY;
+        const zeroY = topY + eqH * 0.5;
+
+        const fMin = 20;
+        const fMax = 20000;
+        const logMin = Math.log10(fMin);
+        const logMax = Math.log10(fMax);
+
+        function freqToX(f) {
+          const norm = (Math.log10(Math.max(fMin, Math.min(fMax, f))) - logMin) / (logMax - logMin);
+          return 14 + norm * (W - 28);
+        }
+
+        function xToFreq(x) {
+          const norm = (x - 14) / (W - 28);
+          return Math.pow(10, logMin + norm * (logMax - logMin));
+        }
+
+        function dbToEqY(db) {
+          const norm = db / 12;
+          return zeroY - (norm * (eqH * 0.44));
+        }
+
+        // Grille de fréquences logarithmique
+        ctx.strokeStyle = 'rgba(14, 59, 67, 0.45)';
+        ctx.lineWidth = 1;
+        const freqGrid = [30, 50, 100, 200, 500, 1000, 2500, 5000, 10000, 16000];
+        freqGrid.forEach(f => {
+          const x = freqToX(f);
+          ctx.beginPath();
+          ctx.moveTo(x, topY);
+          ctx.lineTo(x, botY);
+          ctx.stroke();
+        });
+
+        // Lignes horizontales dB (+6dB, 0dB, -6dB)
+        [6, 0, -6].forEach(db => {
+          const y = dbToEqY(db);
+          ctx.beginPath();
+          ctx.strokeStyle = db === 0 ? 'rgba(34, 211, 238, 0.45)' : 'rgba(14, 59, 67, 0.35)';
+          ctx.moveTo(14, y);
+          ctx.lineTo(W - 14, y);
+          ctx.stroke();
+
+          ctx.font = 'bold 9px monospace';
+          ctx.fillStyle = db === 0 ? '#22d3ee' : '#0e7490';
+          ctx.fillText((db > 0 ? '+' : '') + db + 'dB', W - 36, y + 3);
+        });
+
+        // Spectre FFT vivant en arrière-plan
+        const bars = 44;
+        for (let b = 0; b < bars; b++) {
+          const bx = 16 + (b / bars) * (W - 32);
+          const bf = xToFreq(bx);
+          const pinkEnergy = 1 / (1 + Math.pow(bf / 300, 0.4));
+          const waveMod = Math.sin(time * 3 + b * 0.7) * 0.2 + Math.cos(time * 4 - b * 0.5) * 0.15;
+          const specH = Math.max(3, (pinkEnergy + waveMod + 0.3) * (eqH * 0.55) * (1 + driveVal * 0.05));
+          
+          const specGrad = ctx.createLinearGradient(0, botY, 0, botY - specH);
+          specGrad.addColorStop(0, 'rgba(6, 182, 212, 0.05)');
+          specGrad.addColorStop(0.8, 'rgba(6, 182, 212, 0.25)');
+          specGrad.addColorStop(1, 'rgba(103, 232, 249, 0.6)');
+
+          ctx.fillStyle = specGrad;
+          ctx.fillRect(bx - 2, botY - specH, (W - 32) / bars - 2, specH);
+        }
+
+        // Calcul de la courbe de réponse EQ Composite
+        ctx.beginPath();
+        let firstPt = true;
+
+        for (let x = 14; x <= W - 14; x += 2) {
+          const f = xToFreq(x);
+          let totalDb = 0;
+
+          if (f < hpfVal * 2.5) totalDb -= 24 * Math.log2(1 + Math.pow(hpfVal / f, 2.5));
+          const lpfHz = lpfVal * 1000;
+          if (f > lpfHz * 0.7) totalDb -= 24 * Math.log2(1 + Math.pow(f / lpfHz, 2.5));
+
+          totalDb += bassVal / (1 + Math.pow(f / 90, 2));
+          totalDb += midVal * Math.exp(-Math.pow(Math.log(f / 750) / 0.85, 2));
+          totalDb += highVal * Math.pow(f / 4500, 1.8) / (1 + Math.pow(f / 4500, 1.8));
+          totalDb += presVal * Math.pow(f / 11000, 2) / (1 + Math.pow(f / 11000, 2));
+
+          totalDb += p1g * Math.exp(-Math.pow(Math.log(f / p1f) / 0.5, 2));
+          totalDb += p2g * Math.exp(-Math.pow(Math.log(f / p2f) / 0.5, 2));
+          totalDb += p3g * Math.exp(-Math.pow(Math.log(f / p3f) / 0.5, 2));
+
+          totalDb -= 3.0 * Math.exp(-Math.pow(Math.log(f / lowresVal) / 0.12, 2));
+          totalDb -= 3.0 * Math.exp(-Math.pow(Math.log(f / (hiresVal * 1000)) / 0.12, 2));
+
+          const curY = dbToEqY(Math.max(-12, Math.min(12, totalDb)));
+          if (firstPt) {
+            ctx.moveTo(x, curY);
+            firstPt = false;
+          } else {
+            ctx.lineTo(x, curY);
+          }
+        }
+
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 6;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        const drawNode = (freq, gain, color, label) => {
+          const nx = freqToX(freq);
+          const ny = dbToEqY(Math.max(-12, Math.min(12, gain)));
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(nx, ny, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          ctx.font = 'bold 8px monospace';
+          ctx.fillStyle = color;
+          ctx.fillText(label, nx - 10, ny - 7);
+        };
+
+        drawNode(p1f, p1g, '#38bdf8', 'B1');
+        drawNode(p2f, p2g, '#38bdf8', 'B2');
+        drawNode(p3f, p3g, '#38bdf8', 'B3');
+        drawNode(lowresVal, -3.0, '#fb923c', 'MUD');
+        drawNode(hiresVal * 1000, -3.0, '#fb923c', 'RING');
+
+        // Télémétrie EQ
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#06b6d4';
+        ctx.fillText('EQ RESPONSE CURVE & SPECTRUM', 14, 16);
+        ctx.fillStyle = '#fb923c';
+        ctx.fillText(`TRAPS: ${Math.round(lowresVal)}Hz | ${hiresVal.toFixed(1)}kHz`, W - 170, 16);
+
+        // Labels Fréquences au pied
+        ctx.font = 'bold 8px monospace';
+        ctx.fillStyle = '#0891b2';
+        ctx.fillText('30Hz     100Hz     250Hz     1kHz     2.5kHz     5kHz     10kHz    16kHz', 14, H - 7);
+
+      // =========================================================================
+      // VUE 3 : VUMÈTRES MULTI-COLONNES DE MASTERING (BX_MASTERDESK PRO STYLE)
+      // =========================================================================
+      } else {
+        const baseRms = -14 + (driveVal * 0.8) + (turboVal * 0.4);
+        const rmsL = Math.max(-30, Math.min(3, baseRms + Math.sin(time * 2.8) * 0.6 + Math.cos(time * 4) * 0.4));
+        const rmsR = Math.max(-30, Math.min(3, baseRms + Math.cos(time * 3.1) * 0.6 + Math.sin(time * 3.8) * 0.4));
+
+        const instantPeakL = Math.max(-30, Math.min(trimVal, rmsL + 4.5 + Math.sin(time * 6) * 1.5));
+        const instantPeakR = Math.max(-30, Math.min(trimVal, rmsR + 4.5 + Math.cos(time * 5.5) * 1.5));
+
+        if (instantPeakL > peakHoldL) {
+          peakHoldL = instantPeakL;
+          peakHoldTimerL = 25;
+        } else if (peakHoldTimerL > 0) {
+          peakHoldTimerL--;
+        } else {
+          peakHoldL = Math.max(-30, peakHoldL - 0.25);
+        }
+
+        if (instantPeakR > peakHoldR) {
+          peakHoldR = instantPeakR;
+          peakHoldTimerR = 25;
+        } else if (peakHoldTimerR > 0) {
+          peakHoldTimerR--;
+        } else {
+          peakHoldR = Math.max(-30, peakHoldR - 0.25);
+        }
+
+        const grComp = Math.max(0, Math.min(12, (driveVal * 0.5) * (squashVal / 2.5) + Math.sin(time * 3) * 0.8));
+        const grLim = Math.max(0, Math.min(12, (turboVal * 1.1) + Math.max(0, (instantPeakL - trimVal) * 1.5)));
+        const dynamicRange = Math.max(6, Math.min(14, 13.5 - (driveVal * 0.5) - (turboVal * 0.4)));
+        const lufsShort = Math.max(-28, Math.min(0, baseRms - 0.3 + Math.sin(time * 1.5) * 0.3));
+
+        // 1. En-tête Balance & Phase (Pleine largeur W)
+        const headerY = 16;
+        ctx.font = 'bold 9px monospace';
+        ctx.fillStyle = '#14b8a6';
+
+        // Balance Meter
+        ctx.fillText('BAL:', 10, headerY);
+        const balX = 36;
+        const balW = Math.max(50, Math.floor(W * 0.20));
+        ctx.strokeStyle = '#0e4e58';
+        ctx.strokeRect(balX, headerY - 7, balW, 8);
+        ctx.beginPath();
+        ctx.moveTo(balX + balW / 2, headerY - 7);
+        ctx.lineTo(balX + balW / 2, headerY + 1);
+        ctx.strokeStyle = '#22d3ee';
+        ctx.stroke();
+
+        const balPos = balX + balW / 2 + Math.sin(time * 1.2) * (balW * 0.16);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(balPos - 1.5, headerY - 8, 3, 10);
+
+        // Phase Correlation
+        const corrLabelX = balX + balW + 12;
+        ctx.fillStyle = '#14b8a6';
+        ctx.fillText('CORR:', corrLabelX, headerY);
+        const corrX = corrLabelX + 32;
+        const corrW = Math.max(50, Math.floor(W * 0.20));
+        ctx.strokeStyle = '#0e4e58';
+        ctx.strokeRect(corrX, headerY - 7, corrW, 8);
+        const corrVal = 0.94 + Math.sin(time * 2) * 0.04;
+        const corrPos = corrX + ((corrVal + 1) / 2) * corrW;
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillRect(corrPos - 1.5, headerY - 8, 3, 10);
+
+        // Indicateur True Peak & Dynamic Range au sommet
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = instantPeakL > -0.2 ? '#ef4444' : '#67e8f9';
+        ctx.fillText(`TP: ${instantPeakL.toFixed(1)}`, W - 110, headerY);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(`DR: ${dynamicRange.toFixed(1)}`, W - 52, headerY);
+
+        // Ligne de séparation sous l'en-tête
+        ctx.strokeStyle = 'rgba(20, 184, 166, 0.35)';
+        ctx.beginPath();
+        ctx.moveTo(8, 26);
+        ctx.lineTo(W - 8, 26);
+        ctx.stroke();
+
+        // 2. Zone principale des 5 sections réparties sur TOUTE la largeur W
+        const topM = 44;
+        const botM = H - 26;
+        const meterH = botM - topM;
+
+        function dbToY(db, minDb = -30, maxDb = 3) {
+          const norm = (db - minDb) / (maxDb - minDb);
+          return botM - (norm * meterH);
+        }
+
+        // Calcul dynamique des largeurs de colonnes
+        const usableW = W - 24;
+        const grX = 12;
+        const grW = Math.max(34, Math.floor(usableW * 0.18));
+
+        const drX = grX + grW + 8;
+        const drW = Math.max(22, Math.floor(usableW * 0.12));
+
+        const scaleX = drX + drW + 6;
+        const scaleW = Math.max(28, Math.floor(usableW * 0.14));
+
+        const stX = scaleX + scaleW + 6;
+        const stW = Math.max(50, Math.floor(usableW * 0.28));
+
+        const lufsX = stX + stW + 8;
+        const lufsW = W - 12 - lufsX;
+
+        // ================= A. COLONNE GAIN REDUCTION (GR C / M) =================
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#f97316';
+        ctx.fillText('GR C/M', grX + (grW / 2) - 18, topM - 4);
+
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(grX, topM, grW, meterH);
+        ctx.strokeStyle = '#164e63';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(grX, topM, grW, meterH);
+
+        // Ticks GR
+        [-2, -4, -6, -8, -12].forEach(db => {
+          const y = topM + (Math.abs(db) / 12) * meterH;
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+          ctx.beginPath();
+          ctx.moveTo(grX, y);
+          ctx.lineTo(grX + grW, y);
+          ctx.stroke();
+        });
+
+        const grCompH = (grComp / 12) * meterH;
+        const grLimH = (grLim / 12) * meterH;
+        const subGrW = (grW - 3) / 2;
+
+        ctx.fillStyle = '#f97316';
+        ctx.fillRect(grX + 1, topM, subGrW, grCompH);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(grX + subGrW + 2, topM, subGrW, grLimH);
+
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText(`-${grLim.toFixed(1)}dB`, grX + 2, botM + 14);
+
+        // ================= B. COLONNE DYNAMIC RANGE (DR) =================
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#06b6d4';
+        ctx.fillText('DR', drX + (drW / 2) - 6, topM - 4);
+
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(drX, topM, drW, meterH);
+        ctx.strokeStyle = '#164e63';
+        ctx.strokeRect(drX, topM, drW, meterH);
+
+        const drNorm = (dynamicRange - 4) / 12;
+        const drBarH = drNorm * meterH;
+        ctx.fillStyle = '#06b6d4';
+        ctx.fillRect(drX + 2, botM - drBarH, drW - 4, drBarH);
+
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(`${Math.round(dynamicRange)}`, drX + (drW / 2) - 6, botM + 14);
+
+        // ================= C. COLONNE ÉCHELLE DB CENTRALE =================
+        ctx.font = 'bold 9px monospace';
+        ctx.fillStyle = '#0e7490';
+        ctx.fillText('dBFS', scaleX + (scaleW / 2) - 10, topM - 4);
+
+        [3, 0, -3, -6, -9, -12, -18, -24, -30].forEach(db => {
+          const y = dbToY(db);
+          ctx.font = 'bold 8px monospace';
+          ctx.fillStyle = db === 0 ? '#22d3ee' : '#0e7490';
+          const txt = (db > 0 ? '+' : '') + db;
+          ctx.fillText(txt, scaleX + 2, y + 3);
+          
+          ctx.strokeStyle = db === 0 ? 'rgba(34, 211, 238, 0.4)' : 'rgba(14, 116, 144, 0.35)';
+          ctx.beginPath();
+          ctx.moveTo(scaleX + scaleW - 8, y);
+          ctx.lineTo(scaleX + scaleW, y);
+          ctx.stroke();
+        });
+
+        // Barres L & R
+        const stX = scaleX + 22;
+        const stW = 18;
+        ctx.fillStyle = '#9ca3af';
+        ctx.fillText('L', stX + 6, topM - 3);
+        ctx.fillText('R', stX + stW + 10, topM - 3);
+
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(stX, topM, stW, meterH);
+        ctx.strokeStyle = '#164e63';
+        ctx.strokeRect(stX, topM, stW, meterH);
+        ctx.fillRect(stX + stW + 4, topM, stW, meterH);
+        ctx.strokeRect(stX + stW + 4, topM, stW, meterH);
+
+        const rmsGrad = ctx.createLinearGradient(0, botM, 0, topM);
+        rmsGrad.addColorStop(0, '#047857');
+        rmsGrad.addColorStop(0.7, '#06b6d4');
+        rmsGrad.addColorStop(0.9, '#22d3ee');
+        rmsGrad.addColorStop(1, '#ffffff');
+
+        const yRmsL = dbToY(rmsL);
+        const yRmsR = dbToY(rmsR);
+        ctx.fillStyle = rmsGrad;
+        ctx.fillRect(stX + 2, yRmsL, stW - 4, botM - yRmsL);
+        ctx.fillRect(stX + stW + 6, yRmsR, stW - 4, botM - yRmsR);
+
+        const yPeakL = dbToY(peakHoldL);
+        const yPeakR = dbToY(peakHoldR);
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(stX + 1, yPeakL - 1, stW - 2, 2.5);
+        ctx.fillRect(stX + stW + 5, yPeakR - 1, stW - 2, 2.5);
+
+        ctx.font = '8px monospace';
+        ctx.fillStyle = '#67e8f9';
+        ctx.fillText(`${rmsL.toFixed(1)}`, stX - 2, botM + 11);
+        ctx.fillText(`${rmsR.toFixed(1)}`, stX + stW + 2, botM + 11);
+
+        // LUFS
+        const lufsX = stX + stW * 2 + 18;
+        const lufsW = 24;
+        ctx.fillStyle = '#9ca3af';
+        ctx.fillText('LUFS', lufsX + 1, topM - 3);
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(lufsX, topM, lufsW, meterH);
+        ctx.strokeStyle = '#164e63';
+        ctx.strokeRect(lufsX, topM, lufsW, meterH);
+
+        const yLufs = dbToY(lufsShort, -30, 0);
+        const lufsGrad = ctx.createLinearGradient(0, botM, 0, topM);
+        lufsGrad.addColorStop(0, '#0e7490');
+        lufsGrad.addColorStop(0.8, '#22d3ee');
+        lufsGrad.addColorStop(1, '#a5f3fc');
+        ctx.fillStyle = lufsGrad;
+        ctx.fillRect(lufsX + 2, yLufs, lufsW - 4, botM - yLufs);
+
+        const yTarget = dbToY(selectedTargetLufs, -30, 0);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([3, 2]);
+        ctx.beginPath();
+        ctx.moveTo(lufsX - 6, yTarget);
+        ctx.lineTo(lufsX + lufsW + 6, yTarget);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineWidth = 1;
+
+        ctx.font = '7px monospace';
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('TGT', lufsX + lufsW + 8, yTarget + 2.5);
+        ctx.font = '8px monospace';
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(`${lufsShort.toFixed(1)}`, lufsX + 1, botM + 11);
+      }
+
+      requestAnimationFrame(renderAudioSimulation);
+    }
+    renderAudioSimulation();
+
+    // Préréglages (Presets)
+    const presetSelector = document.getElementById('presetSelector');
+    if (presetSelector) {
+      presetSelector.addEventListener('change', (e) => {
+        const mode = e.target.value;
+        if (mode === 'streaming_safe') {
+          setKnobVal('knob-drive', 1.0);
+          setKnobVal('knob-turbo', 0.5);
+          setKnobVal('knob-trim', -1.0);
+          setKnobVal('knob-bass', 0.0);
+          setKnobVal('knob-high', 0.5);
+        } else if (mode === 'modern_loud') {
+          setKnobVal('knob-drive', 4.5);
+          setKnobVal('knob-turbo', 2.4);
+          setKnobVal('knob-trim', -0.1);
+          setKnobVal('knob-clipper', 4.0);
+          setKnobVal('knob-squash', 3.2);
+        } else if (mode === 'warm_tape') {
+          setKnobVal('knob-drive', 3.0);
+          setKnobVal('knob-thd', -28);
+          setKnobVal('knob-glue', 3.0);
+          setKnobVal('knob-foundation', 2.0);
+          setKnobVal('knob-bass', 1.5);
+        }
+      });
+    }
+
+    function setKnobVal(id, val) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.dataset.val = val;
+      const min = parseFloat(el.dataset.min);
+      const max = parseFloat(el.dataset.max);
+      const norm = (val - min) / (max - min);
+      const angle = -135 + norm * 270;
+      const cap = el.querySelector('.knob-cap');
+      if (cap) cap.style.transform = `rotate(${angle}deg)`;
+      const param = el.dataset.param;
+      const unit = el.dataset.unit || '';
+      const valElem = document.getElementById(`val-${param}`);
+      if (valElem) {
+        valElem.textContent = val.toFixed(1) + (unit ? ' ' + unit : '');
+      }
+    }
+  </script>
+</body>
+</html>

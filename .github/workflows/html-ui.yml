@@ -1,0 +1,80 @@
+name: BloodyMaster HTML interface Windows
+on:
+  push:
+    branches: ['codex/html-webview2']
+    paths: ['html-integration/**', '.github/workflows/html-ui.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-html:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    env:
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: --disable-gpu
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        shell: pwsh
+        run: |
+          choco install nsis -y --no-progress
+          $dependencyRoot = Join-Path $env:RUNNER_TEMP 'bm-webview'
+          New-Item -ItemType Directory -Force $dependencyRoot | Out-Null
+          Invoke-WebRequest 'https://api.nuget.org/v3-flatcontainer/microsoft.web.webview2/1.0.1901.177/microsoft.web.webview2.1.0.1901.177.nupkg' -OutFile "$dependencyRoot/webview.zip"
+          Expand-Archive "$dependencyRoot/webview.zip" "$dependencyRoot/Microsoft.Web.WebView2.1.0.1901.177"
+          Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile "$env:RUNNER_TEMP/WebView2Setup.exe"
+          $signature = Get-AuthenticodeSignature "$env:RUNNER_TEMP/WebView2Setup.exe"
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft') { throw 'Bootstrapper signature check failed.' }
+      - name: Configure HTML edition
+        shell: pwsh
+        run: |
+          cmake -S html-integration -B C:/bm-html-build -G "Visual Studio 17 2022" -A x64 -DBM_HTML_UI=ON -DBM_DEPS_DIR=C:/bm-html-deps -DJUCE_WEBVIEW2_PACKAGE_LOCATION="$env:RUNNER_TEMP/bm-webview" -DBM_WEBVIEW2_BOOTSTRAPPER="$env:RUNNER_TEMP/WebView2Setup.exe" '-DBM_MAKENSIS=C:/Program Files (x86)/NSIS/makensis.exe'
+      - name: Build VST3, HTML tests and installer
+        shell: pwsh
+        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterInstaller BloodyMasterTests bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_vst3_smoke
+      - name: Ensure WebView2 runtime for native integration tests
+        shell: pwsh
+        run: |
+          & C:/bm-html-build/Release/bm_webview_probe.exe
+          if ($LASTEXITCODE -ne 0) {
+            Start-Process "$env:RUNNER_TEMP/WebView2Setup.exe" -ArgumentList '/silent','/install' -Wait
+          }
+          & C:/bm-html-build/Release/bm_webview_probe.exe
+          if ($LASTEXITCODE -ne 0) { throw 'WebView2 runtime unavailable.' }
+      - name: Tests including live WebView2 and VST3 loading
+        run: ctest --test-dir C:/bm-html-build -C Release --output-on-failure
+      - name: WAV format tests
+        run: python html-integration/Tests/DSP/test_wav_io.py C:/bm-html-build/Release/BloodyMasterTest.exe
+      - name: Installer integration tests
+        shell: pwsh
+        run: ./html-integration/packaging/test-installer.ps1 -Setup C:/bm-html-build/installer/BloodyMaster-0.3.1-Test-Setup.exe -ExpectedPlugin 'C:/bm-html-build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3/Contents/x86_64-win/Bloody Master.vst3'
+      - name: Package source and verification
+        shell: pwsh
+        run: |
+          $destination = 'C:/bm-html-build/installer'
+          Compress-Archive -Path html-integration -DestinationPath "$destination/BloodyMaster-0.3.1-HTML-Sources.zip"
+          Copy-Item C:/bm-html-build/Tests/web-ui-report.json "$destination/web-ui-report.json"
+          Get-FileHash "$destination/BloodyMaster-0.3.1-Test-Setup.exe" -Algorithm SHA256 | Format-List | Out-File "$destination/SHA256.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: BloodyMaster-HTML-build-and-tests
+          path: |
+            C:/bm-html-build/installer/*
+            C:/bm-html-build/Testing/Temporary/LastTest.log
+            C:/bm-html-build/Tests/web-ui-report.json
+          if-no-files-found: warn
+      - name: Publish tested HTML installer
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $tag = "bloodymaster-html-0.3.1-test-$env:GITHUB_RUN_ID"
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag C:/bm-html-build/installer/* --clobber
+          } else {
+            gh release create $tag C:/bm-html-build/installer/* --target $env:GITHUB_SHA --title 'BloodyMaster 0.3.1 — Interface HTML (test)' --notes-file html-integration/docs/HTML_RELEASE_NOTES.md --prerelease
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Release upload failed.' }

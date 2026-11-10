@@ -1,0 +1,84 @@
+name: build-windows
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022          # image avec Visual Studio 2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (VS 2022, x64)
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DBM_DEPS_DIR=C:/bm_deps
+
+      - name: Build (VST3 + Standalone + tests, Release)
+        run: cmake --build build --config Release --parallel
+
+      - name: Tests (CTest)
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Tests WAV (formats, Unicode, fichiers invalides)
+        run: python Tests/DSP/test_wav_io.py build/Release/BloodyMasterTest.exe
+
+      - name: Installer NSIS
+        run: choco install nsis -y --no-progress
+
+      - name: Configurer le packaging
+        run: cmake -S . -B build -DBM_MAKENSIS="C:/Program Files (x86)/NSIS/makensis.exe"
+
+      - name: Construire l'installateur
+        run: cmake --build build --config Release --target BloodyMasterInstaller
+
+      - name: Tester installation et desinstallation (runner propre)
+        shell: pwsh
+        run: ./packaging/test-installer.ps1 -Setup "build/installer/BloodyMaster-0.3.0-Test-Setup.exe" -ExpectedPlugin "build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3/Contents/x86_64-win/Bloody Master.vst3"
+
+      - name: Artefact - Installateur VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: BloodyMaster-Setup-x64
+          path: build/installer/BloodyMaster-0.3.0-Test-Setup.exe
+          if-no-files-found: error
+
+      - name: Artefact - outil WAV
+        uses: actions/upload-artifact@v4
+        with:
+          name: BloodyMaster-WAV-x64
+          path: build/Release/BloodyMasterTest.exe
+          if-no-files-found: error
+
+      - name: Verifier la presence des livrables
+        shell: pwsh
+        run: |
+          $exe  = "build/BloodyMaster_artefacts/Release/Standalone/Bloody Master.exe"
+          $vst3 = "build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3"
+          if (-not (Test-Path $exe))  { throw "Standalone .exe absent : $exe" }
+          if (-not (Test-Path $vst3)) { throw "VST3 absent : $vst3" }
+          Get-ChildItem -Recurse "build/BloodyMaster_artefacts/Release" | Select-Object FullName, Length
+
+      - name: Artefact - Standalone .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: BloodyMaster-Standalone-x64
+          path: build/BloodyMaster_artefacts/Release/Standalone/Bloody Master.exe
+          if-no-files-found: error
+
+      - name: Artefact - VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: BloodyMaster-VST3-x64
+          path: build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3
+          if-no-files-found: error
+
+      # Informatif : valide chargement, automation, mono/stereo. N'interrompt pas la publication des artefacts.
+      - name: pluginval (informatif)
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip" -OutFile pluginval.zip
+          Expand-Archive pluginval.zip -DestinationPath pluginval
+          ./pluginval/pluginval.exe --strictness-level 5 --validate-in-process --skip-gui-tests "build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3"
