@@ -1,0 +1,2 @@
+8e15b46cc6d621ade626612a7360f1b2ad0d13160d020aa850ed4b6690813af5  BloodyMaster-0.3.0-Test-Setup.exe
+2a333eb5979f74fbe829946107fbe9b1b193277ac0a9c2c50ae83316e72e949d  BloodyMaster-0.3.0-Test-Project-Sources.zip
