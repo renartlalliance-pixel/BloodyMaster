@@ -23,15 +23,17 @@ endif()
 if(WIN32)
     find_program(BM_MAKENSIS makensis HINTS "C:/Program Files (x86)/NSIS")
     if(BM_MAKENSIS)
+        file(TO_NATIVE_PATH "${BM_WEBVIEW2_BOOTSTRAPPER}" BM_BOOTSTRAPPER_NATIVE)
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/installer" BM_INSTALLER_OUTPUT_NATIVE)
         add_custom_target(BloodyMasterInstaller
             COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/installer"
             COMMAND "${BM_MAKENSIS}"
-                "-DPLUGIN_DIR=$<TARGET_FILE_DIR:BloodyMaster_VST3>/../.."
-                "-DWAV_EXE=$<TARGET_FILE:BloodyMasterTest>"
-                "-DOUT_DIR=${CMAKE_BINARY_DIR}/installer"
+                "-DPLUGIN_DIR=$<SHELL_PATH:$<TARGET_FILE_DIR:BloodyMaster_VST3>/../..>"
+                "-DWAV_EXE=$<SHELL_PATH:$<TARGET_FILE:BloodyMasterTest>>"
+                "-DOUT_DIR=${BM_INSTALLER_OUTPUT_NATIVE}"
                 "-DHTML_UI=$<BOOL:${BM_HTML_UI}>"
-                "-DWEBVIEW_PROBE=$<TARGET_FILE:bm_webview_probe>"
-                "-DWEBVIEW_BOOTSTRAPPER=${BM_WEBVIEW2_BOOTSTRAPPER}"
+                "-DWEBVIEW_PROBE=$<SHELL_PATH:$<TARGET_FILE:bm_webview_probe>>"
+                "-DWEBVIEW_BOOTSTRAPPER=${BM_BOOTSTRAPPER_NATIVE}"
                 "${CMAKE_CURRENT_SOURCE_DIR}/packaging/BloodyMaster.nsi"
             DEPENDS BloodyMaster_VST3 BloodyMasterTest bm_webview_probe
             VERBATIM)

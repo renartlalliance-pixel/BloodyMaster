@@ -17,7 +17,7 @@ Target amd64-unicode
 !define VERSION "0.3.1"
 !define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\BRIAudioBloodyMaster"
 Name "BloodyMaster ${VERSION} - Test VST3"
-OutFile "${OUT_DIR}/BloodyMaster-${VERSION}-Test-Setup.exe"
+OutFile "${OUT_DIR}\BloodyMaster-${VERSION}-Test-Setup.exe"
 InstallDir "$PROGRAMFILES64\BRI Audio Systems\BloodyMaster"
 InstallDirRegKey HKLM "${UNINSTALL_KEY}" "InstallLocation"
 RequestExecutionLevel admin
@@ -90,16 +90,16 @@ Section "Plugin VST3 x64 (obligatoire)" SecCore
   SetShellVarContext all
   SetOutPath "$COMMONFILES64\VST3\Bloody Master.vst3"
   ClearErrors
-  File /r "${PLUGIN_DIR}/*"
+  File /r "${PLUGIN_DIR}\*"
   ${If} ${Errors}
     MessageBox MB_OK|MB_ICONSTOP "Installation du VST3 impossible. Fermez les logiciels audio et reessayez." /SD IDOK
     Abort
   ${EndIf}
   SetOutPath "$INSTDIR"
   File /oname=TEST_WINDOWS_FR.txt "TEST_WINDOWS_FR.txt"
-  File /oname=PRESETS_FR.md "../docs/PRESETS_FR.md"
-  File /oname=ANALOG_AUDIT_FR.md "../docs/ANALOG_AUDIT_FR.md"
-  File /oname=FactoryPresets.json "../Resources/FactoryPresets.json"
+  File /oname=PRESETS_FR.md "..\docs\PRESETS_FR.md"
+  File /oname=ANALOG_AUDIT_FR.md "..\docs\ANALOG_AUDIT_FR.md"
+  File /oname=FactoryPresets.json "..\Resources\FactoryPresets.json"
   WriteUninstaller "$INSTDIR\Desinstaller.exe"
   WriteRegStr HKLM "${UNINSTALL_KEY}" "DisplayName" "BloodyMaster - Test VST3 x64"
   WriteRegStr HKLM "${UNINSTALL_KEY}" "DisplayVersion" "${VERSION}"

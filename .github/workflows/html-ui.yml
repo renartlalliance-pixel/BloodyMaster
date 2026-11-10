@@ -29,9 +29,9 @@ jobs:
         shell: pwsh
         run: |
           cmake -S html-integration -B C:/bm-html-build -G "Visual Studio 17 2022" -A x64 -DBM_HTML_UI=ON -DBM_DEPS_DIR=C:/bm-html-deps -DJUCE_WEBVIEW2_PACKAGE_LOCATION="$env:RUNNER_TEMP/bm-webview" -DBM_WEBVIEW2_BOOTSTRAPPER="$env:RUNNER_TEMP/WebView2Setup.exe" '-DBM_MAKENSIS=C:/Program Files (x86)/NSIS/makensis.exe'
-      - name: Build VST3, HTML tests and installer
+      - name: Build VST3 and HTML tests
         shell: pwsh
-        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterInstaller BloodyMasterTests bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_vst3_smoke
+        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterTests BloodyMasterTest bm_webview_probe bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_vst3_smoke
       - name: Ensure WebView2 runtime for native integration tests
         shell: pwsh
         run: |
@@ -45,6 +45,8 @@ jobs:
         run: ctest --test-dir C:/bm-html-build -C Release --output-on-failure
       - name: WAV format tests
         run: python html-integration/Tests/DSP/test_wav_io.py C:/bm-html-build/Release/BloodyMasterTest.exe
+      - name: Build tested HTML installer
+        run: cmake --build C:/bm-html-build --config Release --target BloodyMasterInstaller
       - name: Installer integration tests
         shell: pwsh
         run: ./html-integration/packaging/test-installer.ps1 -Setup C:/bm-html-build/installer/BloodyMaster-0.3.1-Test-Setup.exe -ExpectedPlugin 'C:/bm-html-build/BloodyMaster_artefacts/Release/VST3/Bloody Master.vst3/Contents/x86_64-win/Bloody Master.vst3'
@@ -63,6 +65,8 @@ jobs:
             C:/bm-html-build/installer/*
             C:/bm-html-build/Testing/Temporary/LastTest.log
             C:/bm-html-build/Tests/web-ui-report.json
+            C:/bm-html-build/BloodyMaster_artefacts/Release/VST3/**/*
+            C:/bm-html-build/Tests/BloodyMasterTests_artefacts/Release/*.exe
           if-no-files-found: warn
       - name: Publish tested HTML installer
         if: success()
