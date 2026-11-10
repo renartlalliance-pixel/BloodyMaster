@@ -69,7 +69,7 @@
     });
   });
   window.addEventListener('blur',finishDrag);
-  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eqActive',deSoloBtn:'spikeListen'};
+  const toggleMap = {bypassBtn:'bypass',modeToggle:'valve',ispBtn:'isp',eqActiveBtn:'eq_active',deSoloBtn:'spike_listen'};
   for (const [element,id] of Object.entries(toggleMap)) document.getElementById(element)?.addEventListener('click', () => {
     if(!active(id)) return;
     const v=state.parameters[id].value>.5?0:1;send(id,v,'begin');send(id,v);send(id,v,'end');
@@ -92,6 +92,7 @@
     });
   document.getElementById('meterSourceBtn')?.addEventListener('click',()=>{source=source==='out'?'in':'out';document.getElementById('meterSourceBtn').textContent=source.toUpperCase();draw();});
   function apply(next) {
+    if(!next.scope && state?.scope)next.scope=state.scope;
     state=next;
     if(!selector.dataset.native){
       selector.replaceChildren(new Option('Réglages personnalisés',''),...next.presets.map((name,i)=>new Option(name,String(i))));
@@ -122,7 +123,7 @@
       }
     }
     const eqLabel=document.querySelector('#eqActiveBtn span:last-child');
-    if(eqLabel)eqLabel.textContent=next.parameters.eqActive.value>.5?'EQ ON':'EQ OFF';
+    if(eqLabel)eqLabel.textContent=next.parameters.eq_active.value>.5?'EQ ON':'EQ OFF';
     const valve=next.parameters.valve.value>.5;
     document.getElementById('modeValveLbl').className=valve?'text-red-400 font-bold':'text-neutral-500';
     document.getElementById('modePureLbl').className=valve?'text-neutral-500':'text-sky-400 font-bold';

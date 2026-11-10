@@ -1,5 +1,7 @@
 Unicode true
+!if ${NSIS_PACKEDVERSION} >= 0x030B0000
 Target amd64-unicode
+!endif
 !include "MUI2.nsh"
 !include "x64.nsh"
 !ifndef PLUGIN_DIR
