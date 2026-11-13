@@ -1,3 +1,13 @@
+# Édition HTML 0.3.8 — écoute Delta vérifiée sous Windows
+
+Le bouton **DELTA** écoute l'entrée originale alignée moins la sortie de toute la chaîne, gain et protection inclus. Fondu de 20 ms, aucune latence supplémentaire. Aucun réglage DSP modifié ; état temporaire désactivé au rappel des presets/sessions et en rendu hors ligne reconnu par l'hôte. [Détails et vérifications](docs/DELTA_FR.md).
+
+Delta est une différence brute diagnostique : son niveau peut dépasser le plafond du master protégé. Vérifier que DELTA est éteint avant un export en temps réel. Les 50 paramètres et presets User restent compatibles ; HTML originaux conservés.
+
+[Télécharger la 0.3.8](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.8-test-43482536001). Windows : 16/16 CTest, 35 contrôles WebView2, 31 tests WAV et installateur réussis ; téléchargement et SHA-256 vérifiés. Voir [STATUS.md](docs/STATUS.md) pour les preuves. Les rubriques ci-dessous décrivent les versions précédentes.
+
+---
+
 # Édition HTML 0.3.7 — protection globale vérifiée sous Windows
 
 La sortie est protégée après les traitements, le bypass et la compensation d'écoute. Plafond de crêtes −2 dBTP avec réserve interne, atténuation stéréo liée et régulation prudente de l'énergie pondérée K pour la limite souhaitée de −5 LUFS. Les mesures affichent désormais la sortie réellement délivrée. [Méthode, latence et limites](docs/OUTPUT_SAFETY_FR.md).

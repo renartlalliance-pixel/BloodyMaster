@@ -1,3 +1,9 @@
+# Mise à jour de reprise — 0.3.8
+
+DELTA global implémenté et vérifié sous Windows, workflow HTML 43482536001 : 16/16 CTest, 35 contrôles WebView2, 31 tests WAV et installateur téléchargé/hash vérifié. Lire STATUS.md, DELTA_FR.md et WINDOWS_038_VERIFICATION.md. Pas de latence ajoutée : 848 échantillons à 48 kHz. Écoute transitoire, remises à zéro et rendus hors ligne ; 50 paramètres et presets User conservés. Delta brut peut dépasser le plafond du master. Les sections ci-dessous sont historiques. LoudnessWar reste une évolution distincte non implémentée.
+
+---
+
 # Mise à jour de reprise — 0.3.7
 
 Protection globale implémentée et vérifiée Windows : workflow HTML 43452301612, 15/15 CTest, 30 vérifications WebView2 et installateur téléchargé/hash vérifié. Lire STATUS.md et OUTPUT_SAFETY_FR.md. Bypass désormais protégé, latence 848 échantillons à 48 kHz ; 50 paramètres et anciens presets conservés. LoudnessWar n'est pas encore un potard implémenté. Les sections ci-dessous sont historiques.
