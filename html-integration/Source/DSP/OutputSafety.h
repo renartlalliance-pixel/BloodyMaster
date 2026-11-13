@@ -17,6 +17,7 @@ class OutputSafety {
 public:
     double reductionDb=0;
     void prepare(double fs) {
+        fs=std::isfinite(fs)?std::clamp(fs,8000.,384000.):48000.;
         lookahead=static_cast<int>(std::ceil(fs*.010));align.prepare(32);delay.prepare(lookahead);demandMaximum.prepare(lookahead);
         const double k=std::tan(pi*1681.974450955533/fs),vh=std::pow(10.,3.999843853973347/20),vb=std::pow(vh,.4996667741545416),q=.7071752369554196,a=1+k/q+k*k;
         shelf.reset();shelf.set({(vh+vb*k/q+k*k)/a,2*(k*k-vh)/a,(vh-vb*k/q+k*k)/a,2*(k*k-1)/a,(1-k/q+k*k)/a},1,true);

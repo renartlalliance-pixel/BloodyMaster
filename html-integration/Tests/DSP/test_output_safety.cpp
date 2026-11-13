@@ -5,6 +5,7 @@
 using namespace bm::dsp;
 void require(bool b,const char* s){if(!b){std::fprintf(stderr,"FAIL %s\n",s);std::exit(1);}}
 int main(){
+ OutputSafety invalidRate;invalidRate.prepare(std::numeric_limits<double>::quiet_NaN());require(invalidRate.latency()==512,"invalid rate falls back safely");
  for(double fs:{44100.,48000.,96000.,192000.}){
     OutputSafety guard;guard.prepare(fs);guard.setCeiling(0);
     for(int i=0;i<static_cast<int>(fs*2);++i){double l=2*std::sin(2*pi*1000*i/fs),r=l;guard.process(l,r,2);

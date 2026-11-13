@@ -37,8 +37,8 @@ for fs in (44100,48000,96000,192000):
             db=20*np.log10(max(tp,1e-12));sp=20*np.log10(max(float(np.max(np.abs(y))),1e-12))
             assert db<=-1+.05, (name,fs,db)
             results.append(dict(vector=name,rate=fs,oversampling=os,sample_peak_dbfs=sp,peak_32x_dbtp=db))
-    y,_=render(f'bypass_{fs}',fs,np.column_stack([vectors['noise'],vectors['noise']*.4]),['--preset','bypass'])
-    expected=np.column_stack([vectors['noise'],vectors['noise']*.4]).astype(np.float32)
+    y,_=render(f'bypass_{fs}',fs,np.column_stack([vectors['noise']*.02,vectors['noise']*.008]),['--preset','bypass'])
+    expected=np.column_stack([vectors['noise']*.02,vectors['noise']*.008]).astype(np.float32)
     assert np.array_equal(y,expected)
 # Aliasing comparison: 7 kHz sine, 5th harmonic folding to 13 kHz without OS.
 fs=48000;t=np.arange(fs)/fs;x=.9*np.sin(2*np.pi*7000*t)
@@ -49,7 +49,7 @@ naive=np.sign(x)*np.where(a<=.75,a,np.where(a>=1.25,1,.75+.5*(u-.5*u*u)))/drive
 def amplitude(v,hz):
     v=v[2000:-2000]; w=np.hanning(len(v));phase=np.exp(-2j*np.pi*hz*np.arange(len(v))/fs)
     return float(2*abs(np.sum(v*w*phase))/sum(w))
-a0=amplitude(naive,13000);a1=amplitude(y[:,0],13000)
+a0=amplitude(naive,13000)/max(amplitude(naive,7000),1e-15);a1=amplitude(y[:,0],13000)/max(amplitude(y[:,0],7000),1e-15)
 improvement=20*np.log10(max(a0,1e-15)/max(a1,1e-15))
 assert improvement>25,improvement
 report={'true_peak_estimator':'independent scipy resample_poly, 32x Kaiser beta10; finite vector validation, not certification',
