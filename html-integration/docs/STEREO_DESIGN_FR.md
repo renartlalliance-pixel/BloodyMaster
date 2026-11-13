@@ -1,4 +1,4 @@
-# Atmosphere et Mid Pan — 0.3.5 en préparation
+# Atmosphere et Mid Pan — 0.3.5
 
 Choix utilisateur : Atmosphere en EQ Mid/Side, quatre profils, centre et grave préservés, aucun délai ajouté. Mid Pan : déplacer le centre et garder les côtés fixes (réponse A).
 
@@ -25,6 +25,6 @@ bm_pan conserve −50 à +50. Avec p=pan/50, angle=(p+1)π/4 : L=√2 cos(angle)
 
 ## Vérification locale
 
-Onze suites DSP sans JUCE réussies, dont test_stereo : quatre Fs 44,1/48/96/192 kHz, centre, grave, effet des profils, panoramique, automation bornée et latence inchangée. Test stéréo également réussi sous ASan/UBSan (détection des fuites désactivée). Les tests Windows natifs sont étendus aux nouvelles commandes ; leur réussite doit être observée sur le prochain workflow avant validation de la 0.3.5. Aucun test FL Studio effectué ici.
+Onze suites DSP sans JUCE réussies, dont test_stereo : quatre Fs 44,1/48/96/192 kHz, centre, grave, effet des profils, panoramique, automation bornée et latence inchangée. Test stéréo également réussi sous ASan/UBSan (détection des fuites désactivée). Workflow Windows HTML 43437863780 réussi : 14/14 CTest, dont 24 vérifications WebView2 natives. Aucun test FL Studio effectué ici.
 
 HTML UI et Reference originaux inchangés, SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff.

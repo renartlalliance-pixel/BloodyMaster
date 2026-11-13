@@ -1,3 +1,9 @@
+# Mise à jour 0.3.5
+
+Cet audit décrit un état antérieur. THD/XL, Valve Color, Tape Color, nettoyages, Atmosphere, profils et Mid Pan sont maintenant raccordés ; les mesures réelles et la compensation d'écoute sont ajoutées. Consulter STATUS.md, STEREO_DESIGN_FR.md et METERING_FR.md pour les fonctions et limites actuelles. Les réserves historiques sur l'absence d'émulation de circuits propriétaires restent applicables.
+
+---
+
 # Audit des inspirations analogiques
 
 Les photos et manuels servent à définir des comportements. Aucune capture des

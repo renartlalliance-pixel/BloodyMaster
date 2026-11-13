@@ -1,6 +1,14 @@
+# Édition HTML 0.3.5 — état actuel
+
+Lire [docs/STATUS.md](docs/STATUS.md). Atmosphere EQ M/S (quatre profils), Mid Pan centre seul, mesures LUFS intégré/court terme 3 s/true peak estimé et comparaison A/B compensée sont raccordés. Onze suites DSP locales, vérification indépendante SciPy et navigateur testés. Workflow Windows HTML 43437863780 réussi : 14/14 CTest, 24 vérifications WebView2 natives, 31 tests WAV et tests installateur. [Télécharger la version de test](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.5-test-43437863780). Validation FL Studio et écoute humaine encore à effectuer.
+
+La compensation d'écoute est désactivée par défaut : écouter A puis B au moins 3 s chacun. **La couper avant export temps réel.** Mesures avant compensation ; rendu hors ligne reconnu par l'hôte à gain unité. Détails et limites dans [METERING_FR.md](docs/METERING_FR.md) et [STEREO_DESIGN_FR.md](docs/STEREO_DESIGN_FR.md). TARGET ne normalise pas le fichier.
+
+La version HTML Windows utilise WebView2 ; 50 paramètres APVTS préservés, 49 actifs, 38 potards dans la page générée. Les deux HTML originaux restent intacts. Les commandes ci-dessous incluent aussi l'éditeur natif de repli.
+
 # Installateur VST3 de test — 10 novembre 2026
 
-`BloodyMaster-0.3.0-Test-Setup.exe` installe le vrai VST3 Windows x64 dans
+`BloodyMaster-0.3.5-Test-Setup.exe` installe le vrai VST3 Windows x64 dans
 `C:\Program Files\Common Files\VST3\Bloody Master.vst3` et propose l'outil WAV.
 Désinstallation dédiée dans les applications Windows. Installateur non signé.
 
@@ -14,14 +22,14 @@ réinstallé dans un préfixe Wine isolé ; hash des DLL vérifié, fichier tier
 Les 31 essais WAV ont aussi passé avec le binaire Windows sous Wine.
 Ce sont des tests de compatibilité sous Wine, pas un lancement Windows natif ni FL Studio.
 
-L'éditeur de test présente 32 contrôles réellement raccordés, neuf presets et des
+L'éditeur de test présente 49 contrôles réellement raccordés, neuf presets et des
 mesures audio réelles (crêtes d'échantillons par bloc et réduction de gain).
 Le HTML approuvé reste inchangé et n'est pas intégré. Les autres DSP décrits dans
 l'audit restent à développer ; cette édition n'est pas une version finale complète.
 
 Compilation standard Windows : installer NSIS 3.11 ou plus, compiler normalement
 le projet, puis `cmake --build build --config Release --target BloodyMasterInstaller`.
-La cible produit `build/installer/BloodyMaster-0.3.0-Test-Setup.exe`.
+La cible produit `build/installer/BloodyMaster-0.3.5-Test-Setup.exe`.
 Les workflows ont été préparés pour produire l'artefact ; pas exécutés sur GitHub.
 
 Voir `packaging/TEST_WINDOWS_FR.txt` pour le premier essai FL Studio,

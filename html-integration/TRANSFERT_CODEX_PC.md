@@ -1,3 +1,9 @@
+# Mise à jour de reprise — 0.3.5
+
+La reprise est faite sur codex/html-webview2. Workflow HTML 43437863780 réussi et installateur 0.3.5 téléchargé/hash vérifié ; détails dans STATUS. Atmosphere, Mid Pan (A), LUFS intégré/court terme/dBTP (A), comparaison compensée temporaire (A) et presets enrichis sont implémentés. Lire docs/STATUS.md, docs/STEREO_DESIGN_FR.md, docs/METERING_FR.md. L'utilisateur a répondu « A à chaque fois » : A par défaut, pas de QCM répété pour ces choix. Les paragraphes ci-dessous sont historiques. Pas d'accès au PC de l'utilisateur et aucun HTML original modifié.
+
+---
+
 # Mise à jour de reprise — 0.3.4
 
 L’utilisateur reprend dans cette conversation cloud : aucun travail n’a été fait sur le PC. Lire docs/STATUS.md et docs/TAPE_DESIGN_FR.md pour l’état le plus récent. Les sections historiques ci-dessous décrivent la 0.3.3 et restent utiles pour les contraintes, mais leurs compteurs sont dépassés.
