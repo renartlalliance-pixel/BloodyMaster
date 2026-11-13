@@ -237,7 +237,7 @@ struct BloodyMasterTests final : public juce::UnitTest
 
     void testGlobalOutputProtection() {
         beginTest("Global protection remains active through host bypass");
-        BloodyMasterProcessor p;p.prepareToPlay(48000,512);juce::MidiBuffer midi;
+        BloodyMasterProcessor p;p.apvts.getParameter(bm::id::bypass)->setValueNotifyingHost(1.f);p.prepareToPlay(48000,512);juce::MidiBuffer midi;
         for(int block=0;block<128;++block){juce::AudioBuffer<float> audio(2,512);
             for(int i=0;i<512;++i){const float x=4.f*std::sin(2*juce::MathConstants<float>::pi*1000*(block*512+i)/48000);audio.setSample(0,i,x);audio.setSample(1,i,-x);}
             p.processBlockBypassed(audio,midi);
