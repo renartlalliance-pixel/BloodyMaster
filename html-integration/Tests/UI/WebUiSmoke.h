@@ -48,7 +48,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         for(int i=0;i<512;++i){const auto v=.2f*std::sin(2*juce::MathConstants<float>::pi*997*(block*512+i)/48000);audio.setSample(0,i,v);audio.setSample(1,i,v*.5f);}
         p.processBlock(audio,midi);
     }
-    if(!verify(wait([&]{return static_cast<bool>(evaluate("(()=>{const s=window.bloodyMasterUi.getState();return s.meters.outputL>0 && s.scope.out[0].some(v=>Math.abs(v)>.001) && s.latency===336 && s.sampleRate===48000;})()"));}),"Real audio samples, meters, Fs and latency reach HTML"))return 10;
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("(()=>{const s=window.bloodyMasterUi.getState();return s.meters.outputL>0 && s.scope.out[0].some(v=>Math.abs(v)>.001) && s.latency===848 && s.sampleRate===48000;})()"));}),"Real audio samples, meters, Fs and latency reach HTML"))return 10;
     if(!verify(static_cast<bool>(evaluate("document.querySelector('#knob-de-amount').getAttribute('aria-disabled')==='false' && window.bloodyMasterUi.getState().parameters.mud_active.value===0")),"Cleanup controls active and traps off by default"))return 11;
     evaluate("document.querySelector('#mudActiveBtn').click();document.querySelector('#knob-mud-amount').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::mudActive)->load()>.5f && p.apvts.getRawParameterValue(bm::id::mudAmount)->load()>25.f && p.apvts.getRawParameterValue(bm::id::ringActive)->load()<.5f;}),"Independent Mud activation and amount reach APVTS"))return 12;
@@ -94,6 +94,8 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     editor=std::make_unique<BloodyMasterEditor>(p,userDirectory);editor->addToDesktop(juce::ComponentPeer::windowIsTemporary);editor->setVisible(true);
     if(!verify(wait([&]{return editor->isUiReady()&&static_cast<bool>(evaluate("window.bloodyMasterUi?.getState()?.userPresets.length===2 && [...document.querySelectorAll('#presetSelector optgroup')].some(g=>g.label==='User'&&g.children.length===2)"));}),"User presets survive editor reopening in their own section"))return 28;
     if(!verify(static_cast<bool>(evaluate("['Rap','Electro','New Rock','Trap'].every(label=>[...document.querySelectorAll('#presetSelector optgroup')].some(g=>g.label===label&&g.children.length===2))")),"Eight inspiration presets appear in four genre sections"))return 29;
+    for(int block=0;block<64;++block){for(int i=0;i<512;++i){audio.setSample(0,i,10);audio.setSample(1,i,-10);}p.processBlockBypassed(audio,midi);}
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("window.bloodyMasterUi.getState().safetyReductionDb>0 && document.querySelector('#outputSafetyReadout').textContent.includes('Protection sortie') && window.bloodyMasterUi.getState().meters.outputL<0.751"));}),"Global protection and protected output meters reach HTML during host bypass"))return 30;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

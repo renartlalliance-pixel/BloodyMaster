@@ -60,7 +60,7 @@ public:
         std::fill(energy.begin(),energy.end(),0);std::fill(counts.begin(),counts.end(),0);blocks.fill(0);history={};
         shelf.reset();rlb.reset();position=blockPosition=samples=filled=0;partial=0;values={};
     }
-    void process(double l,double r,int channels) {
+    void process(double l,double r,int channels,bool analysePeak=true) {
         if(channels<1 || channels>2)return;
         shelf.tick();rlb.tick();
         const std::array<double,2> input{l,r};
@@ -69,7 +69,7 @@ public:
             const double weighted=rlb.process(shelf.process(x,c),c);power+=weighted*weighted;
             history[ch][static_cast<size_t>(position)]=x;
             values.truePeak=std::max(values.truePeak,std::abs(x));
-            for(const auto& phase:taps){double y=0;int index=position;
+            if(analysePeak)for(const auto& phase:taps){double y=0;int index=position;
                 for(size_t i=0;i<phase.size();++i){y+=phase[i]*history[ch][static_cast<size_t>(index)];if(--index<0)index=64;}
                 values.truePeak=std::max(values.truePeak,std::abs(y));}
         }

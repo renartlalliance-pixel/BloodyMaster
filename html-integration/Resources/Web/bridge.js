@@ -122,6 +122,9 @@
   function apply(next) {
     if(!next.scope && state?.scope)next.scope=state.scope;
     state=next;
+    const protection=document.getElementById('outputSafetyReadout');
+    if(protection)protection.textContent=`Protection sortie : −${Math.max(0,next.safetyReductionDb||0).toFixed(1)} dB`;
+    const bypassControl=document.getElementById('bypassBtn');if(bypassControl)bypassControl.title='Bypass des traitements ; protection de sortie toujours active';
     const monitor=document.getElementById('monitorMatchBtn');
     if(monitor){
       monitor.textContent=next.monitorMatch?(next.monitorReady?`Comp. écoute ${(next.monitorGainDb||0).toFixed(1)} dB`:'Comp. écoute : apprentissage'):'Comp. écoute OFF';
@@ -160,6 +163,7 @@
         knob.title=p.active?(id==='lpf'?`Fréquence effective : ${next.lpfEffective.toFixed(0)} Hz (selon Fs)`:'Glisser verticalement ; Maj = réglage fin ; double-clic = défaut'):'Fonction non raccordée au DSP dans cette version';
         if(id==='thd')knob.title='Dosage de coloration : OFF à −60 dB ; cette échelle ne mesure pas le THD de sortie';
         if(id==='tape_color')knob.title='Coloration de bande indépendante de la compression Tape Glue ; 0 % = désactivée';
+        if(id==='trim')knob.title='Plafond demandé ; protection globale plafonnée à −2 dBTP avec réserve interne';
         if(id==='glue')knob.title='Compression de bus ; le dosage Tape Color règle séparément la coloration';
         if(dragging?.id!==id && p.active)updateKnob(knob,p.value);
       }
@@ -210,7 +214,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.6';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.7';
     }
     draw();
   }

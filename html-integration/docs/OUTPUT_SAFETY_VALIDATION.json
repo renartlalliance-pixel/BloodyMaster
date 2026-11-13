@@ -1,0 +1,162 @@
+[
+  {
+    "rate": 44100,
+    "vector": "dense",
+    "preset": "bypass",
+    "peak32x": -8.606622324340911,
+    "srcPeak32x": -8.60086259620063,
+    "aacPeak32x": -8.624692362699031,
+    "mp3Peak32x": -8.607118420988575
+  },
+  {
+    "rate": 44100,
+    "vector": "dense",
+    "preset": "trap-dean-synth",
+    "peak32x": -11.560678840062007,
+    "srcPeak32x": -11.54075827074478,
+    "aacPeak32x": -11.495178314218153,
+    "mp3Peak32x": -11.49825876854214
+  },
+  {
+    "rate": 44100,
+    "vector": "noise",
+    "preset": "bypass",
+    "peak32x": -4.503357472713516,
+    "srcPeak32x": -4.524851261678436,
+    "aacPeak32x": -5.184245912997324,
+    "mp3Peak32x": -5.68302713095158
+  },
+  {
+    "rate": 44100,
+    "vector": "noise",
+    "preset": "trap-dean-synth",
+    "peak32x": -8.240977269984132,
+    "srcPeak32x": -8.360083792623941,
+    "aacPeak32x": -4.749098772238952,
+    "mp3Peak32x": -7.640954923232437
+  },
+  {
+    "rate": 44100,
+    "vector": "intersample",
+    "preset": "bypass",
+    "peak32x": -9.57111313623953,
+    "srcPeak32x": -9.58496568273237,
+    "aacPeak32x": -9.479203012277539,
+    "mp3Peak32x": -9.561979439755378
+  },
+  {
+    "rate": 44100,
+    "vector": "intersample",
+    "preset": "trap-dean-synth",
+    "peak32x": -9.594347293540666,
+    "srcPeak32x": -9.464284217225412,
+    "aacPeak32x": -9.440330944404405,
+    "mp3Peak32x": -9.575814927278874
+  },
+  {
+    "rate": 44100,
+    "vector": "step",
+    "preset": "bypass",
+    "peak32x": -3.15492408333164,
+    "srcPeak32x": -3.138821209329301,
+    "aacPeak32x": -3.157395881991926,
+    "mp3Peak32x": -3.2140891557470663
+  },
+  {
+    "rate": 44100,
+    "vector": "step",
+    "preset": "trap-dean-synth",
+    "peak32x": -2.7488538262268705,
+    "srcPeak32x": -2.7821149584553577,
+    "aacPeak32x": -2.7471247001902492,
+    "mp3Peak32x": -2.770291381928725
+  },
+  {
+    "rate": 48000,
+    "vector": "dense",
+    "preset": "bypass",
+    "peak32x": -8.60257201129542,
+    "integrated": -8.9287476412406,
+    "max400ms": -8.921691077365313,
+    "srcPeak32x": -8.59744436667354,
+    "aacPeak32x": -8.646930019730615,
+    "mp3Peak32x": -8.597944058996635
+  },
+  {
+    "rate": 48000,
+    "vector": "dense",
+    "preset": "trap-dean-synth",
+    "peak32x": -11.614455676975455,
+    "integrated": -9.739594610077239,
+    "max400ms": -9.680973412325393,
+    "srcPeak32x": -11.589690188625507,
+    "aacPeak32x": -10.424651268201643,
+    "mp3Peak32x": -11.47056547606467
+  },
+  {
+    "rate": 48000,
+    "vector": "noise",
+    "preset": "bypass",
+    "peak32x": -4.7301217007770715,
+    "integrated": -12.945463548936422,
+    "max400ms": -12.409242020712485,
+    "srcPeak32x": -5.637409765351798,
+    "aacPeak32x": -5.250344281605806,
+    "mp3Peak32x": -5.906827365615999
+  },
+  {
+    "rate": 48000,
+    "vector": "noise",
+    "preset": "trap-dean-synth",
+    "peak32x": -9.090901674810224,
+    "integrated": -10.5174656980454,
+    "max400ms": -10.329015578329644,
+    "srcPeak32x": -9.236218141338348,
+    "aacPeak32x": -4.159580576796885,
+    "mp3Peak32x": -7.6615326080456185
+  },
+  {
+    "rate": 48000,
+    "vector": "intersample",
+    "preset": "bypass",
+    "peak32x": -9.540299128602896,
+    "integrated": -6.312044377941397,
+    "max400ms": -6.312016094800371,
+    "srcPeak32x": -9.470583186845777,
+    "aacPeak32x": -9.283312225024039,
+    "mp3Peak32x": -9.501121284385746
+  },
+  {
+    "rate": 48000,
+    "vector": "intersample",
+    "preset": "trap-dean-synth",
+    "peak32x": -9.570326592461734,
+    "integrated": -6.510793542073972,
+    "max400ms": -6.509588765300108,
+    "srcPeak32x": -9.594261358862186,
+    "aacPeak32x": -9.645712013534617,
+    "mp3Peak32x": -9.568774481273328
+  },
+  {
+    "rate": 48000,
+    "vector": "step",
+    "preset": "bypass",
+    "peak32x": -3.151528615606391,
+    "integrated": -27.57745625794232,
+    "max400ms": -27.514381223546522,
+    "srcPeak32x": -3.219927942547166,
+    "aacPeak32x": -3.1649736669165476,
+    "mp3Peak32x": -3.2282504952945184
+  },
+  {
+    "rate": 48000,
+    "vector": "step",
+    "preset": "trap-dean-synth",
+    "peak32x": -2.7391527004978906,
+    "integrated": -24.389026724249685,
+    "max400ms": -24.364311211340606,
+    "srcPeak32x": -2.6973093411300435,
+    "aacPeak32x": -2.7457560140865143,
+    "mp3Peak32x": -2.922651389299194
+  }
+]

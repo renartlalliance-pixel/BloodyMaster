@@ -26,7 +26,7 @@ public:
     const juce::String getName() const override { return "Bloody Master"; }
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
-    double getTailLengthSeconds() const override { return 0.02; }
+    double getTailLengthSeconds() const override { return 0.1; }
 
     int getNumPrograms() override;
     int getCurrentProgram() override { return currentProgram.load(std::memory_order_relaxed); }
@@ -41,6 +41,7 @@ public:
 
     juce::AudioProcessorValueTreeState apvts;
     bm::dsp::MeterValues getMeterValues() const;
+    double getSafetyReductionDb() const { return safetyReduction.load(std::memory_order_relaxed); }
     bm::dsp::LoudnessValues getLoudnessValues() const;
     void setMonitorMatch(bool enabled) { monitorEnabled.store(enabled,std::memory_order_relaxed); }
     bool isMonitorMatchEnabled() const { return monitorEnabled.load(std::memory_order_relaxed); }
@@ -54,6 +55,7 @@ public:
     bm::dsp::Settings getToneSettingsForUi() const { return readDspSettings().tone; }
 
 private:
+    std::atomic<double> safetyReduction{0};
     std::atomic<int> currentProgram{0};
     std::array<std::atomic<float>,12> meterValues{};
     std::array<std::array<std::atomic<float>,256>,4> scope{};
@@ -62,14 +64,16 @@ private:
     std::atomic<double> preparedRate{0};
     void captureScope(const juce::AudioBuffer<float>&,bool input);
     void publishMeters();
-    bm::dsp::AudioMeter outputMeter;
+    bm::dsp::AudioMeter outputMeter,matchMeter;
+    bm::dsp::OutputSafety finalSafety;
+    std::array<double,5> finalOutput{};
     std::atomic<bool> meterReset{false};
     std::array<std::atomic<double>,3> loudnessValues{{-200.,-200.,0.}};
     bm::dsp::MonitorMatch monitor;
     std::atomic<bool> monitorEnabled{false},monitorReady{false};
     std::atomic<int> comparisonIndex{0};
     std::atomic<double> monitorGainDb{0};
-    void measureOutput(juce::AudioBuffer<float>&,bool bypass);
+    void measureOutput(juce::AudioBuffer<float>&,bool bypass,double ceiling);
     bm::dsp::Engine mastering;
     std::array<std::atomic<float>*, 49> dspParameters{};
     bm::dsp::EngineSettings readDspSettings() const;

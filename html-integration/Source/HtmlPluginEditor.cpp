@@ -132,6 +132,7 @@ juce::var BloodyMasterEditor::makeState() {
         property(item,"active",activeIds.count(id)!=0);property(parameters,id.substring(3),item);
     }
     property(result,"parameters",parameters);
+    property(result,"safetyReductionDb",processor.getSafetyReductionDb());
     property(result,"monitorMatch",processor.isMonitorMatchEnabled());property(result,"monitorReady",processor.isMonitorMatchReady());
     property(result,"monitorGainDb",processor.getMonitorGainDb());
     const auto loudness=processor.getLoudnessValues();auto measurement=object();

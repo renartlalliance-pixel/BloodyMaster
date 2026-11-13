@@ -1,4 +1,4 @@
-BLOODYMASTER 0.3.6 - VERSION DE TEST WINDOWS X64
+BLOODYMASTER 0.3.7 - VERSION DE TEST WINDOWS X64
 
 1. Fermer FL Studio puis lancer l'installateur.
 2. Le VST3 est copie dans :
@@ -37,3 +37,8 @@ avec un mesureur de true peak/LUFS independant. Aucun niveau LUFS n'est garanti.
 Desinstallation : Parametres Windows > Applications > BloodyMaster - Test VST3 x64.
 L'outil WAV optionnel est installe dans Program Files\BRI Audio Systems\BloodyMaster.
 Il cree une sortie a cote du WAV source, sans modifier celui-ci.
+
+Protection globale active aussi en bypass et apres Comp. ecoute.
+Plafond global -2 dBTP avec reserve ; regulation d'energie pour l'objectif -5 LUFS.
+Verifier les LUFS integres du fichier complet ; aucune garantie universelle des encodeurs.
+Latence a 48 kHz : 848 echantillons declares au DAW.

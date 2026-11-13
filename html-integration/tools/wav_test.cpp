@@ -131,7 +131,7 @@ int run(std::vector<std::string> args) {
     }
     s.oversampling=os;
     Audio a=readWave(input); const size_t frames=a.data[0].size();
-    Engine engine;engine.prepare(a.rate,os);engine.update(s); const int latency=engine.latency();
+    Engine engine;engine.prepare(a.rate,os,true);engine.update(s); const int latency=engine.latency();
     for(auto& c:a.data) c.resize(frames+latency,0);
     MeterValues meter{};
     std::cout<<"Traitement "<<preset<<" / "<<a.rate<<" Hz / "<<a.channels<<" canaux / "<<os<<"x...\n";

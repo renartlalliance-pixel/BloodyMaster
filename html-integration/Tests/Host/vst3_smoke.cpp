@@ -37,7 +37,7 @@ int wmain(int argc,wchar_t** argv) {
     if(processor->setupProcessing(setup)!=kResultOk) return 12;
     component->activateBus(kAudio,kInput,0,true);component->activateBus(kAudio,kOutput,0,true);
     if(component->setActive(true)!=kResultOk || processor->setProcessing(true)!=kResultOk) return 13;
-    if(processor->getLatencySamples()!=336) return 14;
+    if(processor->getLatencySamples()!=848) return 14;
     float in[2][512]{},out[2][512]{};float* ip[]{in[0],in[1]};float* op[]{out[0],out[1]};
     AudioBusBuffers input{},output{};input.numChannels=output.numChannels=2;input.channelBuffers32=ip;output.channelBuffers32=op;
     double maximum=0;
@@ -54,5 +54,5 @@ int wmain(int argc,wchar_t** argv) {
     if(maximum<.01) return 17;
     processor->setProcessing(false);component->setActive(false);component->terminate();processor->release();component->release();factory->release();
     if(auto exit=reinterpret_cast<Entry>(GetProcAddress(dll,"ExitDll"))) exit();
-    FreeLibrary(dll);std::printf("PASS VST3 factory, instance, stereo processing, latency 336, peak %.6f\n",maximum);return 0;
+    FreeLibrary(dll);std::printf("PASS VST3 factory, instance, stereo processing, latency 848, peak %.6f\n",maximum);return 0;
 }

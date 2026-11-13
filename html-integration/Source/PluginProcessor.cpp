@@ -6,8 +6,8 @@
 
 void BloodyMasterProcessor::publishMeters() {
     const auto& m=mastering.meters;
-    const std::array<double,12> values{m.inputPeak,m.outputPeak,m.compressorGr,m.glueGr,m.clipGr,m.limiterGr,
-        m.inputL,m.inputR,m.outputL,m.outputR,m.rmsL,m.rmsR};
+    const std::array<double,12> values{m.inputPeak,finalOutput[0],m.compressorGr,m.glueGr,m.clipGr,m.limiterGr,
+        m.inputL,m.inputR,finalOutput[1],finalOutput[2],finalOutput[3],finalOutput[4]};
     for(size_t i=0;i<values.size();++i) meterValues[i].store(static_cast<float>(values[i]),std::memory_order_relaxed);
 }
 bm::dsp::MeterValues BloodyMasterProcessor::getMeterValues() const {
@@ -106,12 +106,14 @@ void BloodyMasterProcessor::prepareToPlay(double sampleRate, int)
     preparedRate.store(sampleRate,std::memory_order_relaxed);
     const auto settings=readDspSettings();
     mastering.prepare(sampleRate,settings.oversampling);
+    finalSafety.prepare(sampleRate);finalOutput={};safetyReduction.store(0);
+    matchMeter.prepare(sampleRate);
     outputMeter.prepare(sampleRate);
     monitor.prepare(sampleRate);monitorGainDb.store(0);monitorReady.store(false);
     loudnessValues[0].store(-200);loudnessValues[1].store(-200);loudnessValues[2].store(0);
     meterReset.store(false);
     mastering.update(settings);
-    setLatencySamples(mastering.latency());
+    setLatencySamples(mastering.latency()+finalSafety.latency());
 }
 
 bool BloodyMasterProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -134,7 +136,7 @@ void BloodyMasterProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     mastering.update(settings);
     captureScope(buffer,true);
     mastering.process(buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
-    measureOutput(buffer,settings.bypass);
+    measureOutput(buffer,settings.bypass,settings.peaks.ceilingDb);
     publishMeters();
     captureScope(buffer,false);
 }
@@ -146,7 +148,7 @@ void BloodyMasterProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffe
     mastering.update(s);
     captureScope(buffer,true);
     mastering.process(buffer.getArrayOfWritePointers(),buffer.getNumChannels(),buffer.getNumSamples());
-    measureOutput(buffer,true);
+    measureOutput(buffer,true,s.peaks.ceilingDb);
     publishMeters();
     captureScope(buffer,false);
 }
@@ -183,18 +185,31 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new BloodyMasterProcessor();
 }
 
-void BloodyMasterProcessor::measureOutput(juce::AudioBuffer<float>& buffer,bool bypass) {
-    if(meterReset.exchange(false,std::memory_order_relaxed)){outputMeter.reset();monitor.reset();}
+void BloodyMasterProcessor::measureOutput(juce::AudioBuffer<float>& buffer,bool bypass,double ceiling) {
+    if(meterReset.exchange(false,std::memory_order_relaxed)){outputMeter.reset();matchMeter.reset();monitor.reset();}
     const int channels=buffer.getNumChannels();
     if(channels<1 || channels>2)return;
     const auto* l=buffer.getReadPointer(0);const auto* r=buffer.getReadPointer(channels==2?1:0);
-    for(int i=0;i<buffer.getNumSamples();++i)outputMeter.process(l[i],r[i],channels);
+    for(int i=0;i<buffer.getNumSamples();++i)matchMeter.process(l[i],r[i],channels,false);
     std::array<float,49> signature{};
     for(size_t i=0;i<signature.size();++i)signature[i]=dspParameters[i]->load(std::memory_order_relaxed);
     monitor.select(comparisonIndex.load(std::memory_order_relaxed),signature);
-    monitor.process(buffer.getArrayOfWritePointers(),channels,buffer.getNumSamples(),outputMeter.values.shortTerm,
+    monitor.process(buffer.getArrayOfWritePointers(),channels,buffer.getNumSamples(),matchMeter.values.shortTerm,
                     monitorEnabled.load(std::memory_order_relaxed)&&!bypass,isNonRealtime()||bypass);
     monitorGainDb.store(monitor.gainDb,std::memory_order_relaxed);monitorReady.store(monitor.ready,std::memory_order_relaxed);
+    finalSafety.setCeiling(ceiling);finalOutput={};double safetyGr=0;
+    auto* left=buffer.getWritePointer(0);auto* right=buffer.getWritePointer(channels==2?1:0);
+    for(int i=0;i<buffer.getNumSamples();++i){
+        double a=left[i],b=right[i];finalSafety.process(a,b,channels);
+        left[i]=static_cast<float>(a);if(channels==2)right[i]=static_cast<float>(b);
+        outputMeter.process(left[i],right[i],channels);
+        safetyGr=std::max(safetyGr,finalSafety.reductionDb);
+        finalOutput[1]=std::max(finalOutput[1],std::abs(a));finalOutput[2]=std::max(finalOutput[2],std::abs(b));
+        finalOutput[3]+=a*a;finalOutput[4]+=b*b;
+    }
+    finalOutput[0]=std::max(finalOutput[1],finalOutput[2]);
+    if(buffer.getNumSamples()>0){finalOutput[3]=std::sqrt(finalOutput[3]/buffer.getNumSamples());finalOutput[4]=std::sqrt(finalOutput[4]/buffer.getNumSamples());}
+    safetyReduction.store(safetyGr,std::memory_order_relaxed);
     loudnessValues[0].store(outputMeter.values.integrated,std::memory_order_relaxed);
     loudnessValues[1].store(outputMeter.values.shortTerm,std::memory_order_relaxed);
     loudnessValues[2].store(outputMeter.values.truePeak,std::memory_order_relaxed);

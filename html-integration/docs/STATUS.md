@@ -1,3 +1,19 @@
+# 0.3.7 — protection globale en validation Windows
+
+Protection finale implémentée, indépendante de LoudnessWar (potard non ajouté). Voir OUTPUT_SAFETY_FR.md et OUTPUT_SAFETY_VALIDATION.json. Active après bypass interne/hôte, delta et compensation ; aucune hausse de gain ; crêtes −2 dBTP avec réserve et régulation prudente d'énergie K pour l'objectif global −5 LUFS. Cette régulation n'est pas une garantie mathématique de tout intégré futur : vérifier le fichier complet.
+
+Latence 848 échantillons à 48 kHz, déclarée au DAW. Le bypass conserve désormais la protection ; signal faible inchangé après délai. Presets User et 50 paramètres inchangés. HTML originaux préservés. Tests dédiés quatre Fs et tests indépendants 16 rendus/SRC/AAC/MP3 réussis. Vérifier le workflow Windows avant validation de la release.
+
+La note LOUDNESSWAR_DESIGN_FR.md ci-dessous était la conception initiale ; OUTPUT_SAFETY_FR.md décrit l'implémentation actuelle et ses limites. La 0.3.6 reste la version précédente vérifiée.
+
+---
+
+# Prochaine évolution : LoudnessWar et protection globale
+
+Décision utilisateur : −5 LUFS est une limite globale du VST, indépendante du potard. Lire LOUDNESSWAR_DESIGN_FR.md : gain accessible séparé, surveillance intégré/court terme, protection finale de crêtes à −2 dBTP, respect des anciens presets et traitement explicite du bypass. Cette évolution est une conception documentée ; le DSP livré reste la 0.3.6 et ne garantit pas encore cette limite globale.
+
+---
+
 # BloodyMaster — 0.3.6, version de test Windows vérifiée
 
 Ajoute la sauvegarde nommée dans User, persistante hors installation, avec rappel des 50 paramètres, noms accentués, copies numérotées, actualisation et validation complète avant rappel. Huit presets originaux d'inspiration rap/electro/new rock/trap ajoutés : 17 Factory au total, indices historiques 0..8 inchangés. Lire USER_PRESETS_FR.md et ENGINEER_INSPIRATIONS_2026_FR.md.

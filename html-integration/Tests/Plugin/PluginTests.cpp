@@ -39,6 +39,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         testLiveOversampling();
         testFactoryPrograms();
         testUserPresets();
+        testGlobalOutputProtection();
         testHostBypassAndMeters();
         testEditor();
     }
@@ -64,7 +65,7 @@ struct BloodyMasterTests final : public juce::UnitTest
 
     void testPassthrough()
     {
-        beginTest("Bypass: latency-aligned, bit-exact, mono/stereo");
+        beginTest("Protected bypass: safe low-level input stays bit-exact, aligned mono/stereo");
         for (int nch : {1,2}) for (double sr : {44100.,48000.,96000.,192000.})
         for (int block : {1,32,480,1024})
         {
@@ -74,11 +75,11 @@ struct BloodyMasterTests final : public juce::UnitTest
             p.apvts.getParameter(bm::id::bypass)->setValueNotifyingHost(1.f);
             p.prepareToPlay(sr,block);
             const int delay=p.getLatencySamples();
-            expectEquals(delay,192+static_cast<int>(std::ceil(sr*.003)));
+            expectEquals(delay,224+static_cast<int>(std::ceil(sr*.003))+static_cast<int>(std::ceil(sr*.010)));
             const int length=2000,total=length+delay;
             juce::AudioBuffer<float> input(nch,total),output(nch,total); input.clear();output.clear();
             juce::Random rng(12345);
-            for(int c=0;c<nch;++c) for(int i=0;i<length;++i) input.setSample(c,i,rng.nextFloat()-.5f);
+            for(int c=0;c<nch;++c) for(int i=0;i<length;++i) input.setSample(c,i,(rng.nextFloat()-.5f)*.1f);
             juce::MidiBuffer midi;
             for(int pos=0;pos<total;pos+=block) {
                 int size=juce::jmin(block,total-pos);juce::AudioBuffer<float> buf(nch,size);
@@ -234,13 +235,25 @@ struct BloodyMasterTests final : public juce::UnitTest
         expectWithinAbsoluteError(restored.apvts.getRawParameterValue(bm::id::drive)->load(),before,1e-5f);
     }
 
+    void testGlobalOutputProtection() {
+        beginTest("Global protection remains active through host bypass");
+        BloodyMasterProcessor p;p.prepareToPlay(48000,512);juce::MidiBuffer midi;
+        for(int block=0;block<128;++block){juce::AudioBuffer<float> audio(2,512);
+            for(int i=0;i<512;++i){const float x=4.f*std::sin(2*juce::MathConstants<float>::pi*1000*(block*512+i)/48000);audio.setSample(0,i,x);audio.setSample(1,i,-x);}
+            p.processBlockBypassed(audio,midi);
+            for(int i=0;i<512;++i){expect(std::isfinite(audio.getSample(0,i)));expect(std::abs(audio.getSample(0,i))<=.751f);expect(audio.getSample(0,i)==-audio.getSample(1,i));}
+        }
+        const auto values=p.getLoudnessValues();expect(values.integrated>-70&&values.integrated<=-5);
+        expect(p.getSafetyReductionDb()>0);expect(p.getMeterValues().outputPeak<=.751);
+    }
+
     void testHostBypassAndMeters()
     {
         beginTest("Bypass de l'hote et mesures reelles");
         BloodyMasterProcessor p;p.prepareToPlay(48000,512);
         juce::AudioBuffer<float> input(2,4096),output(2,4096);
         juce::Random random(51);juce::MidiBuffer midi;
-        for(int c=0;c<2;++c) for(int i=0;i<4096;++i) input.setSample(c,i,random.nextFloat()-.5f);
+        for(int c=0;c<2;++c) for(int i=0;i<4096;++i) input.setSample(c,i,(random.nextFloat()-.5f)*.1f);
         for(int pos=0;pos<4096;pos+=512) {
             juce::AudioBuffer<float> block(2,512);
             for(int c=0;c<2;++c) block.copyFrom(c,0,input,c,pos,512);
@@ -263,7 +276,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         bool foundPresets=false,foundControls=false;
         for(auto* child:editor->getChildren()) {
             if(auto* combo=dynamic_cast<juce::ComboBox*>(child)) {
-                if(combo->getNumItems()==9) {
+                if(combo->getNumItems()==17) {
                     combo->setSelectedId(4,juce::sendNotificationSync);
                     expectEquals(p.getCurrentProgram(),3);foundPresets=true;
                 }
