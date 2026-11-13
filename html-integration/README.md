@@ -1,3 +1,15 @@
+# Édition HTML 0.3.9 — LoudnessWar, IN GAIN et notice complète
+
+[Notice française — PDF](docs/NOTICE_BLOODYMASTER_FR.pdf) · [Version à lire en ligne](docs/NOTICE_BLOODYMASTER_FR.md) · [HTML autonome](docs/NOTICE_BLOODYMASTER_FR.html)
+
+La notice explique les 40 potards, les boutons, les mesures, les presets User, une méthode de mastering et les inspirations Pultec, Pendulum, Bettermaker, bx_masterdesk PRO et Tascam. Elle distingue inspiration fonctionnelle et émulation matérielle.
+
+IN GAIN règle l’entrée indépendamment de Blood Drive ; LoudnessWar pousse l’étage final avant clipper/limiteur. Protection trop conservatrice corrigée ; 52 paramètres, migration des anciens presets avec gains à zéro. [Fonctionnement et limites](docs/LOUDNESS_GAIN_FR.md).
+
+[Télécharger la 0.3.9](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.9-test-43493392145) : 17/17 CTest Windows, 37 contrôles WebView2, 31 tests WAV et installation réussis, SHA-256 vérifié. Voir [STATUS.md](docs/STATUS.md). Les niveaux après encodage restent à contrôler ; les deux HTML de référence sont inchangés. Les sections suivantes sont historiques.
+
+---
+
 # Édition HTML 0.3.8 — écoute Delta vérifiée sous Windows
 
 Le bouton **DELTA** écoute l'entrée originale alignée moins la sortie de toute la chaîne, gain et protection inclus. Fondu de 20 ms, aucune latence supplémentaire. Aucun réglage DSP modifié ; état temporaire désactivé au rappel des presets/sessions et en rendu hors ligne reconnu par l'hôte. [Détails et vérifications](docs/DELTA_FR.md).

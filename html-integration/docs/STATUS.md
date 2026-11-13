@@ -4,6 +4,8 @@ IN GAIN indépendant (−18/+18 dB) et LoudnessWar dans le panneau doré final (
 
 Tests DSP locaux, navigateur et mesure indépendante de stress réussis pour audio brut/SRC ; un bruit dense extrême dépasse 0 dBTP après AAC : aucune garantie universelle des encodages. Build et installateur Windows vérifiés ; écoute FL Studio nécessaire.
 
+Notice utilisateur 0.3.9 ajoutée : NOTICE_BLOODYMASTER_FR.md, HTML autonome et PDF de 13 pages. Démarrage rapide, 40 potards, boutons/mesures, presets, diagnostic et inspirations matérielles avec sources et limites. Documentation seule ; aucun changement du DSP ni des HTML originaux.
+
 ---
 
 # 0.3.8 — Delta global, version de test Windows vérifiée

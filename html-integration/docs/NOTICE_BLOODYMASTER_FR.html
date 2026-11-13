@@ -1,0 +1,599 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bloody Master 0.3.9 — Notice française</title><style>
+@page { size:A4; margin:18mm 16mm 19mm; }
+* { box-sizing:border-box; }
+body { max-width:950px; margin:40px auto; padding:0 24px; color:#202326; font:15px/1.55 Arial,sans-serif; }
+h1 { font-size:34px; line-height:1.15; border-bottom:5px solid #b99743; padding-bottom:18px; margin-bottom:12px; }
+h2 { font-size:23px; line-height:1.25; color:#202326; border-bottom:1px solid #c9b679; margin-top:34px; padding-bottom:6px; }
+h3 { font-size:18px; margin:23px 0 10px; }
+a { color:#755a11; text-decoration:underline; }
+p,li { orphans:3; widows:3; }
+li { margin:7px 0; }
+table { width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:13px; line-height:1.45; }
+th { background:#efe8d4; text-align:left; }
+th,td { border:1px solid #d6d2c5; padding:8px; vertical-align:top; }
+tr { break-inside:avoid; }
+thead { display:table-header-group; }
+h1,h2,h3 { break-after:avoid; }
+code { font-size:90%; overflow-wrap:anywhere; }
+.toc { background:#f6f3eb; padding:14px 20px; margin:24px 0; }
+.toc ul { list-style:none; padding-left:0; }
+.toc li { margin:4px 0; }
+@media print { body { max-width:none; padding:0; margin:0; font-size:10.5pt; line-height:1.45; } h1 {font-size:28pt;} h2 {font-size:17pt;} h3 {font-size:13pt;} table {font-size:9pt;} th,td {padding:6px;} .toc {break-after:page;} a {color:#59420a;} }
+</style><main><h1 id="bloody-master-notice-tutoriel">Bloody Master — notice &amp; tutoriel</h1>
+<p><strong>Version 0.3.9 · VST3 Windows · Français</strong></p>
+<p>Cette notice décrit les commandes réellement disponibles dans la version HTML 0.3.9. Elle s’adresse aussi aux débutants : les valeurs proposées sont des points de départ à adapter au morceau.</p><nav aria-label="Sommaire"><h2>Sommaire</h2><div class="toc">
+<ul>
+<li><a href="#bloody-master-notice-tutoriel">Bloody Master — notice &amp; tutoriel</a><ul>
+<li><a href="#1-reussir-son-premier-master">1. Réussir son premier master</a></li>
+<li><a href="#2-manipuler-les-commandes">2. Manipuler les commandes</a></li>
+<li><a href="#3-de-harsh-resonance-traps-nettoyer">3. De-Harsh &amp; Resonance Traps — nettoyer</a></li>
+<li><a href="#4-console-tone-matrix-equalizer-equilibrer">4. Console Tone &amp; Matrix Equalizer — équilibrer</a></li>
+<li><a href="#5-blood-drive-dynamics-densite-et-couleur">5. Blood Drive &amp; Dynamics — densité et couleur</a></li>
+<li><a href="#6-spatial-horizon-ms-placer-la-stereo">6. Spatial Horizon &amp; M/S — placer la stéréo</a></li>
+<li><a href="#7-final-wall-master-monter-le-niveau-final">7. Final Wall &amp; Master — monter le niveau final</a></li>
+<li><a href="#8-ecouter-et-comparer">8. Écouter et comparer</a></li>
+<li><a href="#9-precision-hud-comprendre-les-mesures">9. Precision HUD — comprendre les mesures</a></li>
+<li><a href="#10-presets-et-sauvegarde">10. Presets et sauvegarde</a></li>
+<li><a href="#11-resoudre-les-problemes-courants">11. Résoudre les problèmes courants</a></li>
+<li><a href="#12-repere-de-chaine-audio">12. Repère de chaîne audio</a></li>
+<li><a href="#13-les-machines-et-outils-qui-ont-inspire-bloody-master">13. Les machines et outils qui ont inspiré Bloody Master</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<h2 id="1-reussir-son-premier-master">1. Réussir son premier master</h2>
+<ol>
+<li>Place Bloody Master sur le master de FL Studio, après les traitements que tu souhaites lui faire recevoir. Pour comprendre son action, commence sans autre limiteur après lui.</li>
+<li>Charge un preset proche du style de ton morceau. Écoute un passage dense, puis un passage calme. Un preset donne une direction, pas un résultat universel.</li>
+<li>Laisse <strong>IN GAIN à 0 dB</strong> au départ. Ajuste-le si le signal reçu est trop faible ou trop fort. Il n’est pas nécessaire de pousser tous les potards pour obtenir un master fort.</li>
+<li>Réduis seulement les duretés et résonances gênantes avec De-Harsh et les Traps. Corrige ensuite l’équilibre grave/médium/aigu avec l’EQ.</li>
+<li>Ajuste <strong>Blood Drive</strong>, <strong>Squash</strong> et <strong>Recovery</strong> pour obtenir la compression et la couleur voulues. Vérifie que le kick et la caisse claire gardent leur attaque.</li>
+<li>Dose la largeur et Atmosphere, puis vérifie le résultat en mono avec ton DAW.</li>
+<li>Dans le panneau doré, règle <strong>Ceiling Out à −3 dB</strong> si c’est le plafond souhaité. Monte <strong>LoudnessWar progressivement</strong>, par exemple vers +3 puis +6 dB. Écoute avant de monter davantage.</li>
+<li>Clique <strong>RAZ mesures</strong>, lis le morceau entier, puis relève <strong>I</strong> pour le loudness intégré et <strong>TP</strong> pour les crêtes vraies estimées. Une boucle de refrain ne représente pas l’intégré du morceau complet.</li>
+<li>Compare les réglages A/B sur le même passage. La compensation d’écoute aide à juger le son sans être trompé par une simple hausse de volume.</li>
+<li>Avant l’export, coupe <strong>DELTA</strong>, <strong>Spike Listen</strong> et <strong>Comp. écoute</strong>, et vérifie que <strong>BYPASS est désactivé</strong>. Sauvegarde ton réglage dans <strong>User</strong>. Contrôle le fichier exporté et, si nécessaire, sa version encodée.</li>
+</ol>
+<p><strong>Point de départ pour le loudness :</strong> vise d’abord un son propre et vivant. −10 à −7 LUFS peut convenir au résultat recherché, mais dépend du mix. Sur un beat synthétique de validation, avec Drive 12, Hammer 6 et plafond −3, LoudnessWar +6 a donné environ −9,8 LUFS et +12 environ −7,7 LUFS. Ce ne sont pas des valeurs promises pour ton morceau.</p>
+<h2 id="2-manipuler-les-commandes">2. Manipuler les commandes</h2>
+<ul>
+<li><strong>Glisser verticalement</strong> sur un potard : monter pour augmenter, descendre pour diminuer.</li>
+<li><strong>Maintenir Maj</strong> pendant le geste : réglage plus fin.</li>
+<li><strong>Double-cliquer</strong> : revenir à la valeur par défaut du paramètre. Ce n’est pas forcément zéro ni la valeur du preset chargé.</li>
+<li><strong>Tab</strong>, puis les <strong>flèches du clavier</strong> : sélectionner et ajuster un potard ; Maj permet également un ajustement plus fin.</li>
+<li><strong>Survoler</strong> : afficher l’infobulle lorsqu’elle est disponible.</li>
+</ul>
+<p>Les commandes sont lissées pour limiter les clics. Les changements importants de gain, de preset ou de traitement restent audibles.</p>
+<h3 id="quelques-mots-utiles">Quelques mots utiles</h3>
+<table>
+<thead>
+<tr>
+<th>Terme</th>
+<th>Signification pratique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dB</td>
+<td>Écart de niveau ou gain. +6 dB multiplie environ par deux l’amplitude ; cela ne veut pas dire deux fois plus fort à l’oreille.</td>
+</tr>
+<tr>
+<td>dBFS</td>
+<td>Niveau numérique par rapport au maximum d’échantillon. 0 dBFS est la référence maximale.</td>
+</tr>
+<tr>
+<td>LUFS</td>
+<td>Mesure de loudness. −7 LUFS est plus fort que −10 LUFS.</td>
+</tr>
+<tr>
+<td>dBTP</td>
+<td>Crête vraie estimée, incluant les pics qui peuvent apparaître entre les échantillons lors de la reconstruction.</td>
+</tr>
+<tr>
+<td>Réduction / GR</td>
+<td>Atténuation appliquée par un compresseur ou limiteur. Plus elle est élevée, plus l’étage retient le signal.</td>
+</tr>
+<tr>
+<td>Mid / Side</td>
+<td>Mid : contenu commun à gauche et droite ; Side : différence entre les canaux, liée à l’espace stéréo.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-de-harsh-resonance-traps-nettoyer">3. De-Harsh &amp; Resonance Traps — nettoyer</h2>
+<p>Ces correcteurs retirent dynamiquement certaines zones lorsqu’elles ressortent. Ils ne cherchent pas automatiquement la meilleure fréquence : choisis la zone à corriger à l’oreille.</p>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Plage</th>
+<th>Fonction et utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Harsh Freq</strong></td>
+<td>4–12 kHz</td>
+<td>Centre la zone surveillée par De-Harsh. Cherche la dureté des voix, hi-hats ou cymbales. Ce bouton choisit la fréquence ; De-Harsh règle l’action.</td>
+</tr>
+<tr>
+<td><strong>De-Harsh</strong></td>
+<td>0–100 %</td>
+<td>Dose la réduction des agressivités autour de Harsh Freq. À 0 %, cette correction est nulle. Commence doucement ; trop de réduction peut ternir le morceau.</td>
+</tr>
+<tr>
+<td><strong>Mud Trap — fréquence</strong></td>
+<td>80–400 Hz</td>
+<td>Choisit la zone de grave/bas-médium à surveiller : accumulation, effet « carton », manque de lisibilité entre basse et kick.</td>
+</tr>
+<tr>
+<td><strong>Mud Trap — dosage</strong></td>
+<td>0–100 %</td>
+<td>Petit potard sous Mud Trap : dose sa correction dynamique. Il n’agit que si le bouton Mud est <strong>ON</strong>.</td>
+</tr>
+<tr>
+<td><strong>Ring Trap — fréquence</strong></td>
+<td>2–10 kHz</td>
+<td>Choisit une résonance plus aiguë : son métallique, dureté étroite, résonance de voix ou de caisse claire.</td>
+</tr>
+<tr>
+<td><strong>Ring Trap — dosage</strong></td>
+<td>0–100 %</td>
+<td>Petit potard sous Ring Trap : dose sa correction dynamique, lorsque Ring est <strong>ON</strong>.</td>
+</tr>
+<tr>
+<td><strong>Sub Barrier</strong></td>
+<td>15–100 Hz</td>
+<td>Filtre passe-haut : atténue ce qui se trouve sous sa fréquence. Utile pour les infra-graves inutiles ; trop haut, il retire le poids du kick et de la basse.</td>
+</tr>
+<tr>
+<td><strong>Radio Ceil</strong></td>
+<td>18–45 kHz</td>
+<td>Filtre passe-bas : atténue le haut du spectre au-dessus de sa fréquence. Sa fréquence utile dépend de celle du projet ; une valeur au-dessus de la limite numérique peut rendre le filtre neutre.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mud ON/OFF et Ring ON/OFF</strong> activent chaque Trap indépendamment de son dosage. Un réglage de fréquence seul ne suffit pas si sa correction est désactivée.</p>
+<p><strong>Spike Listen / LISTEN</strong> permet d’écouter ce que De-Harsh, Mud et Ring retirent, avant le reste du mastering. Utilise-le brièvement pour vérifier la zone visée, puis coupe-le pour juger le master complet. Il reste une écoute de contrôle, pas le signal à exporter. DELTA prend priorité et suspend cette écoute sans effacer son réglage.</p>
+<h2 id="4-console-tone-matrix-equalizer-equilibrer">4. Console Tone &amp; Matrix Equalizer — équilibrer</h2>
+<h3 id="les-quatre-grandes-couleurs">Les quatre grandes couleurs</h3>
+<table>
+<thead>
+<tr>
+<th>Potard</th>
+<th>Plage</th>
+<th>Ce qu’il change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sub Weight</strong></td>
+<td>−6 à +6 dB</td>
+<td>Courbe large du grave. En positif, renforce le bas avec une atténuation couplée plus haut pour éviter une simple bosse uniforme. En négatif, allège le grave. Ce n’est pas le même filtre que Gravity.</td>
+</tr>
+<tr>
+<td><strong>Punch Body</strong></td>
+<td>−6 à +6 dB</td>
+<td>Courbe large autour de <strong>650 Hz</strong> : corps, matière et bas-médium. Monte si le mix manque de substance ; baisse s’il devient épais ou « boîte ».</td>
+</tr>
+<tr>
+<td><strong>Silk Shine</strong></td>
+<td>−6 à +6 dB</td>
+<td>Courbe large autour de <strong>8 kHz</strong> : brillance et présence du haut. Trop de gain peut rendre les consonnes et cymbales fatigantes.</td>
+</tr>
+<tr>
+<td><strong>Air Diffuse</strong></td>
+<td>−6 à +6 dB</td>
+<td>Shelf aigu autour de <strong>12 kHz</strong> : sensation d’air. Il agit sur la tonalité générale ; Atmosphere agit sur le Side stéréo.</td>
+</tr>
+</tbody>
+</table>
+<p>Les dB de Sub Weight sont ceux de sa commande de courbe : la réponse varie selon la fréquence. Ce n’est pas un gain uniforme appliqué à tout le grave.</p>
+<h3 id="les-trois-bandes-de-correction">Les trois bandes de correction</h3>
+<p>Chaque bande possède <strong>deux potards</strong> : une fréquence et un gain. Les courbes ont une largeur fixe ; aucun réglage de Q n’est proposé.</p>
+<table>
+<thead>
+<tr>
+<th>Bande</th>
+<th>Potard de fréquence</th>
+<th>Potard de gain</th>
+<th>Utilité typique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Band I — Low</strong></td>
+<td>30–400 Hz</td>
+<td>−6 à +6 dB</td>
+<td>Ajuster le poids du kick, de la basse ou un excès de bas-médium.</td>
+</tr>
+<tr>
+<td><strong>Band II — Mid</strong></td>
+<td>400 Hz–4 kHz</td>
+<td>−6 à +6 dB</td>
+<td>Corps, clarté des voix/guitares, médiums trop encombrés ou trop incisifs.</td>
+</tr>
+<tr>
+<td><strong>Band III — Air</strong></td>
+<td>4–18 kHz</td>
+<td>−6 à +6 dB</td>
+<td>Détail, brillance, haut du spectre trop discret ou trop dur.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>EQ ON/OFF</strong> active ou neutralise <strong>ces trois bandes</strong>. Les grandes couleurs Sub Weight/Punch Body/Silk Shine/Air Diffuse, les filtres de nettoyage et Gravity restent indépendants.</p>
+<p><strong>Méthode :</strong> trouve d’abord la fréquence, puis dose le gain. Pour une correction de mastering, commence par de petits écarts, par exemple 0,5 à 1 dB, puis écoute l’ensemble.</p>
+<h2 id="5-blood-drive-dynamics-densite-et-couleur">5. Blood Drive &amp; Dynamics — densité et couleur</h2>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Plage</th>
+<th>Fonction et utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IN GAIN</strong></td>
+<td>−18 à +18 dB</td>
+<td>Gain indépendant placé avant tous les traitements. Augmenter fait travailler davantage la chaîne qui suit. Le bouton ne change pas la valeur de Blood Drive, mais peut changer la compression et la saturation obtenues.</td>
+</tr>
+<tr>
+<td><strong>Blood Drive</strong></td>
+<td>0 à +12 dB</td>
+<td>Gain d’excitation après le nettoyage dynamique et avant EQ/compresseur. Il augmente l’engagement des traitements suivants. À utiliser pour le caractère et la densité de la chaîne, plutôt que comme simple volume final.</td>
+</tr>
+<tr>
+<td><strong>Dual Link</strong></td>
+<td>0–100 %</td>
+<td>Liaison des détecteurs du compresseur gauche/droite. À 100 %, une crête d’un côté influence les deux côtés : image plus stable. À 0 %, chaque côté réagit indépendamment, avec davantage de risque de déplacement stéréo.</td>
+</tr>
+<tr>
+<td><strong>Density Blend</strong></td>
+<td>0–100 %</td>
+<td>Mélange de la compression principale. À 100 %, sa réduction est entièrement appliquée ; en baissant, on réintroduit le signal non compressé à cet étage. À 0 %, Drive, Glue et les autres traitements restent actifs.</td>
+</tr>
+<tr>
+<td><strong>Squash</strong></td>
+<td>1,2:1–8:1</td>
+<td>Ratio de la compression principale. Plus il monte, plus les niveaux au-dessus du seuil sont retenus. Un ratio élevé peut donner une densité plus ferme et réduire le relief.</td>
+</tr>
+<tr>
+<td><strong>Recovery</strong></td>
+<td>10–1 200 ms</td>
+<td>Temps de récupération du compresseur principal. Court : retour plus rapide, pouvant respirer ou pomper. Long : maintien plus doux, pouvant écraser une succession de coups. En Valve, la récupération dépend aussi du signal.</td>
+</tr>
+<tr>
+<td><strong>Tape Glue</strong></td>
+<td>0–6 dB</td>
+<td>Dose un deuxième étage de compression de cohésion : plus on monte, plus il s’engage. L’échelle ne correspond pas à un simple gain de sortie ni à une réduction garantie. La coloration de bande se règle séparément avec Tape Color.</td>
+</tr>
+<tr>
+<td><strong>Crush Clip</strong></td>
+<td>0–10</td>
+<td>Excitation du clipper à coude doux. Arrondit les crêtes avant limitation pour gagner en densité ; à 0, son action d’écrêtage est neutralisée. Trop de Clip peut produire du grain, réduire l’attaque et durcir le grave.</td>
+</tr>
+<tr>
+<td><strong>Tape Color</strong></td>
+<td>0–100 %</td>
+<td>Dosage de coloration de bande : saturation douce et arrondi des aigus dépendant du signal. À 0 %, cet effet est neutre. Ne modifie pas les réglages de Tape Glue.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PURE / VALVE</strong> : Pure désactive le comportement optical de la compression principale et la petite coloration Valve associée. Valve active une récupération dépendante du programme et une légère coloration harmonique. <strong>Pure ne coupe pas</strong> Tape Color, THD, XL, Glue ou le clipper : ce n’est pas un bypass général des couleurs.</p>
+<p><strong>Tape — Discret / Marqué</strong> : Discret donne une excitation et un mélange plus modérés ; Marqué pousse une coloration plus dense. Choisis d’abord le caractère, puis ajuste Tape Color. Il n’y a pas de bruit de bande, de wow ou de flutter ajouté.</p>
+<h3 id="thd-et-xl-sous-lecran-central">THD et XL, sous l’écran central</h3>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Plage / choix</th>
+<th>Fonction et utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>THD</strong></td>
+<td>−60 à −20 dB</td>
+<td>Dose une coloration harmonique. <strong>−60 dB = OFF</strong> pour cet effet ; en allant vers −20, le dosage augmente. L’échelle n’est pas une mesure du taux de distorsion réel en sortie.</td>
+</tr>
+<tr>
+<td><strong>THD : Warm / Dense</strong></td>
+<td>Deux caractères</td>
+<td>Warm favorise une génération asymétrique, associée aux harmoniques paires ; Dense une génération symétrique, associée aux impaires. Le résultat dépend du niveau du signal.</td>
+</tr>
+<tr>
+<td><strong>XL</strong></td>
+<td>0–100 %</td>
+<td>Dose un modelage non linéaire complémentaire. À 0 %, la contribution XL est nulle. Il peut changer la texture et l’arrondi des crêtes ; ce n’est pas un élargisseur stéréo.</td>
+</tr>
+<tr>
+<td><strong>XL MODE</strong></td>
+<td>Densité / Présence / Impact</td>
+<td>Densité travaille surtout au-dessus du grave ; Présence cible davantage le détail supérieur ; Impact agit sur une portion plus large du signal et arrondit les grandes excursions. Compare à dosage faible avant de pousser.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Repère :</strong> Tape Glue = compression ; Tape Color = coloration ; THD = harmonique ; XL = modelage de texture ; Blood Drive = excitation en amont ; LoudnessWar = poussée finale. Leurs effets peuvent se cumuler.</p>
+<h2 id="6-spatial-horizon-ms-placer-la-stereo">6. Spatial Horizon &amp; M/S — placer la stéréo</h2>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Plage</th>
+<th>Fonction et utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mono Base</strong></td>
+<td>0–400 Hz</td>
+<td>Atténue progressivement le Side dans le grave sous la fréquence choisie. Le bas devient plus centré. À 0, cette réduction du Side est neutralisée. Ce n’est pas une séparation brutale à la fréquence affichée.</td>
+</tr>
+<tr>
+<td><strong>Horizon Width</strong></td>
+<td>0–200 %</td>
+<td>Niveau du Side : 100 % conserve sa largeur de référence ; 0 % réduit le Side à zéro ; au-dessus de 100 %, élargit ce qui possède déjà du Side. Vérifie la compatibilité mono.</td>
+</tr>
+<tr>
+<td><strong>Atmosphere</strong></td>
+<td>0–100 %</td>
+<td>Dose une EQ sur le Side selon le profil choisi. À 0 %, cette correction est nulle. Le centre est préservé par cet effet et sa correction vise surtout au-dessus du grave. Aucun délai de transport supplémentaire n’est ajouté.</td>
+</tr>
+<tr>
+<td><strong>Mid Bias</strong></td>
+<td>−50 à +50</td>
+<td>Déplace le <strong>Mid</strong> vers la gauche ou la droite en gardant le Side fixe. C = centre. Ce n’est pas une balance de tout le mix ; laisse-le au centre sauf intention précise.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="warp-profile-les-quatre-profils-datmosphere">Warp Profile — les quatre profils d’Atmosphere</h3>
+<table>
+<thead>
+<tr>
+<th>Profil</th>
+<th>Caractère</th>
+<th>Correction à dosage maximal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 — Ouvert</strong></td>
+<td>Ouvre le haut des côtés</td>
+<td>Shelf d’environ +2 dB à 2,5 kHz.</td>
+</tr>
+<tr>
+<td><strong>2 — Présence</strong></td>
+<td>Fait ressortir le détail latéral</td>
+<td>Cloche d’environ +2,5 dB à 3,5 kHz.</td>
+</tr>
+<tr>
+<td><strong>3 — Air</strong></td>
+<td>Ajoute de l’air sur les côtés</td>
+<td>Shelf d’environ +3 dB à 7 kHz.</td>
+</tr>
+<tr>
+<td><strong>4 — Chaleur</strong></td>
+<td>Donne de la matière latérale</td>
+<td>Cloche d’environ +1,5 dB à 1,2 kHz.</td>
+</tr>
+</tbody>
+</table>
+<p>Les valeurs décrivent les filtres du profil ; la correction finale dépend du dosage et du filtrage de protection du grave. Atmosphere ne crée pas artificiellement de stéréo à partir d’un signal parfaitement mono. La dynamique située après peut réagir au niveau modifié.</p>
+<h2 id="7-final-wall-master-monter-le-niveau-final">7. Final Wall &amp; Master — monter le niveau final</h2>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Plage</th>
+<th>Fonction et utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gravity</strong></td>
+<td>−10 à +10</td>
+<td>Renforce ou allège une courbe large du grave autour de <strong>160 Hz</strong>. L’échelle correspond à environ −3/+3 dB de shelf. Malgré sa position dans le panneau final, son EQ est traitée en amont de la compression. Ce n’est pas un contrôle de loudness.</td>
+</tr>
+<tr>
+<td><strong>LoudnessWar</strong></td>
+<td>0 à +18 dB</td>
+<td>Pousse le signal <strong>après compression et coloration, avant clipper et limiteur</strong>. Garde les réglages de Drive et de couleur, tout en faisant travailler davantage la gestion finale des crêtes. À 0 dB, il n’ajoute pas de gain.</td>
+</tr>
+<tr>
+<td><strong>Ceiling Out</strong></td>
+<td>−6 à 0 dB</td>
+<td>Plafond demandé au limiteur. <strong>Ce n’est pas un fader de volume ordinaire</strong> : il fixe la limite supérieure, sans normaliser automatiquement un signal faible. La protection finale peut retenir un plafond plus bas.</td>
+</tr>
+<tr>
+<td><strong>Hammer</strong></td>
+<td>0 à +6 dB</td>
+<td>Gain de poussée <strong>après le clipper</strong>, avant le limiteur. Permet de charger le limiteur sans augmenter directement l’excitation du clipper. À distinguer de LoudnessWar, situé avant le clipper.</td>
+</tr>
+<tr>
+<td><strong>Release</strong></td>
+<td>1–500 ms</td>
+<td>Récupération du limiteur. Le moteur utilise un minimum effectif de 8 ms puis un allongement dépendant du signal. Une valeur plus longue peut lisser davantage ; une valeur courte peut ramener du mouvement ou de la distorsion.</td>
+</tr>
+<tr>
+<td><strong>LR Unify</strong></td>
+<td>0–100 %</td>
+<td>Liaison gauche/droite du limiteur principal. 100 % retient les canaux ensemble pour stabiliser l’image ; plus bas, ils peuvent réagir différemment. La protection globale finale reste entièrement liée.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ISP Guard</strong> active la prise en compte des crêtes inter-échantillons dans le limiteur principal, avec une réserve supplémentaire. Le couper ne désactive pas la protection globale de sortie.</p>
+<h3 id="ce-que-loudnesswar-peut-faire">Ce que LoudnessWar peut faire</h3>
+<p>Si le master manque de niveau, il pousse les étages finaux. Si ceux-ci retiennent déjà fortement le signal, monter encore peut surtout augmenter l’écrêtage et la réduction, avec peu de gain de loudness. <strong>Il ne s’immobilise pas automatiquement sur le réglage « parfait »</strong> : surveille le son, les LUFS et la réduction. Garder les valeurs des traitements ne signifie pas garder exactement la même dynamique après une forte poussée.</p>
+<h3 id="la-protection-globale">La protection globale</h3>
+<p>Elle reste active après les traitements, le bypass interne et la compensation d’écoute. Elle ne monte jamais le gain. Elle vise l’objectif de sécurité global de <strong>−5 LUFS</strong>, avec une régulation d’énergie prudente. −5 LUFS est une limite haute recherchée, pas une cible à atteindre à chaque master ; vérifie l’intégré du fichier complet.</p>
+<p>Son plafond retient le plus bas entre Ceiling Out et −2 dB, avec <strong>0,5 dB de réserve interne</strong>. Exemple : Ceiling Out −3 donne une borne d’échantillons à −3,5 dB ; un réglage −0,2 ne permet pas de contourner la protection. La crête vraie est mesurée séparément. L’indication <strong>Protection sortie : −x dB</strong> montre son intervention.</p>
+<p>Le rééchantillonnage et les codecs peuvent recréer des pics. Les tests ont notamment observé un dépassement AAC sur un master fortement poussé, malgré un master brut sous −3 dBTP. Contrôle la version encodée ; baisse le plafond ou la poussée si nécessaire. Une plateforme peut aussi réduire le volume de lecture : un master plus dense n’y sera pas forcément plus fort.</p>
+<h2 id="8-ecouter-et-comparer">8. Écouter et comparer</h2>
+<h3 id="bypass">BYPASS</h3>
+<p>Écoute l’entrée alignée en temps, avec les traitements contournés. <strong>La protection finale reste active</strong>, donc un signal très fort peut encore être atténué. IN GAIN et LoudnessWar sont contournés avec la chaîne. Un hôte qui arrête complètement le plugin peut contourner aussi sa protection.</p>
+<h3 id="a-b">A / B</h3>
+<p>Deux mémoires temporaires de réglages pour comparer deux versions. Au premier basculement, l’autre mémoire est une copie : passe sur B, modifie tes réglages, puis reviens sur A pour comparer. A/B n’est pas une comparaison automatique « original contre master » ; utilise BYPASS pour cela. Sauvegarde les versions utiles dans User.</p>
+<h3 id="comp-ecoute">Comp. écoute</h3>
+<p>Compensation temporaire pour comparer A et B à des niveaux plus proches. Active-la et écoute <strong>le même passage au moins 3 secondes dans chaque état</strong>. Le plus fort est atténué, jusqu’à 12 dB ; le plus faible n’est pas amplifié. Après une modification, laisse l’apprentissage se refaire. Une protection différente entre A et B peut limiter la correspondance obtenue.</p>
+<p>Pour régler le loudness réel et avant un export temps réel, <strong>coupe Comp. écoute</strong>. Le rendu hors ligne reconnu par l’hôte l’ignore, mais un export temps réel peut conserver cette atténuation. Les mesures de sortie reflètent l’écoute après compensation et protection.</p>
+<h3 id="delta">DELTA</h3>
+<p><strong>Delta = entrée originale alignée − sortie traitée complète.</strong> Le bouton fait entendre uniquement cette différence ; le master normal est remplacé dans l’écoute, sans désactiver les calculs DSP nécessaires à la comparaison.</p>
+<p>La référence est prise <strong>avant IN GAIN</strong>. La sortie comparée inclut les nouveaux gains, les traitements, la compensation éventuelle et la protection. L’alignement tient compte du suréchantillonnage et du lookahead. Une différence de niveau seule peut donc être audible dans Delta ; ce n’est pas exclusivement un détecteur de distorsion.</p>
+<p>Utilise-le pour repérer ce que le traitement change. Coupe-le pour retrouver le master normal, avec transition douce. Un chemin réellement neutre à gain unitaire s’annule à la précision numérique près ; un preset nommé « Clean » peut néanmoins contenir des traitements.</p>
+<p>Delta est désactivé par défaut, au rappel des presets/sessions et au rendu hors ligne reconnu. Il est aussi coupé au changement A/B. <strong>Vérifie OFF avant export temps réel.</strong> C’est une différence brute après comparaison au master protégé : son niveau peut dépasser le plafond du master.</p>
+<h2 id="9-precision-hud-comprendre-les-mesures">9. Precision HUD — comprendre les mesures</h2>
+<table>
+<thead>
+<tr>
+<th>Commande / affichage</th>
+<th>Fonction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SCOPE</strong></td>
+<td>Forme d’onde réelle du signal sélectionné. Observe la forme et les grandes crêtes ; ce n’est pas un analyseur de spectre.</td>
+</tr>
+<tr>
+<td><strong>EQ CURVE</strong></td>
+<td>Réponse calculée des filtres de tonalité. Ne représente pas toute la coloration non linéaire, la compression ni tous les effets stéréo.</td>
+</tr>
+<tr>
+<td><strong>METERS</strong></td>
+<td>Crêtes L/R en dBFS et réductions COMP/LIM. COMP correspond à la compression principale ; LIM au limiteur principal. La protection finale possède son indication séparée.</td>
+</tr>
+<tr>
+<td><strong>IN / OUT</strong></td>
+<td>Change la source des crêtes et du scope. IN est avant les traitements, donc avant IN GAIN. Ce bouton ne transforme pas l’indicateur LUFS en mesure d’entrée.</td>
+</tr>
+<tr>
+<td><strong>I — LUFS intégré</strong></td>
+<td>Loudness de l’audio mesuré depuis la remise à zéro, avec gating. Lis le morceau entier pour juger son niveau global.</td>
+</tr>
+<tr>
+<td><strong>S — LUFS court terme</strong></td>
+<td>Loudness sur environ 3 secondes. Utile pour suivre couplet, refrain et passages denses.</td>
+</tr>
+<tr>
+<td><strong>TP — dBTP</strong></td>
+<td>Maximum cumulé de crête vraie estimée 4× depuis la remise à zéro. À vérifier avec un mesureur indépendant sur l’export.</td>
+</tr>
+<tr>
+<td><strong>RAZ mesures</strong></td>
+<td>Recommence les mesures et l’apprentissage de compensation A/B. Ne change pas les potards et ne désactive pas la protection.</td>
+</tr>
+<tr>
+<td><strong>TARGET</strong></td>
+<td>Repère visuel inactif en 0.3.9. Aucune normalisation automatique vers la valeur affichée.</td>
+</tr>
+<tr>
+<td><strong>Sample Rate / Latency</strong></td>
+<td>Fréquence du projet et délai déclaré au DAW. À 48 kHz, le total est de 848 échantillons, environ 17,7 ms.</td>
+</tr>
+</tbody>
+</table>
+<p>Les mesures suivent l’audio reçu : elles ne se remettent pas automatiquement à zéro au début du morceau. « — » peut indiquer une fenêtre encore incomplète ou du silence. En Delta, les mesures de sortie reflètent la différence entendue.</p>
+<p><strong>Suréchantillonnage 2× / 4× / 8×</strong> : paramètre accessible par la liste des paramètres du plugin dans le DAW ; il n’a pas de potard dédié dans l’interface HTML. Concerne les étages non linéaires, avec un coût CPU croissant. Il ne change pas la fréquence du fichier exporté et n’est pas un réglage de volume. La latence de la chaîne reste compensée.</p>
+<h2 id="10-presets-et-sauvegarde">10. Presets et sauvegarde</h2>
+<p>Le menu regroupe les presets <strong>Factory</strong>, <strong>Rap</strong>, <strong>Electro</strong>, <strong>New Rock</strong>, <strong>Trap</strong> et <strong>User</strong>. Les presets d’inspiration sont des réglages originaux, sans approbation ni reproduction garantie des ingénieurs cités.</p>
+<ol>
+<li>Règle le plugin et coupe les écoutes de contrôle.</li>
+<li>Clique <strong>Sauver</strong>, donne un nom, puis <strong>Enregistrer</strong>.</li>
+<li>Retrouve le réglage dans <strong>User</strong>.</li>
+<li>Le bouton <strong>↻</strong> actualise la liste, notamment après une sauvegarde depuis une autre instance.</li>
+</ol>
+<p>Un nom déjà utilisé crée une copie numérotée. Le menu ne propose pas d’écrasement ou de suppression directe. Les fichiers sont dans <code>%APPDATA%\BRI Audio Systems\BloodyMaster\User Presets</code> : copie ce dossier pour sauvegarder ta banque.</p>
+<p>Les presets actuels enregistrent les 52 paramètres, dont les deux gains, le bypass et Spike Listen. <strong>Delta et Comp. écoute ne sont pas sauvegardés.</strong> Les anciens presets compatibles rappellent IN GAIN et LoudnessWar à zéro. La session du DAW conserve aussi ses réglages propres. La désinstallation conserve la banque User.</p>
+<h2 id="11-resoudre-les-problemes-courants">11. Résoudre les problèmes courants</h2>
+<table>
+<thead>
+<tr>
+<th>Ce que tu entends / constates</th>
+<th>Quoi vérifier en premier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pas assez de loudness</td>
+<td>Comp. écoute OFF, BYPASS OFF, niveau du mix entrant. Monte LoudnessWar par étapes ; utilise IN GAIN si l’entrée est faible. TARGET n’effectue aucune normalisation.</td>
+</tr>
+<tr>
+<td>Le volume augmente peu mais le son se dégrade</td>
+<td>Clipper, limiteur ou protection travaillent déjà beaucoup. Réduis la poussée ; corrige le mix ou le grave plutôt que d’insister.</td>
+</tr>
+<tr>
+<td>Kick aplati / grave qui distord</td>
+<td>Réduis LoudnessWar, Hammer ou Crush Clip. Vérifie Sub Weight/Gravity, puis la compression et ses récupérations.</td>
+</tr>
+<tr>
+<td>Voix ou cymbales trop ternes</td>
+<td>Réduis De-Harsh ou Ring ; vérifie Radio Ceil et la coloration Tape.</td>
+</tr>
+<tr>
+<td>Mix trop épais</td>
+<td>Vérifie Sub Weight, Gravity et Punch Body. Cherche ensuite la bonne fréquence de Mud plutôt que de tout couper.</td>
+</tr>
+<tr>
+<td>Image qui bouge</td>
+<td>Remonte Dual Link et LR Unify ; vérifie Mid Bias.</td>
+</tr>
+<tr>
+<td>Stéréo impressionnante mais disparition en mono</td>
+<td>Réduis Horizon Width/Atmosphere et contrôle les effets stéréo déjà présents dans le mix.</td>
+</tr>
+<tr>
+<td>Son étrange, très faible ou différence seule</td>
+<td>Vérifie DELTA et Spike Listen, puis Comp. écoute et BYPASS.</td>
+</tr>
+<tr>
+<td>Le plafond semble plus bas que sa valeur</td>
+<td>Protection globale, réserve interne, ISP Guard et éventuelle compensation d’écoute : le plafond affiché n’est pas un gain de rattrapage.</td>
+</tr>
+<tr>
+<td>Le rappel d’un preset change peu le niveau</td>
+<td>Compare le même passage avec Comp. écoute OFF ; les étages de protection peuvent retenir les hausses.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-repere-de-chaine-audio">12. Repère de chaîne audio</h2>
+<p>Pour comprendre les interactions, le trajet principal est :</p>
+<p><strong>Entrée originale → IN GAIN → De-Harsh/Traps → Blood Drive → filtres/EQ/Gravity et M/S → compression principale → Glue → Tape Color/THD/XL/Valve → LoudnessWar → Crush Clip → Hammer → limiteur → compensation d’écoute éventuelle → protection finale → sortie.</strong></p>
+<p>Les écoutes Spike, BYPASS et DELTA utilisent des chemins de contrôle spécifiques. Les positions graphiques sont des regroupements d’usage : notamment Gravity reste une EQ avant compression, même si son bouton est dans le panneau final.</p>
+<p><strong>À retenir :</strong> règle d’abord le son, puis le niveau final. Compare à volume proche, préserve les attaques utiles et contrôle le fichier réellement livré.</p>
+<h2 id="13-les-machines-et-outils-qui-ont-inspire-bloody-master">13. Les machines et outils qui ont inspiré Bloody Master</h2>
+<p>Bloody Master rassemble des idées de mastering issues de plusieurs références. <strong>Le DSP est original : il reprend des principes de travail et des comportements, pas les circuits ni les algorithmes propriétaires de ces appareils.</strong> Voici précisément ce qui a été retenu.</p>
+<h3 id="pultec-le-grave-musical-et-les-courbes-larges">Pultec — le grave musical et les courbes larges</h3>
+<p>La famille Pultec, notamment le principe de grave rendu célèbre par l’EQP-1A, est la référence pour une EQ musicale : des corrections larges et l’interaction entre renforcement et atténuation du bas.</p>
+<p>Dans Bloody Master, cette inspiration se retrouve surtout dans <strong>Sub Weight</strong>. En montant ce potard, la courbe renforce le grave et combine une atténuation située plus haut. Cela permet de rechercher du poids sans ajouter uniformément la même épaisseur à tout le bas du spectre.</p>
+<p><strong>Notre réalisation :</strong> deux courbes numériques couplées, commandées par un seul potard. Ce n’est pas la reproduction du réseau passif, des transformateurs ou des lampes d’un Pultec, ni de toutes ses positions de fréquence. Les autres bandes d’EQ sont aussi des filtres numériques originaux.</p>
+<h3 id="pendulum-audio-ocl-2-la-souplesse-de-la-compression-optical">Pendulum Audio OCL-2 — la souplesse de la compression optical</h3>
+<p>L’OCL-2 est une référence de compression optique à lampes. Le projet en retient l’idée d’une <strong>compression à genou doux</strong>, d’une liaison stéréo et d’une récupération qui dépend du programme musical.</p>
+<p>Dans Bloody Master, cela concerne le comportement du compresseur, notamment <strong>VALVE</strong>, <strong>Recovery</strong> et <strong>Dual Link</strong>. Après un passage qui sollicite davantage la compression, la récupération peut s’allonger : la valeur du potard n’est donc pas une durée totale rigide.</p>
+<p><strong>Notre réalisation :</strong> détecteur et enveloppes numériques, attaque principale fixée à 8 ms et coloration Valve originale. Aucune cellule optique ou lampe physique modélisée ; les modes matériels FAST/PRESET/MANUAL de l’OCL-2 ne sont pas reproduits. <strong>L’OCL-2 inspire la compression, pas un limiteur brickwall.</strong></p>
+<h3 id="bettermaker-mastering-compressor-le-controle-du-bus-stereo">Bettermaker Mastering Compressor — le contrôle du bus stéréo</h3>
+<p>Le Mastering Compressor sert de référence fonctionnelle pour le travail de dynamique en mastering : contrôle de la compression, liaison stéréo, dosage parallèle et détecteur moins dominé par les très basses fréquences.</p>
+<p>Dans Bloody Master, ces idées correspondent à <strong>Squash</strong>, <strong>Recovery</strong>, <strong>Dual Link</strong> et <strong>Density Blend</strong>. Le détecteur du compresseur possède un filtrage à 80 Hz pour limiter sa sensibilité au bas : ce filtre concerne la détection, pas une coupure à 80 Hz du signal écouté.</p>
+<p><strong>Notre réalisation :</strong> un compresseur numérique original. Les différents modes et circuits du Bettermaker, son sidechain complet et sa calibration analogique ne sont pas reproduits. Le THD de Bloody Master est un étage de couleur propre au projet.</p>
+<h3 id="bettermaker-mastering-limiter-maitriser-le-dernier-etage">Bettermaker Mastering Limiter — maîtriser le dernier étage</h3>
+<p>Le Mastering Limiter inspire la fonction de fin de chaîne : pousser le niveau tout en maîtrisant les crêtes et le plafond.</p>
+<p>Dans Bloody Master, on retrouve cette logique avec <strong>Hammer</strong>, <strong>Ceiling Out</strong>, <strong>Release</strong>, <strong>LR Unify</strong> et <strong>ISP Guard</strong>, associés à un clipper placé avant le limiteur. <strong>LoudnessWar</strong> a ensuite été ajouté pour rendre la poussée finale plus accessible.</p>
+<p><strong>Notre réalisation :</strong> clipper doux, suréchantillonnage, anticipation et limitation numériques originaux. La courbe du clipper n’est pas une capture du Bettermaker. LoudnessWar et la protection globale sont des fonctions propres à Bloody Master, sans équivalent matériel exact revendiqué.</p>
+<h3 id="bx_masterdesk-pro-lapproche-chaine-de-master-dans-un-seul-outil">bx_masterdesk PRO — l’approche « chaîne de master dans un seul outil »</h3>
+<p>Cette référence est <strong>un plugin</strong>, pas une machine analogique. Elle a guidé l’objectif fonctionnel : réunir nettoyage, tonalité, dynamique, couleur, stéréo, contrôle du niveau et mesures dans une interface de mastering accessible.</p>
+<p>Bloody Master suit cette idée d’un parcours complet, avec ses propres choix de commandes et de DSP. Il n’utilise pas le code ni les algorithmes propriétaires de bx_masterdesk PRO.</p>
+<h3 id="tascam-model-12-linspiration-de-linterface">Tascam Model 12 — l’inspiration de l’interface</h3>
+<p>La Model 12 a inspiré <strong>l’aspect visuel</strong>, les commandes et l’esprit de la façade. Le son de ses préamplis, son EQ et sa sommation ne sont pas modélisés. L’habillage Tascam ne signifie donc pas que le plugin reproduit une console Model 12.</p>
+<h3 id="et-les-autres-etages">Et les autres étages ?</h3>
+<p><strong>Tape Color, THD, XL, De-Harsh, les Traps, Atmosphere, Gravity, LoudnessWar et la protection finale</strong> sont des réalisations originales du projet, nourries de principes généraux de traitement audio. Tape Color ne revendique pas une émulation Studer ou Ampex ; Tape Glue est un compresseur de cohésion, pas une machine à bande. Les presets inspirés d’ingénieurs sont des propositions originales, pas leurs chaînes officielles.</p>
+<h3 id="sources-et-tracabilite">Sources et traçabilité</h3>
+<p>Les références techniques du développement sont conservées dans le dépôt, notamment l’audit des inspirations et les documents de conception. Pour retrouver les principes d’origine :</p>
+<ul>
+<li><a href="https://help.uaudio.com/hc/en-us/articles/7183176266260-Pultec-Passive-EQ-Collection-Manual">Manuel Pultec Passive EQ Collection — Universal Audio</a> : explication des commandes et de l’interaction boost/atténuation ; ce manuel décrit les produits UA et leurs références, pas notre DSP.</li>
+<li><a href="https://www.pendulumaudio.com/ocl-2">Pendulum Audio — OCL-2</a> : présentation du compresseur et de ses comportements.</li>
+<li><a href="https://www.bettermaker.com/mastering-compressor">Bettermaker — Mastering Compressor</a> : référence constructeur pour l’architecture fonctionnelle du compresseur.</li>
+<li><a href="https://bettermaker.eu/en_GB/i/Bettermaker-Mastering-Limiter-FAQ/14">Bettermaker — Mastering Limiter FAQ</a> : principes et usages de la limitation de mastering.</li>
+</ul>
+<p>Ces références documentent les inspirations. Elles ne constituent pas une validation de correspondance sonore entre Bloody Master et les appareils cités.</p>
+<hr />
+<p>Notice vérifiée contre les sources de Bloody Master 0.3.9, commit audio <code>6ec0e12</code>. Les traitements sont des algorithmes originaux ; leurs noms n’impliquent pas une émulation exacte d’appareils analogiques. Les précisions de validation sont disponibles dans <code>docs/STATUS.md</code>, <code>LOUDNESS_GAIN_FR.md</code>, <code>DELTA_FR.md</code> et les rapports de mesure du dépôt.</p></main></html>
