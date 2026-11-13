@@ -26,7 +26,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         return capture->value;
     };
     if(!verify(wait([&]{return static_cast<bool>(evaluate("!!window.bloodyMasterUi?.getState()"));}),"Native state reaches HTML"))return 2;
-    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===37 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
+    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===38 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
     evaluate("document.querySelector('#knob-drive').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::drive)->load()>1.1f;}),"HTML knob updates APVTS"))return 4;
     auto* drive=p.apvts.getParameter(bm::id::drive);drive->setValueNotifyingHost(drive->convertTo0to1(6.3f));
@@ -58,6 +58,11 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::thdMode)->load()>.5f && p.apvts.getRawParameterValue(bm::id::xlMode)->load()==1.f;}),"THD color and discrete XL mode reach APVTS"))return 15;
     auto* xlMode=p.apvts.getParameter(bm::id::xlMode);xlMode->setValueNotifyingHost(xlMode->convertTo0to1(2.f));
     if(!verify(wait([&]{return static_cast<bool>(evaluate("document.querySelector('#val-xl_mode').textContent==='Impact'"));}),"XL mode automation updates rotary label"))return 16;
+    const auto originalGlue=p.apvts.getRawParameterValue(bm::id::glue)->load();
+    evaluate("document.querySelector('#tapeModeBtn').click();document.querySelector('#knob-tape-color').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::tapeMode)->load()==1.f && p.apvts.getRawParameterValue(bm::id::tapeColor)->load()>0.f && p.apvts.getRawParameterValue(bm::id::glue)->load()==originalGlue;}),"Tape colour and character are independent of Glue compression"))return 17;
+    auto* tape=p.apvts.getParameter(bm::id::tapeColor);tape->setValueNotifyingHost(tape->convertTo0to1(37.f));
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("Math.abs(Number(document.querySelector('#knob-tape-color').dataset.val)-37)<.001"));}),"Tape colour host automation returns to HTML"))return 18;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

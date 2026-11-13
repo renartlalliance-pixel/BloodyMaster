@@ -69,7 +69,7 @@ inline const FactoryPreset* findPreset(std::string_view slug) {
     return nullptr;
 }
 // Physical APVTS values. This mapping also documents the CLI/plugin agreement.
-inline std::array<std::pair<const char*,float>,45> presetParameters(const dsp::EngineSettings& s) {
+inline std::array<std::pair<const char*,float>,47> presetParameters(const dsp::EngineSettings& s) {
     const auto& t=s.tone;const auto& d=s.dynamics;const auto& p=s.peaks;
     return {{{id::hpf,float(t.hpf)},{id::lpf,float(t.lpf/1000)},
       {id::bass,float(t.bass)},{id::mid,float(t.mid)},{id::high,float(t.high)},
@@ -89,6 +89,7 @@ inline std::array<std::pair<const char*,float>,45> presetParameters(const dsp::E
       {id::mudActive,float(s.cleanup.mudEnabled)},{id::ringAmount,float(s.cleanup.ringAmount)},
       {id::ringActive,float(s.cleanup.ringEnabled)},
       {id::thd,float(p.color.thdDb)},{id::xl,float(p.color.xl)},
-      {id::thdMode,float(p.color.thdMode)},{id::xlMode,float(p.color.xlMode)}}};
+      {id::thdMode,float(p.color.thdMode)},{id::xlMode,float(p.color.xlMode)},
+      {id::tapeColor,float(p.color.tape)},{id::tapeMode,float(p.color.tapeMode)}}};
 }
 }

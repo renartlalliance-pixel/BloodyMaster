@@ -1,4 +1,4 @@
-BLOODYMASTER 0.3.3 - VERSION DE TEST WINDOWS X64
+BLOODYMASTER 0.3.4 - VERSION DE TEST WINDOWS X64
 
 1. Fermer FL Studio puis lancer l'installateur.
 2. Le VST3 est copie dans :

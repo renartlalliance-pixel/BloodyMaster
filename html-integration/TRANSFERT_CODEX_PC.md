@@ -1,3 +1,9 @@
+# Mise à jour de reprise — 0.3.4
+
+L’utilisateur reprend dans cette conversation cloud : aucun travail n’a été fait sur le PC. Lire docs/STATUS.md et docs/TAPE_DESIGN_FR.md pour l’état le plus récent. Les sections historiques ci-dessous décrivent la 0.3.3 et restent utiles pour les contraintes, mais leurs compteurs sont dépassés.
+
+Tape : sélecteur Discret/Marqué choisi par l’utilisateur, dosage séparé décidé par l’assistant après recherche expressément déléguée. Implémenté et testé localement ; workflow Windows à vérifier pour ce commit. Pas de nouveau QCM Tape nécessaire.
+
 # BloodyMaster — reprise dans Codex sur le PC
 
 ## Dossier à ouvrir

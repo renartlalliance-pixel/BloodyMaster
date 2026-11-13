@@ -7,7 +7,7 @@ binary, directory = sys.argv[1:3]
 directory = pathlib.Path(directory)
 subprocess.run([binary, '--export', str(directory)], check=True)
 rows = []
-for mode in range(6):
+for mode in range(8):
     frequency = 14000 if mode in (0, 5) else 7000
     # Even stages: second harmonic folds to 20k; odd stages: fifth to 13k.
     alias = 20000 if frequency == 14000 else 13000

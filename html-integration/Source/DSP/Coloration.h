@@ -1,11 +1,14 @@
 #pragma once
 #include "MasteringCore.h"
+#include "TapeColor.h"
 
 namespace bm::dsp {
 struct ColorSettings {
     double thdDb=-60,xl=0;
     int thdMode=0,xlMode=0; // warm/dense; density/presence/impact
     bool valve=false;
+    double tape=0;
+    int tapeMode=0;
     bool operator==(const ColorSettings&) const = default;
 };
 // Original harmonic shapers. Run inside the existing 2/4/8x FIR path, before
@@ -16,10 +19,12 @@ class Coloration {
     Ramp thd,asymmetric,valve,xl;
     std::array<Ramp,3> modes;
     ColorSettings last{};
+    TapeColor tape;
     bool initial=true;
 public:
     void prepare(double rate) {
         fs=rate;initial=true;low={};presence={};dcInput={};dcOutput={};
+        tape.prepare(rate);
         lowCoefficient=std::exp(-2*pi*180/fs);
         presenceCoefficient=std::exp(-2*pi*1300/fs);
         dcCoefficient=std::exp(-2*pi*8/fs);
@@ -27,13 +32,15 @@ public:
     void update(const ColorSettings& s) {
         if(!initial && s==last)return;
         last=s;const int n=std::max(1,static_cast<int>(fs*.02));
-        const double intensity=(dbGain(std::clamp(s.thdDb,-60.,-20.)+20)-.01)/.99;
+        const double intensity=(std::pow(10.,(std::clamp(s.thdDb,-60.,-20.)+20)/20)-.01)/.99;
+        tape.update(s.tape,s.tapeMode);
         thd.set(intensity,n,initial);asymmetric.set(s.thdMode==0?1.:0.,n,initial);
         valve.set(s.valve?1.:0.,n,initial);xl.set(std::clamp(s.xl/100,0.,1.),n,initial);
         for(int i=0;i<3;++i)modes[static_cast<size_t>(i)].set(i==std::clamp(s.xlMode,0,2)?1.:0.,n,initial);
         initial=false;
     }
     void process(double& l,double& r) {
+        tape.process(l,r);
         const double amount=thd.next(),warm=asymmetric.next(),tube=valve.next(),bloom=xl.next();
         std::array<double,3> weights{};for(size_t i=0;i<3;++i)weights[i]=modes[i].next();
         std::array<double,2> samples{l,r};

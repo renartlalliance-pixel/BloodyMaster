@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "cases": 18,
-  "minimum_alias_reduction_db": 135.72799112556953,
+  "cases": 24,
+  "minimum_alias_reduction_db": 108.50932146851059,
   "note": "Isolated coloration, clipper/limiter disabled. Specific coherent tones, not a universal aliasing bound.",
   "results": [
     {
@@ -129,6 +129,48 @@
       "alias_hz": 20000,
       "alias_reduction_db": 142.04105117508962,
       "reconstructed_peak": 0.8347564657924651
+    },
+    {
+      "mode": 6,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 117.76644335768293,
+      "reconstructed_peak": 0.743946786196481
+    },
+    {
+      "mode": 6,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 109.55636970643678,
+      "reconstructed_peak": 0.7436678239998259
+    },
+    {
+      "mode": 6,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 108.50932146851059,
+      "reconstructed_peak": 0.743509892650239
+    },
+    {
+      "mode": 7,
+      "oversampling": 2,
+      "alias_hz": 13000,
+      "alias_reduction_db": 126.30044742940505,
+      "reconstructed_peak": 0.4162087578118917
+    },
+    {
+      "mode": 7,
+      "oversampling": 4,
+      "alias_hz": 13000,
+      "alias_reduction_db": 119.65237077338682,
+      "reconstructed_peak": 0.4153695689057145
+    },
+    {
+      "mode": 7,
+      "oversampling": 8,
+      "alias_hz": 13000,
+      "alias_reduction_db": 118.60480304600459,
+      "reconstructed_peak": 0.4148847392606845
     }
   ]
 }

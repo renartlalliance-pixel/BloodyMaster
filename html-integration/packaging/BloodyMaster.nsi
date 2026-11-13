@@ -14,7 +14,7 @@ Target amd64-unicode
   !define OUT_DIR "."
 !endif
 !define PRODUCT "BloodyMaster"
-!define VERSION "0.3.3"
+!define VERSION "0.3.4"
 !define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\BRIAudioBloodyMaster"
 Name "BloodyMaster ${VERSION} - Test VST3"
 OutFile "${OUT_DIR}\BloodyMaster-${VERSION}-Test-Setup.exe"
@@ -24,10 +24,10 @@ RequestExecutionLevel admin
 SetCompressor /SOLID lzma
 ShowInstDetails show
 ShowUninstDetails show
-VIProductVersion "0.3.3.0"
+VIProductVersion "0.3.4.0"
 VIAddVersionKey /LANG=1036 "ProductName" "BloodyMaster - version de test"
 VIAddVersionKey /LANG=1036 "FileDescription" "Installation VST3 Windows x64"
-VIAddVersionKey /LANG=1036 "FileVersion" "0.3.3"
+VIAddVersionKey /LANG=1036 "FileVersion" "0.3.4"
 VIAddVersionKey /LANG=1036 "LegalCopyright" "B.R.I Audio Systems"
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "BloodyMaster - test VST3 Windows x64"

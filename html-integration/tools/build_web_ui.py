@@ -31,6 +31,13 @@ if count!=1:raise SystemExit('Harmonic controls placeholder not found')
 # these controls inside the HUD when adding the authorised mode controls.
 html,count=re.subn(r'(<div class="[^"]*")(>\s*<div class="[^"]*">\s*<span[^>]*>TARGET:)',r'\1 style="flex-wrap:wrap;row-gap:8px"\2',html,count=1)
 if count!=1:raise SystemExit('HUD target row not found')
+tape_controls='''<div class="flex items-center justify-end gap-3 mt-1">
+<span class="text-[8px] font-bold text-teal-300">TAPE COLOR</span>
+<div class="knob-base knob-green w-6 h-6" id="knob-tape-color" data-param="tape_color" data-min="0" data-max="100" data-val="0" data-unit="%"><div class="knob-cap"><div class="knob-indicator"></div></div></div>
+<span id="val-tape_color" class="text-[8px] font-mono text-neutral-400">0%</span>
+<button id="tapeModeBtn" class="tascam-btn text-[8px] px-1 py-0.5">Discret</button></div>'''
+html,count=re.subn(r'(<div[^>]*id="val-clipper"[^>]*>.*?</div>\s*</div>\s*</div>)',lambda m:m[0]+tape_controls,html,flags=re.S)
+if count!=1:raise SystemExit('Tape controls placeholder not found')
 output=pathlib.Path(sys.argv[1]);output.mkdir(parents=True,exist_ok=True)
 (output/'index.html').write_text(html,encoding='utf-8')
 print('Runtime HTML generated; approved HTML unchanged.')

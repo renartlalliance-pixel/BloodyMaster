@@ -19,14 +19,15 @@ Spectrum spectrum(ColorSettings s,double hz=1000,double amplitude=.5) {
 ColorSettings configuration(int mode){ColorSettings s;
     if(mode<2){s.thdDb=-20;s.thdMode=mode;}
     else if(mode<5){s.xl=100;s.xlMode=mode-2;}
-    else s.valve=true;
+    else if(mode==5)s.valve=true;
+    else {s.tape=100;s.tapeMode=mode-6;}
     return s;
 }
 void exports(const std::filesystem::path& directory) {
     std::filesystem::create_directories(directory);
     // Coherent one-second windows after settling; raw doubles for independent
     // spectral and reconstruction analysis, no WAV codec or preset involved.
-    for(int mode=0;mode<6;++mode)for(int factor:{1,2,4,8}) {
+    for(int mode=0;mode<8;++mode)for(int factor:{1,2,4,8}) {
         const auto settings=configuration(mode);
         const double hz=mode==0||mode==5?14000.:7000.;
         Coloration native;native.prepare(48000);native.update(settings);
@@ -55,12 +56,21 @@ int main(int argc,char** argv){
     require(std::abs(bass.fundamental/.5-1)<.01,"density preserves sub bass");
     require(bassImpact.third>bass.third*5,"impact acts on full band");
     require(spectrum(presence,4000).fundamental>spectrum(density,4000).fundamental,"presence has distinct upper-mid response");
+    const auto discreetTape=spectrum(configuration(6)),markedTape=spectrum(configuration(7));
+    require(markedTape.third>discreetTape.third*2,"marked tape has more odd harmonics");
+    require(markedTape.fundamental<discreetTape.fundamental,"marked tape rounds peaks more strongly");
+    auto tapeLow=configuration(6);tapeLow.tape=25;
+    require(spectrum(tapeLow).third<discreetTape.third*.4,"independent tape dosage");
+    auto tapeOff=configuration(7);tapeOff.tape=0;
+    require(std::abs(spectrum(tapeOff).fundamental-.5)<1.e-10,"tape off exact unity even in marked mode");
+    require(std::abs(spectrum(configuration(7),1000,.001).fundamental/.001-1)<.001,"small-signal gain normalised");
+    require(std::abs(discreetTape.mean)<1.e-8 && std::abs(markedTape.mean)<1.e-8,"tape generates no DC on symmetric sine");
     for(double fs:{44100.,48000.,96000.,192000.})for(int factor:{2,4,8}) {
         PeakChain chain;chain.prepare(fs,factor);PeakSettings s;s.color=configuration(0);chain.update(s);
         const int latency=chain.latency();
         double previous=0;
         for(int i=0;i<static_cast<int>(fs*.1);++i){
-            if(i%257==0){s.color=configuration((i/257)%6);chain.update(s);}
+            if(i%257==0){s.color=configuration((i/257)%8);chain.update(s);}
             double l=2*std::sin(2*pi*997*i/fs),r=0;chain.process(l,r);
             require(std::isfinite(l)&&std::isfinite(r),"mode automation finite");
             require(std::abs(l)<=dbGain(s.ceilingDb)+1.e-8,"final ceiling with coloration");
@@ -69,5 +79,5 @@ int main(int argc,char** argv){
         }
         require(chain.latency()==latency,"coloration adds no latency");
     }
-    std::printf("PASS harmonic balance, dosage, DC, neutral, sub preservation, six modes, stereo, automation and ceiling at four rates / three OS factors\n");
+    std::printf("PASS harmonic balance, dosage, DC, neutral, sub preservation, eight configurations, stereo, automation and ceiling at four rates / three OS factors\n");
 }
