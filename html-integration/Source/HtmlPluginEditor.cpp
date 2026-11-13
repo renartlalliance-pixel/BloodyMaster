@@ -28,6 +28,7 @@ std::optional<juce::WebBrowserComponent::Resource> resource(const juce::String& 
 }
 }
 BloodyMasterEditor::BloodyMasterEditor(BloodyMasterProcessor& p):AudioProcessorEditor(&p),processor(p) {
+    processor.setComparisonIndex(0);
     for(const auto& [id,value]:bm::presetParameters(bm::factoryPresets()[0].settings)) {
         juce::ignoreUnused(value);activeIds.insert(id);
     }
@@ -73,11 +74,13 @@ void BloodyMasterEditor::actionEvent(const juce::var& event) {
     if(!event.isObject())return;
     const auto action=event["action"].toString();
     if(action=="preset" && event["index"].isInt())processor.setCurrentProgram(static_cast<int>(event["index"]));
+    else if(action=="monitorMatch")processor.setMonitorMatch(!processor.isMonitorMatchEnabled());
+    else if(action=="resetMeters")processor.requestMeterReset();
     else if(action=="ab") {
         comparison[comparisonIndex]=processor.apvts.copyState();
         const int next=1-comparisonIndex;
         if(!comparison[next].isValid())comparison[next]=comparison[comparisonIndex].createCopy();
-        processor.apvts.replaceState(comparison[next].createCopy());comparisonIndex=next;
+        processor.apvts.replaceState(comparison[next].createCopy());comparisonIndex=next;processor.setComparisonIndex(next);
     }
     timerCallback();
 }
@@ -110,6 +113,11 @@ juce::var BloodyMasterEditor::makeState() {
         property(item,"active",activeIds.count(id)!=0);property(parameters,id.substring(3),item);
     }
     property(result,"parameters",parameters);
+    property(result,"monitorMatch",processor.isMonitorMatchEnabled());property(result,"monitorReady",processor.isMonitorMatchReady());
+    property(result,"monitorGainDb",processor.getMonitorGainDb());
+    const auto loudness=processor.getLoudnessValues();auto measurement=object();
+    property(measurement,"integrated",loudness.integrated);property(measurement,"shortTerm",loudness.shortTerm);
+    property(measurement,"truePeak",loudness.truePeak);property(result,"loudness",measurement);
     juce::Array<juce::var> presets;int selected=-1;
     const auto& bank=bm::factoryPresets();
     for(size_t i=0;i<bank.size();++i) {

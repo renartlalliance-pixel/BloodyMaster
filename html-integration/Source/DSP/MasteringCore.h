@@ -74,6 +74,8 @@ struct Settings {
     double bass=0, mid=0, high=0, presence=0, body=0;
     std::array<double,3> freq{120,1800,12000}, gain{0,0,0};
     double monoBass=0, width=100, balance=0;
+    double atmosphere=0;
+    int profile=1;
     bool eq=true, bypass=false;
     bool operator==(const Settings&) const = default;
 };
@@ -85,12 +87,23 @@ class MasteringCore {
     std::array<Biquad,11> filters{};
     Biquad sideFilter;
     Ramp width, balance, wet;
+    Biquad atmosphereHighpass;
+    std::array<Biquad,4> atmosphereFilters;
+    std::array<Ramp,4> atmosphereMix;
 public:
     void prepare(double fs) {
         sampleRate=std::isfinite(fs) && fs>=8000 ? fs : 44100;
         smoothing=static_cast<int>(sampleRate*.02);
         for(auto& f:filters) f.reset();
         sideFilter.reset(); initial=true;
+        atmosphereHighpass.reset();
+        atmosphereHighpass.set(design(Type::highpass,sampleRate,350),1,true);
+        const std::array<Type,4> types{Type::highShelf,Type::peak,Type::highShelf,Type::peak};
+        const std::array<double,4> hz{2500,3500,7000,1200}, db{2,2.5,3,1.5};
+        for(size_t i=0;i<4;++i) {
+            atmosphereFilters[i].reset();
+            atmosphereFilters[i].set(design(types[i],sampleRate,hz[i],db[i],.7),1,true);
+        }
     }
     void update(const Settings& s) {
         if(!initial && s==lastSettings) return;
@@ -108,6 +121,8 @@ public:
         sideFilter.set(design(Type::highpass,sampleRate,s.monoBass),smoothing,initial);
         width.set(std::clamp(s.width/100,0.0,2.0),smoothing,initial);
         balance.set(std::clamp(s.balance/50,-1.0,1.0),smoothing,initial);
+        for(size_t i=0;i<4;++i)
+            atmosphereMix[i].set(static_cast<int>(i)==std::clamp(s.profile,0,3)?std::clamp(s.atmosphere/100.,0.,1.):0.,smoothing,initial);
         wet.set(s.bypass?0:1,static_cast<int>(sampleRate*.005),initial);
         initial=false;
     }
@@ -118,12 +133,24 @@ public:
             const double dryL=channels[0][n], dryR=count==2?channels[1][n]:dryL;
             double l=dryL,r=dryR;
             for(auto& f:filters) { f.tick(); l=f.process(l,0); if(count==2) r=f.process(r,1); }
-            sideFilter.tick();
+            sideFilter.tick(); atmosphereHighpass.tick();
+            for(auto& f:atmosphereFilters) f.tick();
             const double w=width.next(), p=balance.next(), mix=wet.next();
             if(count==2) {
-                const double m=(l+r)*.5, side=sideFilter.process((l-r)*.5,0)*w;
-                l=(m+side)*(p>0?1-p:1); r=(m-side)*(p<0?1+p:1);
+                const double m=(l+r)*.5;
+                double side=sideFilter.process((l-r)*.5,0)*w;
+                // Fixed filters continuously follow Side. Fade only their corrections,
+                // avoiding coefficient jumps or stale states on profile changes.
+                const double upper=atmosphereHighpass.process(side,0);
+                for(size_t i=0;i<4;++i)
+                    side+=atmosphereMix[i].next()*(atmosphereFilters[i].process(upper,0)-upper);
+                // Mid-only pan: constant power relative to the centred Mid.
+                // Side is unchanged; endpoints move Mid completely to one channel.
+                const double angle=(p+1)*pi/4;
+                l=m*std::sqrt(2.)*std::cos(angle)+side;
+                r=m*std::sqrt(2.)*std::sin(angle)-side;
             }
+            else for(auto& a:atmosphereMix) (void)a.next();
             // Exact dry after the bypass fade; filter states keep following the input.
             channels[0][n]=mix==0?static_cast<float>(dryL):static_cast<float>(dryL+(l-dryL)*mix);
             if(count==2) channels[1][n]=mix==0?static_cast<float>(dryR):static_cast<float>(dryR+(r-dryR)*mix);

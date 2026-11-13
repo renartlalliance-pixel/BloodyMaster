@@ -230,7 +230,7 @@ struct BloodyMasterTests final : public juce::UnitTest
                 }
             }
             if(auto* viewport=dynamic_cast<juce::Viewport*>(child)) {
-                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),47);foundControls=true;
+                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),49);foundControls=true;
             }
         }
         expect(foundPresets && foundControls);

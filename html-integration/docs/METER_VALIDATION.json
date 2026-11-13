@@ -1,0 +1,62 @@
+[
+  {
+    "name": "bass-1",
+    "integrated": -26.828051366,
+    "shortTerm": -26.607224344,
+    "maxLoudnessError": 4.573799117224553e-10
+  },
+  {
+    "name": "mid-1",
+    "integrated": -23.224115134,
+    "shortTerm": -23.003634327,
+    "maxLoudnessError": 1.2039791386087018e-10
+  },
+  {
+    "name": "treble-1",
+    "integrated": -19.879899766,
+    "shortTerm": -19.659420817,
+    "maxLoudnessError": 3.246825031055778e-10
+  },
+  {
+    "name": "bass-2",
+    "integrated": -23.81775141,
+    "shortTerm": -23.596924388,
+    "maxLoudnessError": 3.2533620242247707e-10
+  },
+  {
+    "name": "mid-2",
+    "integrated": -20.213815177,
+    "shortTerm": -19.99333437,
+    "maxLoudnessError": 3.708819917846995e-10
+  },
+  {
+    "name": "treble-2",
+    "integrated": -16.869599809,
+    "shortTerm": -16.649120861,
+    "maxLoudnessError": 3.1512570330960443e-10
+  },
+  {
+    "name": "gated-noise",
+    "integrated": -23.839818066,
+    "shortTerm": -33.110372962,
+    "maxLoudnessError": 4.645812623493839e-10
+  },
+  {
+    "name": "peak-6000",
+    "measuredPeak": 0.797084634,
+    "referencePeak32x": 0.7999445148297628,
+    "errorDb": 0.031108556580126765
+  },
+  {
+    "name": "peak-12000",
+    "measuredPeak": 0.797151351,
+    "referencePeak32x": 0.7999811551954142,
+    "errorDb": 0.03077940316655989
+  },
+  {
+    "name": "peak-18000",
+    "measuredPeak": 0.797084634,
+    "referencePeak32x": 0.7998936512282989,
+    "errorDb": 0.030556256180709562
+  }
+]

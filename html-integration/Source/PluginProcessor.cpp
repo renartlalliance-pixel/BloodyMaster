@@ -62,7 +62,7 @@ BloodyMasterProcessor::BloodyMasterProcessor()
       apvts(*this, nullptr, "BloodyMasterState", bm::createParameterLayout())
 {
     (void) bm::factoryPresets();
-    const std::array<const char*,47> ids {
+    const std::array<const char*,49> ids {
         bm::id::hpf, bm::id::lpf, bm::id::bass, bm::id::mid, bm::id::high,
         bm::id::presence, bm::id::foundation, bm::id::p1f, bm::id::p2f, bm::id::p3f,
         bm::id::p1g, bm::id::p2g, bm::id::p3g, bm::id::monomaker, bm::id::width,
@@ -72,7 +72,7 @@ BloodyMasterProcessor::BloodyMasterProcessor()
         bm::id::limrel, bm::id::limlink, bm::id::isp, bm::id::oversampling,
         bm::id::defreq,bm::id::deamount,bm::id::lowres,bm::id::hires,bm::id::spikeListen,
         bm::id::mudAmount,bm::id::mudActive,bm::id::ringAmount,bm::id::ringActive,
-        bm::id::thd,bm::id::xl,bm::id::thdMode,bm::id::xlMode,bm::id::tapeColor,bm::id::tapeMode
+        bm::id::thd,bm::id::xl,bm::id::thdMode,bm::id::xlMode,bm::id::tapeColor,bm::id::tapeMode,bm::id::enhance,bm::id::profile
     };
     for (size_t i=0; i<ids.size(); ++i)
         dspParameters[i]=apvts.getRawParameterValue(ids[i]);
@@ -97,6 +97,7 @@ bm::dsp::EngineSettings BloodyMasterProcessor::readDspSettings() const
     c.listen=v(36)>.5;c.mudAmount=v(37);c.mudEnabled=v(38)>.5;c.ringAmount=v(39);c.ringEnabled=v(40)>.5;
     p.color.thdDb=v(41);p.color.xl=v(42);p.color.thdMode=static_cast<int>(v(43));p.color.xlMode=static_cast<int>(v(44));p.color.valve=d.optical;
     p.color.tape=v(45);p.color.tapeMode=static_cast<int>(v(46));
+    s.atmosphere=v(47);s.profile=static_cast<int>(v(48));
     return settings;
 }
 
@@ -105,6 +106,10 @@ void BloodyMasterProcessor::prepareToPlay(double sampleRate, int)
     preparedRate.store(sampleRate,std::memory_order_relaxed);
     const auto settings=readDspSettings();
     mastering.prepare(sampleRate,settings.oversampling);
+    outputMeter.prepare(sampleRate);
+    monitor.prepare(sampleRate);monitorGainDb.store(0);monitorReady.store(false);
+    loudnessValues[0].store(-200);loudnessValues[1].store(-200);loudnessValues[2].store(0);
+    meterReset.store(false);
     mastering.update(settings);
     setLatencySamples(mastering.latency());
 }
@@ -125,9 +130,11 @@ void BloodyMasterProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     for (int ch = getTotalNumInputChannels(); ch < getTotalNumOutputChannels(); ++ch)
         buffer.clear(ch, 0, buffer.getNumSamples());
 
-    mastering.update(readDspSettings());
+    const auto settings=readDspSettings();
+    mastering.update(settings);
     captureScope(buffer,true);
     mastering.process(buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
+    measureOutput(buffer,settings.bypass);
     publishMeters();
     captureScope(buffer,false);
 }
@@ -139,6 +146,7 @@ void BloodyMasterProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffe
     mastering.update(s);
     captureScope(buffer,true);
     mastering.process(buffer.getArrayOfWritePointers(),buffer.getNumChannels(),buffer.getNumSamples());
+    measureOutput(buffer,true);
     publishMeters();
     captureScope(buffer,false);
 }
@@ -173,4 +181,24 @@ void BloodyMasterProcessor::setStateInformation(const void* data, int sizeInByte
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new BloodyMasterProcessor();
+}
+
+void BloodyMasterProcessor::measureOutput(juce::AudioBuffer<float>& buffer,bool bypass) {
+    if(meterReset.exchange(false,std::memory_order_relaxed)){outputMeter.reset();monitor.reset();}
+    const int channels=buffer.getNumChannels();
+    if(channels<1 || channels>2)return;
+    const auto* l=buffer.getReadPointer(0);const auto* r=buffer.getReadPointer(channels==2?1:0);
+    for(int i=0;i<buffer.getNumSamples();++i)outputMeter.process(l[i],r[i],channels);
+    std::array<float,49> signature{};
+    for(size_t i=0;i<signature.size();++i)signature[i]=dspParameters[i]->load(std::memory_order_relaxed);
+    monitor.select(comparisonIndex.load(std::memory_order_relaxed),signature);
+    monitor.process(buffer.getArrayOfWritePointers(),channels,buffer.getNumSamples(),outputMeter.values.shortTerm,
+                    monitorEnabled.load(std::memory_order_relaxed)&&!bypass,isNonRealtime()||bypass);
+    monitorGainDb.store(monitor.gainDb,std::memory_order_relaxed);monitorReady.store(monitor.ready,std::memory_order_relaxed);
+    loudnessValues[0].store(outputMeter.values.integrated,std::memory_order_relaxed);
+    loudnessValues[1].store(outputMeter.values.shortTerm,std::memory_order_relaxed);
+    loudnessValues[2].store(outputMeter.values.truePeak,std::memory_order_relaxed);
+}
+bm::dsp::LoudnessValues BloodyMasterProcessor::getLoudnessValues() const {
+    return {loudnessValues[0].load(std::memory_order_relaxed),loudnessValues[1].load(std::memory_order_relaxed),loudnessValues[2].load(std::memory_order_relaxed)};
 }

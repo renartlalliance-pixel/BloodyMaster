@@ -1,6 +1,8 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "DSP/Engine.h"
+#include "DSP/AudioMeter.h"
+#include "DSP/MonitorMatch.h"
 #include <array>
 #include <atomic>
 #include <optional>
@@ -39,6 +41,13 @@ public:
 
     juce::AudioProcessorValueTreeState apvts;
     bm::dsp::MeterValues getMeterValues() const;
+    bm::dsp::LoudnessValues getLoudnessValues() const;
+    void setMonitorMatch(bool enabled) { monitorEnabled.store(enabled,std::memory_order_relaxed); }
+    bool isMonitorMatchEnabled() const { return monitorEnabled.load(std::memory_order_relaxed); }
+    void setComparisonIndex(int index) { comparisonIndex.store(index,std::memory_order_relaxed); }
+    double getMonitorGainDb() const { return monitorGainDb.load(std::memory_order_relaxed); }
+    bool isMonitorMatchReady() const { return monitorReady.load(std::memory_order_relaxed); }
+    void requestMeterReset() { meterReset.store(true,std::memory_order_relaxed); }
     struct ScopeFrame { std::array<std::array<float,256>,4> channels{}; int samples=0; };
     std::optional<ScopeFrame> getScopeFrame() const;
     double getDspSampleRate() const { return preparedRate.load(std::memory_order_relaxed); }
@@ -53,8 +62,16 @@ private:
     std::atomic<double> preparedRate{0};
     void captureScope(const juce::AudioBuffer<float>&,bool input);
     void publishMeters();
+    bm::dsp::AudioMeter outputMeter;
+    std::atomic<bool> meterReset{false};
+    std::array<std::atomic<double>,3> loudnessValues{{-200.,-200.,0.}};
+    bm::dsp::MonitorMatch monitor;
+    std::atomic<bool> monitorEnabled{false},monitorReady{false};
+    std::atomic<int> comparisonIndex{0};
+    std::atomic<double> monitorGainDb{0};
+    void measureOutput(juce::AudioBuffer<float>&,bool bypass);
     bm::dsp::Engine mastering;
-    std::array<std::atomic<float>*, 47> dspParameters{};
+    std::array<std::atomic<float>*, 49> dspParameters{};
     bm::dsp::EngineSettings readDspSettings() const;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BloodyMasterProcessor)
 };

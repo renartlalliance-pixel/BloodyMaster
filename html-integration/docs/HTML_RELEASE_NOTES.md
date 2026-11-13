@@ -1,11 +1,9 @@
-BloodyMaster 0.3.4 — version de test.
+# BloodyMaster 0.3.5 — version de test HTML
 
-- Nouveau dosage Tape Color indépendant de la compression Tape Glue.
-- Sélecteur Discret / Marqué, saturation douce et arrondi des aigus dépendant du niveau.
-- Neutre à 0 %, 0 % par défaut et dans les presets existants.
-- Suréchantillonnage 2/4/8x existant, sans latence supplémentaire ; modes et dosage lissés.
-- HTML original conservé ; nouveaux contrôles dans la page générée. Paramètres ajoutés après les anciens pour préserver IDs et index.
+Ajoute Atmosphere, EQ sur le Side avec quatre profils et dosage, centre préservé, grave très peu modifié, sans latence supplémentaire. Mid Pan déplace désormais le centre en gardant les côtés fixes ; les anciens réglages de pan non nuls peuvent changer de rendu. Voir STEREO_DESIGN_FR.md.
 
-THD Warm/Dense, XL Densité/Présence/Impact, Valve et nettoyages dynamiques des versions précédentes sont conservés. Les traitements sont originaux et ne prétendent pas émuler exactement des circuits analogiques.
+Conserve Tape Color indépendant (Discret/Marqué), THD/XL, nettoyages, compression et limiteur. HTML originaux conservés.
 
-Restent à développer : Stereo Enhance/profils/Mid pan, mesures LUFS/true peak et comparaison compensée. Les mesures absentes ne sont pas simulées. Installateur non signé, version de test ; fermer FL Studio avant installation puis rescanner les plugins. WebView2 installé si nécessaire avec une connexion dans ce cas. Validation FL Studio sur la machine de l’utilisateur à effectuer.
+Ajoute les mesures réelles LUFS intégré/court terme 3 s et true peak estimé 4×, RAZ manuelle et comparaison A/B compensée. Écouter les deux états au moins 3 s ; atténuation seule jusqu'à 12 dB. **Couper la compensation avant export temps réel.** Elle est désactivée par défaut et ignorée au rendu hors ligne signalé par l'hôte. Mesures avant compensation. Presets de genre enrichis légèrement. Voir METERING_FR.md pour limites, gates et protocole de vérification. TARGET ne normalise pas le fichier.
+
+Reste la validation FL Studio et l'écoute comparative humaine. Installateur non signé, version de test. Fermer FL Studio avant installation et rescanner les plugins. WebView2 installé si nécessaire avec une connexion dans ce cas.

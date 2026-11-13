@@ -95,9 +95,23 @@
       draw();
     });
   document.getElementById('meterSourceBtn')?.addEventListener('click',()=>{source=source==='out'?'in':'out';document.getElementById('meterSourceBtn').textContent=source.toUpperCase();draw();});
+  document.getElementById('monitorMatchBtn')?.addEventListener('click',()=>emit('bmAction',{action:'monitorMatch'}));
+  document.getElementById('resetMetersBtn')?.addEventListener('click',()=>emit('bmAction',{action:'resetMeters'}));
+  const loudnessText = measurement => {
+    const lu = value => Number.isFinite(value) && value > -199 ? value.toFixed(1) : '—';
+    const tp = measurement?.truePeak > 0 ? (20*Math.log10(measurement.truePeak)).toFixed(1) : '—';
+    return `I ${lu(measurement?.integrated)} LUFS / S ${lu(measurement?.shortTerm)} LUFS / TP ${tp} dBTP`;
+  };
   function apply(next) {
     if(!next.scope && state?.scope)next.scope=state.scope;
     state=next;
+    const monitor=document.getElementById('monitorMatchBtn');
+    if(monitor){
+      monitor.textContent=next.monitorMatch?(next.monitorReady?`Comp. écoute ${(next.monitorGainDb||0).toFixed(1)} dB`:'Comp. écoute : écouter A puis B ≥ 3 s'):'Comp. écoute OFF';
+      monitor.classList.toggle('btn-active',!!next.monitorMatch);monitor.setAttribute('aria-pressed',String(!!next.monitorMatch));
+      monitor.title='Écoute temporaire : atténue le plus fort (maximum 12 dB). Mesures avant compensation. COUPER avant export temps réel ; désactivée lors du rendu hors ligne signalé par l’hôte.';
+    }
+    const readout=document.getElementById('loudnessReadout');if(readout)readout.textContent=loudnessText(next.loudness);
     if(!selector.dataset.native){
       selector.replaceChildren(new Option('Réglages personnalisés',''),...next.presets.map((name,i)=>new Option(name,String(i))));
       selector.dataset.native='true';
@@ -148,14 +162,20 @@
     const valve=next.parameters.valve.value>.5;
     document.getElementById('modeValveLbl').className=valve?'text-red-400 font-bold':'text-neutral-500';
     document.getElementById('modePureLbl').className=valve?'text-neutral-500':'text-sky-400 font-bold';
-    document.querySelectorAll('.profile-btn').forEach(btn=>{btn.disabled=true;btn.title='Profils M/S non raccordés dans cette version';});
-    const ab=document.getElementById('abBtn');ab.title=`Comparaison ${next.ab} active — sans compensation automatique de volume`;ab.setAttribute('aria-label',ab.title);
+    document.querySelectorAll('.profile-btn').forEach(btn=>{
+      const index=Number(btn.dataset.prof)-1;
+      btn.disabled=!next.parameters.profile.active;
+      btn.title=['Ouvert : shelf 2,5 kHz','Présence : cloche 3,5 kHz','Air : shelf 7 kHz','Chaleur : cloche 1,2 kHz'][index];
+      btn.classList.toggle('btn-active',index===next.parameters.profile.value);
+      btn.setAttribute('aria-pressed',String(index===next.parameters.profile.value));
+    });
+    const ab=document.getElementById('abBtn');ab.title=`Comparaison ${next.ab} active — ${next.monitorMatch?'compensation d’écoute activée':'compensation d’écoute désactivée'}`;ab.setAttribute('aria-label',ab.title);
     ab.classList.toggle('btn-active',next.ab==='B');
     for(const span of document.querySelectorAll('span')){
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.4';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.5';
     }
     draw();
   }
@@ -190,7 +210,7 @@
         {label:'COMP',value:meters.compressorGr/12,text:meters.compressorGr.toFixed(1),color:'#fbbf24'},
         {label:'LIM',value:meters.limiterGr/12,text:meters.limiterGr.toFixed(1),color:'#ef4444'}];
       bars.forEach((bar,i)=>{const x=18+i*(W-36)/4,bottom=H-40,height=H-78;ctx.fillStyle='#0f3035';ctx.fillRect(x,30,20,height);ctx.fillStyle=bar.color;ctx.fillRect(x,bottom-height*clamp(bar.value,0,1),20,height*clamp(bar.value,0,1));ctx.fillText(bar.label,x-2,H-25);ctx.fillText(bar.text,x-5,H-12);});
-      ctx.fillStyle='#94a3b8';ctx.fillText('LUFS / TRUE PEAK : — (non mesurés)',12,H-1);
+      ctx.fillStyle='#94a3b8';ctx.fillText(loudnessText(state.loudness),12,H-1);
     }
   }
   window.addEventListener('resize',draw);

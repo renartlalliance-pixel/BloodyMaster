@@ -63,6 +63,22 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::tapeMode)->load()==1.f && p.apvts.getRawParameterValue(bm::id::tapeColor)->load()>0.f && p.apvts.getRawParameterValue(bm::id::glue)->load()==originalGlue;}),"Tape colour and character are independent of Glue compression"))return 17;
     auto* tape=p.apvts.getParameter(bm::id::tapeColor);tape->setValueNotifyingHost(tape->convertTo0to1(37.f));
     if(!verify(wait([&]{return static_cast<bool>(evaluate("Math.abs(Number(document.querySelector('#knob-tape-color').dataset.val)-37)<.001"));}),"Tape colour host automation returns to HTML"))return 18;
+    evaluate("document.querySelector('.profile-btn[data-prof=\"4\"]').click();document.querySelector('#knob-enhance').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::profile)->load()==3.f && p.apvts.getRawParameterValue(bm::id::enhance)->load()>0.f;}),"Atmosphere and profile controls reach APVTS"))return 19;
+    auto* profile=p.apvts.getParameter(bm::id::profile);profile->setValueNotifyingHost(profile->convertTo0to1(0.f));
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("document.querySelector('.profile-btn[data-prof=\"1\"]').getAttribute('aria-pressed')==='true'"));}),"Profile host automation updates selection"))return 20;
+    for(int block=0;block<310;++block){
+        for(int i=0;i<512;++i){const float v=.1f*std::sin(2*juce::MathConstants<float>::pi*1000*(block*512+i)/48000);audio.setSample(0,i,v);audio.setSample(1,i,v);}
+        p.processBlock(audio,midi);
+    }
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("(()=>{const m=window.bloodyMasterUi.getState().loudness;return m.integrated>-100 && m.shortTerm>-100 && m.truePeak>0 && !document.querySelector('#loudnessReadout').textContent.includes('—');})()"));}),"Real integrated, short term and true peak reach HTML"))return 21;
+    evaluate("document.querySelector('#resetMetersBtn').click();true");pump(100);
+    audio.clear();p.processBlock(audio,midi);
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("window.bloodyMasterUi.getState().loudness.integrated===-200 && window.bloodyMasterUi.getState().loudness.shortTerm===-200"));}),"Manual meter reset reaches audio thread"))return 22;
+    evaluate("document.querySelector('#monitorMatchBtn').click();true");
+    if(!verify(wait([&]{return p.isMonitorMatchEnabled();}),"Temporary monitor compensation can be enabled"))return 23;
+    evaluate("document.querySelector('#monitorMatchBtn').click();true");
+    if(!verify(wait([&]{return !p.isMonitorMatchEnabled();}),"Monitor compensation can be disabled before export"))return 24;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

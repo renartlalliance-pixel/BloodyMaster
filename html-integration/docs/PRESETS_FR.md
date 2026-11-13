@@ -29,7 +29,7 @@ pistes et n'ajoute pas de de-esser, de compresseur multibande ou de modèle de l
 ## Réglages principaux
 
 Tous : plafond −1 dB, ISP activé, suréchantillonnage 8×, liaison compresseur et
-limiteur 100 %, balance centrée. Les valeurs Clip sont les commandes de drive du
+limiteur 100 %, Mid Pan centré. Les valeurs Clip sont les commandes de drive du
 clipper ; elles ne sont pas une quantité de crêtes effectivement coupées.
 
 | Preset / identifiant CLI | Intention | Drive dB | Ratio | Release ms | Mix % | Clip | Push dB | Mono Hz | Largeur % |
@@ -44,7 +44,7 @@ clipper ; elles ne sont pas une quantité de crêtes effectivement coupées.
 Pop Open/Dense utilisent le relâchement optical ; Rap et Electro utilisent le
 relâchement non optical. L'attaque principale reste fixée à 8 ms dans ce moteur.
 L'optical rallonge la récupération selon le programme : la valeur affichée n'est
-pas une durée totale de récupération garantie. L'intégralité des 32 paramètres
+pas une durée totale de récupération garantie. L'intégralité des 49 paramètres
 actifs est exportée dans `Resources/FactoryPresets.json` depuis la banque C++.
 
 ## Choisir et ajuster
@@ -71,3 +71,21 @@ compilation (selon l'interface de programmes exposée par le DAW). Le HTML n'a p
 été modifié et son menu n'est pas encore relié. Les tests de rappel JUCE passent avec les binaires Windows sous Wine ;
 leur validation sous Windows natif et FL Studio reste à faire. La sauvegarde d'état conserve l'indice du programme et les
 valeurs de paramètres ; une automation ultérieure peut personnaliser le preset.
+
+
+## Mise à jour 0.3.5
+
+Les presets de genre utilisent les modules finalisés avec des dosages prudents.
+THD/XL et les pièges restent au repos ; aucun nettoyage automatique imposé.
+
+| Preset | Atmosphere | Profil | Tape Color Discret |
+|---|---:|---|---:|
+| Rap Sub Focus | 0 % | 2 Présence | 8 % |
+| Rap Forward | 8 % | 2 Présence | 10 % |
+| Pop Open | 15 % | 1 Ouvert | 5 % |
+| Pop Dense | 10 % | 4 Chaleur | 12 % |
+| Electro Punch | 8 % | 3 Air | 6 % |
+| Electro Club | 10 % | 1 Ouvert | 10 % |
+
+Clean, Glue et Punch conservent Atmosphere et Tape Color à zéro. Ce sont des
+points de départ numériques à écouter, pas des réglages validés sur tout master.
