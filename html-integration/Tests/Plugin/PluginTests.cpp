@@ -334,8 +334,11 @@ int main(int argc,char** argv)
     runner.runTestsInCategory("BloodyMaster");
 
     int failures = 0;
-    for (int i = 0; i < runner.getNumResults(); ++i)
-        failures += runner.getResult(i)->failures;
+    for (int i = 0; i < runner.getNumResults(); ++i) {
+        const auto* result=runner.getResult(i);failures+=result->failures;
+        std::printf("GROUP %s: %d failures\n",result->subcategoryName.toRawUTF8(),result->failures);
+        if(result->failures>0)for(const auto& message:result->messages)std::printf("%s\n",message.toRawUTF8());
+    }
 
     if (runner.getNumResults() == 0)
         return 2; // aucun test execute = echec
