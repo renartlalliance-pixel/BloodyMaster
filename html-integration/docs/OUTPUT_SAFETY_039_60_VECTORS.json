@@ -1,0 +1,427 @@
+{
+  "true_peak_estimator": "independent scipy resample_poly, 32x Kaiser beta10; finite vector validation, not certification",
+  "vectors": [
+    {
+      "vector": "interpeak",
+      "rate": 44100,
+      "oversampling": 2,
+      "sample_peak_dbfs": -5.662411396001614,
+      "peak_32x_dbtp": -3.542492619031064
+    },
+    {
+      "vector": "impulse",
+      "rate": 44100,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 44100,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4860847267234187
+    },
+    {
+      "vector": "noise",
+      "rate": 44100,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.460565307840008
+    },
+    {
+      "vector": "dc_step",
+      "rate": 44100,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.7057380748474618,
+      "peak_32x_dbtp": -2.4246140739437907
+    },
+    {
+      "vector": "interpeak",
+      "rate": 44100,
+      "oversampling": 4,
+      "sample_peak_dbfs": -5.5485600929457455,
+      "peak_32x_dbtp": -3.5276377621419264
+    },
+    {
+      "vector": "impulse",
+      "rate": 44100,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 44100,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4867905902698357
+    },
+    {
+      "vector": "noise",
+      "rate": 44100,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.447454532190628
+    },
+    {
+      "vector": "dc_step",
+      "rate": 44100,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.7296059589536608,
+      "peak_32x_dbtp": -2.4288250528887696
+    },
+    {
+      "vector": "interpeak",
+      "rate": 44100,
+      "oversampling": 8,
+      "sample_peak_dbfs": -5.559153852428448,
+      "peak_32x_dbtp": -3.527746959900497
+    },
+    {
+      "vector": "impulse",
+      "rate": 44100,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 44100,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.48665028278909
+    },
+    {
+      "vector": "noise",
+      "rate": 44100,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.446261147723838
+    },
+    {
+      "vector": "dc_step",
+      "rate": 44100,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.7249633058258067,
+      "peak_32x_dbtp": -2.428076791532692
+    },
+    {
+      "vector": "interpeak",
+      "rate": 48000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -5.7396751617186474,
+      "peak_32x_dbtp": -3.6172005758564123
+    },
+    {
+      "vector": "impulse",
+      "rate": 48000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 48000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5062068386730783,
+      "peak_32x_dbtp": -2.503011990356802
+    },
+    {
+      "vector": "noise",
+      "rate": 48000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.455746792099721
+    },
+    {
+      "vector": "dc_step",
+      "rate": 48000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.7057331262830098,
+      "peak_32x_dbtp": -2.4246136779799174
+    },
+    {
+      "vector": "interpeak",
+      "rate": 48000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -5.625590931145812,
+      "peak_32x_dbtp": -3.6018372515999157
+    },
+    {
+      "vector": "impulse",
+      "rate": 48000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 48000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5061501864196782,
+      "peak_32x_dbtp": -2.4927671825386137
+    },
+    {
+      "vector": "noise",
+      "rate": 48000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.447440556518833
+    },
+    {
+      "vector": "dc_step",
+      "rate": 48000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.7295861102455987,
+      "peak_32x_dbtp": -2.4288224683161634
+    },
+    {
+      "vector": "interpeak",
+      "rate": 48000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -5.636145384273822,
+      "peak_32x_dbtp": -3.60192763668642
+    },
+    {
+      "vector": "impulse",
+      "rate": 48000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 48000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5046794297980064,
+      "peak_32x_dbtp": -2.4926853093819616
+    },
+    {
+      "vector": "noise",
+      "rate": 48000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4462482939312014
+    },
+    {
+      "vector": "dc_step",
+      "rate": 48000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.724938508205797,
+      "peak_32x_dbtp": -2.4280732324315837
+    },
+    {
+      "vector": "interpeak",
+      "rate": 96000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -5.613888224636189,
+      "peak_32x_dbtp": -4.04117282213856
+    },
+    {
+      "vector": "impulse",
+      "rate": 96000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -3.517695280271412,
+      "peak_32x_dbtp": -2.688147913601047
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 96000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4979145816895287
+    },
+    {
+      "vector": "noise",
+      "rate": 96000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.457017486517545
+    },
+    {
+      "vector": "dc_step",
+      "rate": 96000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -3.1650787568244514,
+      "peak_32x_dbtp": -2.4829677810406094
+    },
+    {
+      "vector": "interpeak",
+      "rate": 96000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -5.435232204262636,
+      "peak_32x_dbtp": -4.04829235693914
+    },
+    {
+      "vector": "impulse",
+      "rate": 96000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -3.455817864805892,
+      "peak_32x_dbtp": -2.67463163833395
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 96000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4955591023873325
+    },
+    {
+      "vector": "noise",
+      "rate": 96000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.46213612565827
+    },
+    {
+      "vector": "dc_step",
+      "rate": 96000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -3.176277842201533,
+      "peak_32x_dbtp": -2.484149064464846
+    },
+    {
+      "vector": "interpeak",
+      "rate": 96000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -5.4338132953445175,
+      "peak_32x_dbtp": -4.049772592998366
+    },
+    {
+      "vector": "impulse",
+      "rate": 96000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -3.500918192373807,
+      "peak_32x_dbtp": -2.675097348098097
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 96000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4950641341898026
+    },
+    {
+      "vector": "noise",
+      "rate": 96000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.461478680761369
+    },
+    {
+      "vector": "dc_step",
+      "rate": 96000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -3.1806880498724155,
+      "peak_32x_dbtp": -2.484392027875445
+    },
+    {
+      "vector": "interpeak",
+      "rate": 192000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -5.030591646892338,
+      "peak_32x_dbtp": -4.2920644804930355
+    },
+    {
+      "vector": "impulse",
+      "rate": 192000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.6446203732243383,
+      "peak_32x_dbtp": -2.4691284755236174
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 192000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.500383953016558,
+      "peak_32x_dbtp": -2.4935291087281817
+    },
+    {
+      "vector": "noise",
+      "rate": 192000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "dc_step",
+      "rate": 192000,
+      "oversampling": 2,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.4921545535421425
+    },
+    {
+      "vector": "interpeak",
+      "rate": 192000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -5.010214055034393,
+      "peak_32x_dbtp": -4.294927080124122
+    },
+    {
+      "vector": "impulse",
+      "rate": 192000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.7166628925678866,
+      "peak_32x_dbtp": -2.452292357250281
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 192000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5002203249254262,
+      "peak_32x_dbtp": -2.493554826907668
+    },
+    {
+      "vector": "noise",
+      "rate": 192000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "dc_step",
+      "rate": 192000,
+      "oversampling": 4,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.495864281185673
+    },
+    {
+      "vector": "interpeak",
+      "rate": 192000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -5.010780017505202,
+      "peak_32x_dbtp": -4.295078197080354
+    },
+    {
+      "vector": "impulse",
+      "rate": 192000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.70897079679723,
+      "peak_32x_dbtp": -2.4540643891920166
+    },
+    {
+      "vector": "bass_bursts",
+      "rate": 192000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.50012850122878,
+      "peak_32x_dbtp": -2.4935550123657633
+    },
+    {
+      "vector": "noise",
+      "rate": 192000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.5000059563872123
+    },
+    {
+      "vector": "dc_step",
+      "rate": 192000,
+      "oversampling": 8,
+      "sample_peak_dbfs": -2.5000000877622415,
+      "peak_32x_dbtp": -2.496102111609938
+    }
+  ],
+  "alias_13khz_reduction_db": 85.43084962554636,
+  "bypass_exact_and_file_integrity": true
+}

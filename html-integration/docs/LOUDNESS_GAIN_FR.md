@@ -20,4 +20,6 @@ Tests de gains à quatre fréquences, trois facteurs OS, bypass ; tests plugin d
 
 Stress additionnel : 16 rendus 44,1/48 kHz, crêtes 32×, SRC et AAC/MP3 ; voir OUTPUT_SAFETY_039_STRESS.json. Crêtes initiales sous −2 dBTP et conversions sous 0 sur ces vecteurs ; LUFS intégré et fenêtres 400 ms sous −5 sur les cas mesurés à 48 kHz. Un bruit dense traité à 44,1 kHz dépasse 0 après AAC (environ +0,42 dBTP). À LoudnessWar +12 sur le beat musical, AAC atteint aussi environ +0,012 dBTP malgré un master brut sous −3 dBTP. Ces dépassements sont enregistrés comme limites, pas présentés comme une réussite de protection codec. La réserve ne garantit donc pas toutes les plateformes ni tous les signaux. Les rapports 0.3.7 restent historiques et ne prouvent pas le comportement 0.3.9.
 
+Régression indépendante supplémentaire : 60 vecteurs à quatre Fs et trois facteurs OS, crêtes SciPy 32× ; pire crête −2,42461 dBTP, bypass faible exact et sources intactes. Voir OUTPUT_SAFETY_039_60_VECTORS.json. Suites DSP locales, 31 tests WAV, contrôle mémoire ASan/UBSan de la protection et vérification syntaxique JUCE réussis.
+
 HTML originaux inchangés : SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff. Écoute humaine/FL Studio à faire.

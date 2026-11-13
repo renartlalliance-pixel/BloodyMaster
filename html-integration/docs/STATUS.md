@@ -1,8 +1,8 @@
-# 0.3.9 — mise à jour en validation Windows
+# 0.3.9 — version de test Windows vérifiée
 
 IN GAIN indépendant (−18/+18 dB) et LoudnessWar dans le panneau doré final (0/+18 dB) implémentés. Blood Drive/Dynamics.h inchangés. Correction de la protection trop conservatrice : énergie K glissante 400 ms, gains crêtes/loudness séparés. Lire LOUDNESS_GAIN_FR.md. Objectif global −5 LUFS conservé, plafond utilisateur prioritaire avec réserve interne. Compatibilité anciens presets/sessions par gains à zéro ; User v2, 52 paramètres/51 DSP actifs, Delta inclut les gains, latence inchangée. HTML originaux conservés.
 
-Tests DSP locaux, navigateur et mesure indépendante de stress réussis pour audio brut/SRC ; un bruit dense extrême dépasse 0 dBTP après AAC : aucune garantie universelle des encodages. Build/installateur Windows à vérifier avant livraison ; écoute FL Studio nécessaire.
+Tests DSP locaux, navigateur et mesure indépendante de stress réussis pour audio brut/SRC ; un bruit dense extrême dépasse 0 dBTP après AAC : aucune garantie universelle des encodages. Build et installateur Windows vérifiés ; écoute FL Studio nécessaire.
 
 ---
 
@@ -113,3 +113,16 @@ Le premier passage Windows passait l'audio mais échouait à une assertion d'inf
 Delta est une différence brute après comparaison au master protégé ; son niveau peut dépasser le plafond du master. Il est forcé OFF au rendu hors ligne reconnu par l'hôte ; vérifier OFF avant export en temps réel. Aucun test d'écoute humaine ni FL Studio revendiqué. Les commits de documentation après f61a88c ne changent pas le code compilé de cet installateur.
 
 HTML originaux inchangés : SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff.
+
+
+## Validation Windows 0.3.9
+
+Workflow HTML 43493392145, commit 6ec0e12274e35305ba03fceeeeb8005259c39d32 : succès. 17/17 CTest (audio, migration des sessions/User v1, gains indépendants, Delta avec nouveaux gains, chargement VST3), 37 vérifications WebView2 natives, 31 tests WAV. Installation répétée, désinstallation, conservation des fichiers tiers et réinstallation réussies.
+
+Release : https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.9-test-43493392145
+
+Installateur téléchargé (4 333 125 octets) ; SHA-256 local comparé au fichier publié : 7810f26f44adae643e771f2080cc647b83f2fa313331ecd04b35973e3572b92f. Rapport natif téléchargé : passed=37, backend=WebView2 native Windows.
+
+Mesure indépendante du beat synthétique (entrée −22 LUFS, Drive 12/Hammer 6 inchangés, plafond −3) : LoudnessWar 0/6/12/18 → −11,80/−9,83/−7,68/−6,41 LUFS. Crêtes brutes reconstruites 32× sous −3 dBTP sur ces quatre sorties. AAC du cas +12 remonte à +0,012 dBTP ; un bruit dense de stress à +0,42 : limites explicitement enregistrées, aucune garantie codec universelle. Voir LOUDNESS_GAIN_VALIDATION.json et OUTPUT_SAFETY_039_STRESS.json.
+
+Régression indépendante de 60 vecteurs, quatre Fs/trois OS : pire crête 32× −2,42461 dBTP ; voir OUTPUT_SAFETY_039_60_VECTORS.json. Tests DSP locaux, vérification syntaxique JUCE, navigateur et ASan/UBSan de protection réussis. HTML originaux inchangés, SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff. Les commits de documentation après 6ec0e12 ne modifient pas les sources de cet installateur ; écoute humaine/FL Studio à faire.
