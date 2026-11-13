@@ -67,6 +67,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::profile)->load()==3.f && p.apvts.getRawParameterValue(bm::id::enhance)->load()>0.f;}),"Atmosphere and profile controls reach APVTS"))return 19;
     auto* profile=p.apvts.getParameter(bm::id::profile);profile->setValueNotifyingHost(profile->convertTo0to1(0.f));
     if(!verify(wait([&]{return static_cast<bool>(evaluate("document.querySelector('.profile-btn[data-prof=\"1\"]').getAttribute('aria-pressed')==='true'"));}),"Profile host automation updates selection"))return 20;
+    p.apvts.getParameter(bm::id::spikeListen)->setValueNotifyingHost(0);
     for(int block=0;block<310;++block){
         for(int i=0;i<512;++i){const float v=.1f*std::sin(2*juce::MathConstants<float>::pi*1000*(block*512+i)/48000);audio.setSample(0,i,v);audio.setSample(1,i,v);}
         p.processBlock(audio,midi);

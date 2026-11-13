@@ -39,8 +39,10 @@ tape_controls='''<div class="flex items-center justify-end gap-3 mt-1">
 html,count=re.subn(r'(<div[^>]*id="val-clipper"[^>]*>.*?</div>\s*</div>\s*</div>)',lambda m:m[0]+tape_controls,html,flags=re.S)
 if count!=1:raise SystemExit('Tape controls placeholder not found')
 # Real output meters and manual reset, only in generated runtime HTML.
-meter_controls='<div class="flex items-center justify-end gap-3 mt-1"><span id="loudnessReadout" class="text-[8px] font-mono text-neutral-400">I — LUFS / S — LUFS / TP — dBTP</span><button id="monitorMatchBtn" class="tascam-btn text-[8px] px-1 py-0.5">Comp. écoute OFF</button><button id="resetMetersBtn" class="tascam-btn text-[8px] px-1 py-0.5">RAZ mesures</button></div>'
-html=html.replace('<script src="bridge.js"></script>',meter_controls+'<script src="bridge.js"></script>')
+meter_controls='<div class="flex items-center justify-center gap-3" style="position:absolute;left:6px;right:6px;bottom:6px;flex-wrap:wrap;row-gap:2px"><span id="loudnessReadout" style="flex-basis:100%;text-align:center" class="text-[8px] font-mono text-neutral-400">I — LUFS / S — LUFS / TP — dBTP</span><button id="monitorMatchBtn" class="tascam-btn text-[8px] px-1 py-0.5">Comp. écoute OFF</button><button id="resetMetersBtn" class="tascam-btn text-[8px] px-1 py-0.5">RAZ mesures</button></div>'
+canvas='<canvas id="precisionMeterCanvas" class="w-full h-full block"></canvas>'
+if html.count(canvas)!=1:raise SystemExit('Meter canvas placeholder not found')
+html=html.replace(canvas,canvas.replace('class=', 'style="height:calc(100% - 44px)" class=')+meter_controls)
 output=pathlib.Path(sys.argv[1]);output.mkdir(parents=True,exist_ok=True)
 (output/'index.html').write_text(html,encoding='utf-8')
 print('Runtime HTML generated; approved HTML unchanged.')
