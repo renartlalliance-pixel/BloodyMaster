@@ -1,6 +1,7 @@
 #pragma once
 #include "MasteringCore.h"
 #include <cstdint>
+#include <vector>
 
 namespace bm::dsp {
 struct LoudnessValues {
@@ -12,8 +13,8 @@ struct LoudnessValues {
 // Neither estimator changes the audio or adds transport latency.
 class AudioMeter {
     static constexpr int bins=17001;
-    std::array<double,bins> energy{};
-    std::array<uint64_t,bins> counts{};
+    std::vector<double> energy;
+    std::vector<uint64_t> counts;
     std::array<double,30> blocks{};
     std::array<std::array<double,65>,4> taps{};
     std::array<std::array<double,65>,2> history{};
@@ -40,6 +41,7 @@ public:
     LoudnessValues values{};
     void prepare(double fs) {
         fs=std::isfinite(fs)?std::clamp(fs,8000.,384000.):48000.;
+        energy.assign(bins,0);counts.assign(bins,0);
         blockSamples=std::max(1,static_cast<int>(std::round(fs*.1)));
         const double k=std::tan(pi*1681.974450955533/fs),vh=std::pow(10.,3.999843853973347/20),vb=std::pow(vh,.4996667741545416),q=.7071752369554196;
         const double a=1+k/q+k*k;
@@ -55,7 +57,7 @@ public:
         reset();
     }
     void reset() {
-        energy.fill(0);counts.fill(0);blocks.fill(0);history={};
+        std::fill(energy.begin(),energy.end(),0);std::fill(counts.begin(),counts.end(),0);blocks.fill(0);history={};
         shelf.reset();rlb.reset();position=blockPosition=samples=filled=0;partial=0;values={};
     }
     void process(double l,double r,int channels) {

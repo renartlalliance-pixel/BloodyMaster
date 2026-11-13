@@ -31,7 +31,7 @@ jobs:
           cmake -S html-integration -B C:/bm-html-build -G "Visual Studio 17 2022" -A x64 -DBM_HTML_UI=ON -DBM_DEPS_DIR=C:/bm-html-deps -DJUCE_WEBVIEW2_PACKAGE_LOCATION="$env:RUNNER_TEMP/bm-webview" -DBM_WEBVIEW2_BOOTSTRAPPER="$env:RUNNER_TEMP/WebView2Setup.exe" '-DBM_MAKENSIS=C:/Program Files (x86)/NSIS/makensis.exe'
       - name: Build VST3 and HTML tests
         shell: pwsh
-        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterTests BloodyMasterTest bm_webview_probe bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_test_cleanup bm_test_color bm_vst3_smoke
+        run: cmake --build C:/bm-html-build --config Release --parallel 2 --target BloodyMasterTests BloodyMasterTest bm_webview_probe bm_test_dbutils bm_test_mastering bm_test_dynamics bm_test_switching bm_test_analog_behaviors bm_test_presets bm_test_cleanup bm_test_color bm_test_stereo bm_test_meter bm_test_monitor_match bm_vst3_smoke
       - name: Ensure WebView2 runtime for native integration tests
         shell: pwsh
         run: |
