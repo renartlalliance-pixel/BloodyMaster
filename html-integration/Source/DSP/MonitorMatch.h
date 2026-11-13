@@ -4,7 +4,7 @@ namespace bm::dsp {
 // Transient A/B audition: learn each uncorrected 3 s short-term loudness,
 // attenuate the louder snapshot. No upward gain or added latency.
 class MonitorMatch {
-    std::array<std::array<float,49>,2> signatures{};
+    std::array<std::array<float,51>,2> signatures{};
     std::array<double,2> loudness{-200,-200};
     std::array<bool,2> known{};
     int selected=-1,age=0,learningSamples=144000,smoothing=4800;
@@ -14,7 +14,7 @@ public:
     bool ready=false;
     void prepare(double fs){learningSamples=static_cast<int>(fs*3);smoothing=static_cast<int>(fs*.1);reset();}
     void reset(){loudness={-200,-200};known={};selected=-1;age=0;gain.set(1,1,true);gainDb=0;ready=false;}
-    void select(int index,const std::array<float,49>& signature){
+    void select(int index,const std::array<float,51>& signature){
         index=std::clamp(index,0,1);
         if(selected!=index){selected=index;age=0;}
         const auto slot=static_cast<size_t>(index);

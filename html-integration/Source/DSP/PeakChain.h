@@ -79,7 +79,7 @@ inline double softClip(double x) {
 }
 struct PeakSettings {
     ColorSettings color{};
-    double clipDb=0,pushDb=0,ceilingDb=-1,releaseMs=100,link=100;
+    double clipDb=0,pushDb=0,ceilingDb=-1,releaseMs=100,link=100,loudnessWarDb=0;
     bool isp=true,clipEnabled=true,limiterEnabled=true;
     bool operator==(const PeakSettings&) const = default;
 };
@@ -92,7 +92,7 @@ class PeakChain {
     StereoDelay align,delay;
     std::array<SlidingMaximum,2> max;
     std::array<double,2> gain{1,1},memory{};
-    Ramp clipDrive,clipMix,push,ceiling,release,link,isp,limiterMix;
+    Ramp clipDrive,clipMix,push,ceiling,release,link,isp,limiterMix,loudnessWar;
 public:
     double clipGr=0,limiterGr=0;
     void prepare(double rate,int oversampling=8) {
@@ -112,6 +112,7 @@ public:
         int n=static_cast<int>(fs*.02);
         clipDrive.set(dbGain(std::clamp(s.clipDb,0.,10.)),n,initial);
         clipMix.set(s.clipEnabled?std::clamp(s.clipDb/.1,0.,1.):0.,n,initial);
+        loudnessWar.set(dbGain(std::clamp(s.loudnessWarDb,0.,18.)),n,initial);
         push.set(dbGain(std::clamp(s.pushDb,0.,6.)),n,initial);
         ceiling.set(dbGain(std::clamp(s.ceilingDb,-6.,0.)),n,initial);
         release.set(std::clamp(s.releaseMs,1.,500.),n,initial);
@@ -120,12 +121,13 @@ public:
         limiterMix.set(s.limiterEnabled?1:0,n,initial); initial=false;
     }
     void process(double& l,double& r) {
-        const double drive=clipDrive.next(), cm=clipMix.next(), p=push.next();
+        const double drive=clipDrive.next(), cm=clipMix.next(), p=push.next(), lift=loudnessWar.next();
         up.push(l,r); std::array<double,2> native{}; double reduction=0;
         for(int phase=0;phase<factor;++phase) {
             std::array<double,2> x{up.phase(0,phase),up.phase(1,phase)};
             color.process(x[0],x[1]);
             for(auto& v:x) {
+                v*=lift; // post-colour gain into oversampled clipping / limiting
                 const double clipped=softClip(v*drive)/drive;
                 const double y=v+cm*(clipped-v);
                 if(std::abs(v)>1.e-9) reduction=std::max(reduction,gainDb(std::abs(v)/std::max(std::abs(y),1.e-12)));

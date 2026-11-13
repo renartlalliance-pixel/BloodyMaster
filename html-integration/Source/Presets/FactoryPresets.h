@@ -125,7 +125,7 @@ inline const FactoryPreset* findPreset(std::string_view slug) {
     return nullptr;
 }
 // Physical APVTS values. This mapping also documents the CLI/plugin agreement.
-inline std::array<std::pair<const char*,float>,49> presetParameters(const dsp::EngineSettings& s) {
+inline std::array<std::pair<const char*,float>,51> presetParameters(const dsp::EngineSettings& s) {
     const auto& t=s.tone;const auto& d=s.dynamics;const auto& p=s.peaks;
     return {{{id::hpf,float(t.hpf)},{id::lpf,float(t.lpf/1000)},
       {id::bass,float(t.bass)},{id::mid,float(t.mid)},{id::high,float(t.high)},
@@ -147,6 +147,7 @@ inline std::array<std::pair<const char*,float>,49> presetParameters(const dsp::E
       {id::thd,float(p.color.thdDb)},{id::xl,float(p.color.xl)},
       {id::thdMode,float(p.color.thdMode)},{id::xlMode,float(p.color.xlMode)},
       {id::tapeColor,float(p.color.tape)},{id::tapeMode,float(p.color.tapeMode)},
-      {id::enhance,float(t.atmosphere)},{id::profile,float(t.profile)}}};
+      {id::enhance,float(t.atmosphere)},{id::profile,float(t.profile)},
+      {id::inputGain,float(s.inputGainDb)},{id::loudnessWar,float(p.loudnessWarDb)}}};
 }
 }

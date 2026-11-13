@@ -167,6 +167,8 @@
         knob.title=p.active?(id==='lpf'?`Fréquence effective : ${next.lpfEffective.toFixed(0)} Hz (selon Fs)`:'Glisser verticalement ; Maj = réglage fin ; double-clic = défaut'):'Fonction non raccordée au DSP dans cette version';
         if(id==='thd')knob.title='Dosage de coloration : OFF à −60 dB ; cette échelle ne mesure pas le THD de sortie';
         if(id==='tape_color')knob.title='Coloration de bande indépendante de la compression Tape Glue ; 0 % = désactivée';
+        if(id==='input_gain')knob.title='Gain d’entrée indépendant avant tous les traitements ; Blood Drive reste inchangé';
+        if(id==='loudness_war')knob.title='Gain après couleur et compression, avant clipper et limiteur ; monter progressivement en surveillant LUFS et réduction';
         if(id==='trim')knob.title='Plafond demandé ; protection globale plafonnée à −2 dBTP avec réserve interne';
         if(id==='glue')knob.title='Compression de bus ; le dosage Tape Color règle séparément la coloration';
         if(dragging?.id!==id && p.active)updateKnob(knob,p.value);
@@ -218,7 +220,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.8';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.9';
     }
     draw();
   }

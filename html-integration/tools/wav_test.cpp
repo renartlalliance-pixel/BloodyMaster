@@ -115,7 +115,9 @@ int run(std::vector<std::string> args) {
         size_t used=0; const double value=std::stod(args[i+1],&used);
         if(used!=args[i+1].size() || !std::isfinite(value)) throw std::runtime_error("Valeur numerique invalide.");
         const auto range=[&](double lo,double hi){ if(value<lo || value>hi) throw std::runtime_error("Valeur hors plage: "+key); };
-        if(key=="--drive") { range(0,12);s.dynamics.drive=value; }
+        if(key=="--input-gain") { range(-18,18);s.inputGainDb=value; }
+        else if(key=="--loudness-war") { range(0,18);s.peaks.loudnessWarDb=value; }
+        else if(key=="--drive") { range(0,12);s.dynamics.drive=value; }
         else if(key=="--clip") { range(0,10);s.peaks.clipDb=value; }
         else if(key=="--push") { range(0,6);s.peaks.pushDb=value; }
         else if(key=="--ceiling") { range(-6,0);s.peaks.ceilingDb=value; }

@@ -28,7 +28,7 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
         return capture->value;
     };
     if(!verify(wait([&]{return static_cast<bool>(evaluate("!!window.bloodyMasterUi?.getState()"));}),"Native state reaches HTML"))return 2;
-    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===38 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
+    if(!verify(static_cast<bool>(evaluate("document.querySelectorAll('.knob-base').length===40 && document.querySelector('#knob-drive').getBoundingClientRect().width===80 && getComputedStyle(document.querySelector('.wood-panel')).backgroundImage.includes('linear-gradient')")),"Approved layout and offline CSS loaded"))return 3;
     evaluate("document.querySelector('#knob-drive').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
     if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::drive)->load()>1.1f;}),"HTML knob updates APVTS"))return 4;
     auto* drive=p.apvts.getParameter(bm::id::drive);drive->setValueNotifyingHost(drive->convertTo0to1(6.3f));
@@ -96,6 +96,11 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(static_cast<bool>(evaluate("['Rap','Electro','New Rock','Trap'].every(label=>[...document.querySelectorAll('#presetSelector optgroup')].some(g=>g.label===label&&g.children.length===2))")),"Eight inspiration presets appear in four genre sections"))return 29;
     for(int block=0;block<64;++block){for(int i=0;i<512;++i){audio.setSample(0,i,10);audio.setSample(1,i,-10);}p.processBlockBypassed(audio,midi);}
     if(!verify(wait([&]{return static_cast<bool>(evaluate("window.bloodyMasterUi.getState().safetyReductionDb>0 && document.querySelector('#outputSafetyReadout').textContent.includes('Protection sortie') && window.bloodyMasterUi.getState().meters.outputL<0.751"));}),"Global protection and protected output meters reach HTML during host bypass"))return 30;
+    const auto unchangedDrive=p.apvts.getRawParameterValue(bm::id::drive)->load();
+    evaluate("document.querySelector('#knob-input-gain').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));document.querySelector('#knob-loudness-war').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',bubbles:true}));true");
+    if(!verify(wait([&]{return p.apvts.getRawParameterValue(bm::id::inputGain)->load()>0&&p.apvts.getRawParameterValue(bm::id::loudnessWar)->load()>0&&p.apvts.getRawParameterValue(bm::id::drive)->load()==unchangedDrive;}),"New gains reach DSP parameters without changing Blood Drive"))return 36;
+    auto* war=p.apvts.getParameter(bm::id::loudnessWar);war->setValueNotifyingHost(war->convertTo0to1(12.f));
+    if(!verify(wait([&]{return static_cast<bool>(evaluate("Number(document.querySelector('#knob-loudness-war').dataset.val)===12 && document.querySelector('#knob-loudness-war').closest('.gold-accent-plate')!==null"));}),"LoudnessWar automation reaches the final gold panel"))return 37;
     const auto deltaSettings=p.apvts.copyState().toXmlString();
     evaluate("document.querySelector('#deltaBtn').click();true");
     const bool deltaActivated=wait([&]{return p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn')?.getAttribute('aria-pressed')==='true'"));});

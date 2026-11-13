@@ -81,7 +81,7 @@ private:
     std::atomic<double> monitorGainDb{0};
     void measureOutput(juce::AudioBuffer<float>&,bool bypass,double ceiling);
     bm::dsp::Engine mastering;
-    std::array<std::atomic<float>*, 49> dspParameters{};
+    std::array<std::atomic<float>*, 51> dspParameters{};
     bm::dsp::EngineSettings readDspSettings() const;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BloodyMasterProcessor)
 };

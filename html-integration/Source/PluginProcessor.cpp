@@ -63,7 +63,7 @@ BloodyMasterProcessor::BloodyMasterProcessor()
       apvts(*this, nullptr, "BloodyMasterState", bm::createParameterLayout())
 {
     (void) bm::factoryPresets();
-    const std::array<const char*,49> ids {
+    const std::array<const char*,51> ids {
         bm::id::hpf, bm::id::lpf, bm::id::bass, bm::id::mid, bm::id::high,
         bm::id::presence, bm::id::foundation, bm::id::p1f, bm::id::p2f, bm::id::p3f,
         bm::id::p1g, bm::id::p2g, bm::id::p3g, bm::id::monomaker, bm::id::width,
@@ -73,7 +73,7 @@ BloodyMasterProcessor::BloodyMasterProcessor()
         bm::id::limrel, bm::id::limlink, bm::id::isp, bm::id::oversampling,
         bm::id::defreq,bm::id::deamount,bm::id::lowres,bm::id::hires,bm::id::spikeListen,
         bm::id::mudAmount,bm::id::mudActive,bm::id::ringAmount,bm::id::ringActive,
-        bm::id::thd,bm::id::xl,bm::id::thdMode,bm::id::xlMode,bm::id::tapeColor,bm::id::tapeMode,bm::id::enhance,bm::id::profile
+        bm::id::thd,bm::id::xl,bm::id::thdMode,bm::id::xlMode,bm::id::tapeColor,bm::id::tapeMode,bm::id::enhance,bm::id::profile,bm::id::inputGain,bm::id::loudnessWar
     };
     for (size_t i=0; i<ids.size(); ++i)
         dspParameters[i]=apvts.getRawParameterValue(ids[i]);
@@ -99,6 +99,7 @@ bm::dsp::EngineSettings BloodyMasterProcessor::readDspSettings() const
     p.color.thdDb=v(41);p.color.xl=v(42);p.color.thdMode=static_cast<int>(v(43));p.color.xlMode=static_cast<int>(v(44));p.color.valve=d.optical;
     p.color.tape=v(45);p.color.tapeMode=static_cast<int>(v(46));
     s.atmosphere=v(47);s.profile=static_cast<int>(v(48));
+    settings.inputGainDb=v(49);p.loudnessWarDb=v(50);
     return settings;
 }
 
@@ -187,7 +188,12 @@ void BloodyMasterProcessor::setStateInformation(const void* data, int sizeInByte
     if (auto xml = getXmlFromBinary(data, sizeInBytes))
         if (xml->hasTagName(apvts.state.getType())) {
             currentProgram.store(juce::jlimit(0,getNumPrograms()-1,xml->getIntAttribute("factoryProgram",0)),std::memory_order_relaxed);
-            apvts.replaceState(juce::ValueTree::fromXml(*xml));
+            auto restored=juce::ValueTree::fromXml(*xml);
+            for(const auto* id:{bm::id::inputGain,bm::id::loudnessWar})
+                if(!restored.getChildWithProperty("id",id).isValid()){
+                    juce::ValueTree parameter("PARAM");parameter.setProperty("id",id,nullptr);parameter.setProperty("value",0.f,nullptr);restored.addChild(parameter,-1,nullptr);
+                }
+            apvts.replaceState(restored);
         }
 }
 
@@ -202,7 +208,7 @@ void BloodyMasterProcessor::measureOutput(juce::AudioBuffer<float>& buffer,bool 
     if(channels<1 || channels>2)return;
     const auto* l=buffer.getReadPointer(0);const auto* r=buffer.getReadPointer(channels==2?1:0);
     for(int i=0;i<buffer.getNumSamples();++i)matchMeter.process(l[i],r[i],channels,false);
-    std::array<float,49> signature{};
+    std::array<float,51> signature{};
     for(size_t i=0;i<signature.size();++i)signature[i]=dspParameters[i]->load(std::memory_order_relaxed);
     monitor.select(comparisonIndex.load(std::memory_order_relaxed),signature);
     monitor.process(buffer.getArrayOfWritePointers(),channels,buffer.getNumSamples(),matchMeter.values.shortTerm,

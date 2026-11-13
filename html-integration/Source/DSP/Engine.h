@@ -8,6 +8,7 @@ struct EngineSettings {
     DynamicsSettings dynamics{};
     PeakSettings peaks{};
     CleanupSettings cleanup{};
+    double inputGainDb=0;
     bool bypass=false;
     int oversampling=0; // 0 keeps the mode selected by prepare.
 };
@@ -25,14 +26,14 @@ class Engine {
     StereoDelay dry;
     StereoDelay deltaDelay;
     Ramp audition;
-    Ramp wet;
+    Ramp wet,inputGain;
     double fs=48000;
     bool initial=true;
 public:
     MeterValues meters{};
     void prepare(double sampleRate,int oversampling=8,bool protectOutput=false) {
         fs=std::clamp(sampleRate,8000.,384000.);
-        protectedOutput=protectOutput;outputSafety.prepare(fs);
+        protectedOutput=protectOutput;if(protectedOutput)outputSafety.prepare(fs);
         tone.prepare(fs); dynamics.prepare(fs); cleanup.prepare(fs); peaks.prepare(fs,oversampling);
         dry.prepare(peaks.latency()); initial=true; meters={};
         deltaDelay.prepare(peaks.latency());
@@ -41,6 +42,7 @@ public:
     double safetyReductionDb() const { return protectedOutput?outputSafety.reductionDb:0; }
     void update(EngineSettings s) {
         outputSafety.setCeiling(s.peaks.ceilingDb);
+        inputGain.set(dbGain(std::clamp(s.inputGainDb,-18.,18.)),static_cast<int>(fs*.02),initial);
         s.tone.bypass=false; tone.update(s.tone); dynamics.update(s.dynamics); peaks.update(s.peaks);
         cleanup.update(s.cleanup);
         audition.set(s.cleanup.enabled && s.cleanup.listen?1.:0.,static_cast<int>(fs*.005),initial);
@@ -59,6 +61,7 @@ public:
             meters.inputPeak=std::max({meters.inputPeak,std::abs(l),std::abs(r)});
             meters.inputL=std::max(meters.inputL,std::abs(l));
             meters.inputR=std::max(meters.inputR,std::abs(r));
+            const double preGain=inputGain.next();l*=preGain;r*=preGain;
             cleanup.process(l,r);
             const auto delta=deltaDelay.push(cleanup.removed[0],cleanup.removed[1]);
             const double drive=dynamics.inputGain();

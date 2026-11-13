@@ -1,3 +1,11 @@
+# 0.3.9 — mise à jour en validation Windows
+
+IN GAIN indépendant (−18/+18 dB) et LoudnessWar dans le panneau doré final (0/+18 dB) implémentés. Blood Drive/Dynamics.h inchangés. Correction de la protection trop conservatrice : énergie K glissante 400 ms, gains crêtes/loudness séparés. Lire LOUDNESS_GAIN_FR.md. Objectif global −5 LUFS conservé, plafond utilisateur prioritaire avec réserve interne. Compatibilité anciens presets/sessions par gains à zéro ; User v2, 52 paramètres/51 DSP actifs, Delta inclut les gains, latence inchangée. HTML originaux conservés.
+
+Tests DSP locaux, navigateur et mesure indépendante de stress réussis pour audio brut/SRC ; un bruit dense extrême dépasse 0 dBTP après AAC : aucune garantie universelle des encodages. Build/installateur Windows à vérifier avant livraison ; écoute FL Studio nécessaire.
+
+---
+
 # 0.3.8 — Delta global, version de test Windows vérifiée
 
 DELTA implémenté : entrée avant DSP retardée de la latence complète (848 échantillons à 48 kHz) moins sortie après gain et protection, transitions 20 ms, aucun ajout de latence. État temporaire non sauvegardé, remis à zéro aux rappels Factory/User/session/A-B, à prepare et au rendu hors ligne. Les 50 paramètres de traitement et presets User restent inchangés. Voir DELTA_FR.md.

@@ -1,4 +1,4 @@
-BLOODYMASTER 0.3.8 - VERSION DE TEST WINDOWS X64
+BLOODYMASTER 0.3.9 - VERSION DE TEST WINDOWS X64
 
 1. Fermer FL Studio puis lancer l'installateur.
 2. Le VST3 est copie dans :
@@ -6,7 +6,11 @@ BLOODYMASTER 0.3.8 - VERSION DE TEST WINDOWS X64
 3. Ouvrir FL Studio, Options > Manage plugins > Find installed plugins.
 4. Rechercher Bloody Master et le charger sur un insert du Mixer.
 5. Commencer avec le volume de monitoring habituel et un mix non limite.
-   Choisir un preset puis ajuster le niveau entrant, Drive, Clip et Hammer.
+   Choisir un preset ; IN GAIN ajuste l'entree sans changer Blood Drive.
+   LoudnessWar dans le panneau dore pousse le master avant Clip/limiteur.
+   Essayer +6 dB puis ajuster a l'oreille et au mesureur ; Ceiling Out a -3 dB
+   pour le plafond souhaite. Plus de loudness peut changer la dynamique.
+   Les gains supplementaires sont a zero dans les anciens presets/sessions.
 
 DSP disponibles : HPF/LPF, EQ de couleur, 3 bandes parametriques, Gravity,
 largeur, Atmosphere 4 profils, grave mono, Mid Pan (centre seul), compresseur et Glue, clipper, limiteur, bypass
@@ -48,3 +52,7 @@ Transition 20 ms, latence inchangee ; parametres DSP inchanges.
 Desactive par defaut et au rappel des presets/sessions.
 Difference diagnostique brute : elle peut depasser le plafond du master.
 Couper DELTA avant export temps reel. Force OFF en rendu hors ligne reconnu.
+
+IN GAIN : -18 a +18 dB. LoudnessWar : 0 a +18 dB, protection finale prioritaire.
+La 0.3.9 corrige une surattenuation de la protection precedente.
+Un AAC tres pousse peut encore depasser zero : verifier le fichier encode.

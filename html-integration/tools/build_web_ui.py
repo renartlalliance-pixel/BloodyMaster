@@ -38,6 +38,14 @@ tape_controls='''<div class="flex items-center justify-end gap-3 mt-1">
 <button id="tapeModeBtn" class="tascam-btn text-[8px] px-1 py-0.5">Discret</button></div>'''
 html,count=re.subn(r'(<div[^>]*id="val-clipper"[^>]*>.*?</div>\s*</div>\s*</div>)',lambda m:m[0]+tape_controls,html,flags=re.S)
 if count!=1:raise SystemExit('Tape controls placeholder not found')
+# Independent input trim (Drive unchanged) and post-colour LoudnessWar.
+input_gain='''<div style="display:flex;align-items:center;gap:3px"><span style="font-size:8px;line-height:9px;color:#aaa;text-align:center">IN<br>GAIN</span><div class="knob-base knob-grey" style="width:24px;height:24px" id="knob-input-gain" data-param="input_gain" data-min="-18" data-max="18" data-val="0" data-unit="dB"><div class="knob-cap"><div class="knob-indicator"></div></div></div><span id="val-input_gain" style="font:8px monospace;color:#ccc;white-space:nowrap">0.0 dB</span></div>'''
+html,count=re.subn(r'(<div[^>]*id="val-drive"[^>]*>.*?</div>)',lambda m:'<div style="display:flex;align-items:center;gap:6px;margin-top:6px">'+m[0].replace('id="val-drive"','style="margin-top:0;white-space:nowrap;font-size:10px" id="val-drive"')+input_gain+'</div>',html,count=1,flags=re.S)
+if count!=1:raise SystemExit('Drive readout placeholder not found')
+loudness='''<div class="flex flex-col items-center"><div class="text-[10px] font-bold text-neutral-900 mb-1">LoudnessWar</div><div class="knob-base knob-red w-16 h-16" id="knob-loudness-war" data-param="loudness_war" data-min="0" data-max="18" data-val="0" data-unit="dB"><div class="knob-cap"><div class="knob-indicator"></div></div></div><div class="mt-1 font-mono text-xs text-neutral-900 font-bold" id="val-loudness_war">0.0 dB</div></div>'''
+marker='<!-- CEILING OUT POTENTIOMÈTRE / FADER DE SORTIE -->'
+if html.count(marker)!=1:raise SystemExit('Final panel placeholder not found')
+html=html.replace(marker,loudness+marker)
 # Real output meters and manual reset, only in generated runtime HTML.
 meter_controls='<div class="flex items-center justify-center gap-3" style="position:absolute;left:6px;right:6px;bottom:6px;flex-wrap:wrap;row-gap:2px"><span id="loudnessReadout" style="flex-basis:100%;text-align:center" class="text-[8px] font-mono text-neutral-400">I — LUFS / S — LUFS / TP — dBTP</span><button id="monitorMatchBtn" class="tascam-btn text-[8px] px-1 py-0.5">Comp. écoute OFF</button><span id="outputSafetyReadout" class="text-[8px] font-mono text-neutral-400" title="Protection globale : crêtes et énergie pondérée K ; active aussi en bypass">Protection sortie : −0,0 dB</span><button id="resetMetersBtn" class="tascam-btn text-[8px] px-1 py-0.5">RAZ mesures</button></div>'
 canvas='<canvas id="precisionMeterCanvas" class="w-full h-full block"></canvas>'

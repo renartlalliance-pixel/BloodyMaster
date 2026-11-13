@@ -5,7 +5,7 @@ using namespace bm::dsp;
 void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL %s\n",message);std::exit(1);}}
 int main(){
  for(double fs:{44100.,48000.,96000.,192000.}){
-    MonitorMatch match;match.prepare(fs);std::array<float,49> signature{};
+    MonitorMatch match;match.prepare(fs);std::array<float,51> signature{};
     float l[512],r[512];float* data[]{l,r};
     auto feed=[&](double lu,bool enabled,bool offline,int blocks){for(int block=0;block<blocks;++block){std::fill_n(l,512,.5f);std::fill_n(r,512,-.25f);match.process(data,2,512,lu,enabled,offline);}};
     const int learn=static_cast<int>(std::ceil(fs*3/512))+1;

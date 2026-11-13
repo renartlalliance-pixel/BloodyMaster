@@ -1,3 +1,5 @@
+> Document historique 0.3.7. La 0.3.9 corrige la suratténuation et remplace les constantes de détection/récupération décrites ci-dessous ; lire [LOUDNESS_GAIN_FR.md](LOUDNESS_GAIN_FR.md) et ses nouveaux rapports, notamment la limite observée après AAC sur bruit dense. Depuis 0.3.8, Delta intervient après la protection et reste une écoute diagnostique brute.
+
 # Protection globale — 0.3.7
 
 Protection active sur toute sortie traitée par le plugin : après les DSP, écoute Spike/delta, bypass des traitements, bypass traité par l'hôte et compensation d'écoute A/B. Dans le plugin elle est le dernier traitement ; mesures et scope sont ensuite relevés sur le signal réellement délivré. Dans l'outil WAV elle est activée au dernier étage du moteur, compensation de latence incluse. Un hôte qui ne fait plus exécuter le plugin peut contourner toute protection du plugin.

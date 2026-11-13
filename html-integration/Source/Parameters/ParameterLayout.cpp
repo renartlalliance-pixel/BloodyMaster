@@ -74,6 +74,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::xlMode, v }, "XL Mode", StringArray{ "Density", "Presence", "Impact" }, 0));
     addFloat(id::tapeColor, "Tape Color", 0.0f, 100.0f, 0.0f, "%");
     p.push_back(std::make_unique<AudioParameterChoice>(PID{ id::tapeMode, v }, "Tape Character", StringArray{ "Discreet", "Marked" }, 0));
+    addFloat(id::inputGain, "Input Gain", -18.0f, 18.0f, 0.0f, "dB");
+    addFloat(id::loudnessWar, "LoudnessWar", 0.0f, 18.0f, 0.0f, "dB");
     return { p.begin(), p.end() };
 }
 } // namespace bm

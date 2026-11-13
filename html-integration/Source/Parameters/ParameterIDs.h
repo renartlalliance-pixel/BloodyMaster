@@ -54,4 +54,6 @@ namespace bm::id
     inline constexpr const char* xlMode = "bm_xl_mode";
     inline constexpr const char* tapeColor = "bm_tape_color";
     inline constexpr const char* tapeMode = "bm_tape_mode";
+    inline constexpr const char* inputGain = "bm_input_gain";
+    inline constexpr const char* loudnessWar = "bm_loudness_war";
 }

@@ -77,3 +77,7 @@ add_test(NAME output_safety COMMAND bm_test_output_safety)
 add_executable(bm_test_delta DSP/test_delta.cpp)
 target_include_directories(bm_test_delta PRIVATE ../Source)
 add_test(NAME delta_monitor COMMAND bm_test_delta)
+
+add_executable(bm_test_loudness_gain DSP/test_loudness_gain.cpp)
+target_include_directories(bm_test_loudness_gain PRIVATE ../Source)
+add_test(NAME loudness_gain COMMAND bm_test_loudness_gain)

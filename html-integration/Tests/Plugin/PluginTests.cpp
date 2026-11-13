@@ -41,6 +41,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         testUserPresets();
         testGlobalOutputProtection();
         testDeltaAudition();
+        testGainMigration();
         testHostBypassAndMeters();
         testEditor();
     }
@@ -98,7 +99,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         beginTest("Parametres : nombre, IDs uniques/versionnes, automatisables");
         BloodyMasterProcessor p;
         const auto& params = p.getParameters();
-        expectEquals(params.size(), 50); // New controls appended; old indexes are preserved.
+        expectEquals(params.size(), 52); // New controls appended; old indexes are preserved.
 
         std::set<juce::String> ids;
         for (auto* prm : params)
@@ -215,7 +216,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         bm::UserPresets reopened(directory);expect(reopened.refresh(p.apvts).wasOk());
         p.setCurrentProgram(0);expect(reopened.load(id,p.apvts).wasOk());
         expectWithinAbsoluteError(p.apvts.getRawParameterValue(bm::id::drive)->load(),3.25f,1e-5f);
-        for(const auto& e:reopened.entries())if(e.id==id){expectEquals(static_cast<int>(e.parameters.size()),50);expect(bm::UserPresets::matches(e,p.apvts));}
+        for(const auto& e:reopened.entries())if(e.id==id){expectEquals(static_cast<int>(e.parameters.size()),52);expect(bm::UserPresets::matches(e,p.apvts));}
         const auto presetFile=directory.getChildFile(id+".bmpreset");const auto original=presetFile.loadFileAsString();
         auto doc=juce::JSON::parse(original);auto* params=doc["parameters"].getDynamicObject();
         params->setProperty(bm::id::drive,9.f);params->setProperty(bm::id::width,999.f);
@@ -257,6 +258,9 @@ struct BloodyMasterTests final : public juce::UnitTest
             for(auto* p:{&normal,&delta}){
                 auto* os=p->apvts.getParameter(bm::id::oversampling);os->setValueNotifyingHost(os->convertTo0to1(float(mode)));
                 p->apvts.getParameter(bm::id::bypass)->setValueNotifyingHost(neutral?1.f:0.f);
+                if(!neutral)for(const auto& gain:std::array<std::pair<const char*,float>,2>{{{bm::id::inputGain,3.f},{bm::id::loudnessWar,6.f}}}){
+                    auto* parameter=p->apvts.getParameter(gain.first);parameter->setValueNotifyingHost(parameter->convertTo0to1(gain.second));
+                }
                 p->prepareToPlay(fs,64); // exercise host blocks larger than prepare's hint
             }
             expect(!delta.isDeltaEnabled());
@@ -291,6 +295,45 @@ struct BloodyMasterTests final : public juce::UnitTest
         p.setDeltaEnabled(true);juce::MemoryBlock state;p.getStateInformation(state);p.setStateInformation(state.getData(),static_cast<int>(state.getSize()));expect(!p.isDeltaEnabled());
         p.setDeltaEnabled(true);p.prepareToPlay(96000,128);expect(!p.isDeltaEnabled());
         BloodyMasterProcessor restored;restored.setStateInformation(state.getData(),static_cast<int>(state.getSize()));expect(!restored.isDeltaEnabled());
+    }
+
+    void testGainMigration() {
+        beginTest("Independent gains: defaults, controls and legacy session/User migration");
+        BloodyMasterProcessor p;p.setCurrentProgram(16);
+        auto set=[&](const char* id,float value){auto* q=p.apvts.getParameter(id);q->setValueNotifyingHost(q->convertTo0to1(value));};
+        auto raw=[&](const char* id){return p.apvts.getRawParameterValue(id)->load();};
+        expectWithinAbsoluteError(raw(bm::id::inputGain),0.f,1e-7f);
+        expectWithinAbsoluteError(raw(bm::id::loudnessWar),0.f,1e-7f);
+        const float drive=raw(bm::id::drive);set(bm::id::inputGain,6);set(bm::id::loudnessWar,12);
+        expectWithinAbsoluteError(raw(bm::id::drive),drive,1e-7f);
+        juce::MemoryBlock saved;p.getStateInformation(saved);
+        BloodyMasterProcessor restored;restored.setStateInformation(saved.getData(),int(saved.getSize()));
+        expectWithinAbsoluteError(restored.apvts.getRawParameterValue(bm::id::inputGain)->load(),6.f,1e-5f);
+        expectWithinAbsoluteError(restored.apvts.getRawParameterValue(bm::id::loudnessWar)->load(),12.f,1e-5f);
+        auto legacy=p.apvts.copyState().createCopy();
+        for(const auto* id:{bm::id::inputGain,bm::id::loudnessWar})legacy.removeChild(legacy.getChildWithProperty("id",id),nullptr);
+        auto xml=legacy.createXml();juce::MemoryBlock oldSession;juce::AudioProcessor::copyXmlToBinary(*xml,oldSession);
+        p.setStateInformation(oldSession.getData(),int(oldSession.getSize()));
+        expectWithinAbsoluteError(raw(bm::id::inputGain),0.f,1e-7f);
+        expectWithinAbsoluteError(raw(bm::id::loudnessWar),0.f,1e-7f);
+        expectWithinAbsoluteError(raw(bm::id::drive),drive,1e-5f);
+        const auto directory=juce::File::getSpecialLocation(juce::File::tempDirectory).getNonexistentChildFile("BloodyMaster-gain-migration","",false);
+        struct Cleanup{juce::File dir;~Cleanup(){dir.deleteRecursively();}} cleanup{directory};
+        bm::UserPresets users(directory);juce::String id;expect(users.save("Legacy",p.apvts,id).wasOk());
+        auto file=directory.getChildFile(id+".bmpreset");auto doc=juce::JSON::parse(file.loadFileAsString());
+        doc.getDynamicObject()->setProperty("version",1);
+        auto* params=doc["parameters"].getDynamicObject();params->removeProperty(bm::id::inputGain);params->removeProperty(bm::id::loudnessWar);
+        const auto oldFile=juce::JSON::toString(doc);expect(file.replaceWithText(oldFile));
+        set(bm::id::inputGain,18);set(bm::id::loudnessWar,18);
+        expect(users.refresh(p.apvts).wasOk());expect(users.load(id,p.apvts).wasOk());
+        expectEquals(file.loadFileAsString(),oldFile);
+        expectWithinAbsoluteError(raw(bm::id::inputGain),0.f,1e-7f);
+        expectWithinAbsoluteError(raw(bm::id::loudnessWar),0.f,1e-7f);
+        expectWithinAbsoluteError(raw(bm::id::drive),drive,1e-5f);
+        set(bm::id::inputGain,3);set(bm::id::loudnessWar,9);juce::String newId;
+        expect(users.save("Current",p.apvts,newId).wasOk());p.setCurrentProgram(0);expect(users.load(newId,p.apvts).wasOk());
+        expectWithinAbsoluteError(raw(bm::id::inputGain),3.f,1e-5f);
+        expectWithinAbsoluteError(raw(bm::id::loudnessWar),9.f,1e-5f);
     }
 
     void testHostBypassAndMeters()
@@ -328,7 +371,7 @@ struct BloodyMasterTests final : public juce::UnitTest
                 }
             }
             if(auto* viewport=dynamic_cast<juce::Viewport*>(child)) {
-                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),49);foundControls=true;
+                expectEquals(viewport->getViewedComponent()->getNumChildComponents(),51);foundControls=true;
             }
         }
         expect(foundPresets && foundControls);

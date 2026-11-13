@@ -1,0 +1,31 @@
+{
+  "inputLUFS": -22.0,
+  "sourceIntact": true,
+  "fixture": "Deterministic 8 s stereo bass/drums/bed; Drive 12, Hammer 6, ceiling -3",
+  "results": [
+    {
+      "loudnessWarDb": 0,
+      "integratedLUFS": -11.802201700332555,
+      "truePeak32xDb": -3.3984419873354526
+    },
+    {
+      "loudnessWarDb": 6,
+      "integratedLUFS": -9.825178827445956,
+      "truePeak32xDb": -3.4482858200196356
+    },
+    {
+      "loudnessWarDb": 12,
+      "integratedLUFS": -7.680562272430411,
+      "truePeak32xDb": -3.4857857942163006,
+      "aacDecodedPeak32xDb": 0.011767631008278327,
+      "aacDecodedClips": true,
+      "mp3DecodedPeak32xDb": -2.2127013112463807,
+      "mp3DecodedClips": false
+    },
+    {
+      "loudnessWarDb": 18,
+      "integratedLUFS": -6.412214585031546,
+      "truePeak32xDb": -3.4419014807668886
+    }
+  ]
+}
