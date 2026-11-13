@@ -1,3 +1,9 @@
+# Mise à jour de reprise — 0.3.6
+
+User presets et huit presets d'inspiration sont implémentés et vérifiés sous Windows, workflow HTML 43442449010. Lire docs/STATUS.md, USER_PRESETS_FR.md et ENGINEER_INSPIRATIONS_2026_FR.md. Installateur 0.3.6 téléchargé et SHA-256 vérifié ; les deux HTML originaux sont intacts. La demande future de potard reste non précisée.
+
+---
+
 # Mise à jour de reprise — 0.3.5
 
 La reprise est faite sur codex/html-webview2. Workflow HTML 43437863780 réussi et installateur 0.3.5 téléchargé/hash vérifié ; détails dans STATUS. Atmosphere, Mid Pan (A), LUFS intégré/court terme/dBTP (A), comparaison compensée temporaire (A) et presets enrichis sont implémentés. Lire docs/STATUS.md, docs/STEREO_DESIGN_FR.md, docs/METERING_FR.md. L'utilisateur a répondu « A à chaque fois » : A par défaut, pas de QCM répété pour ces choix. Les paragraphes ci-dessous sont historiques. Pas d'accès au PC de l'utilisateur et aucun HTML original modifié.

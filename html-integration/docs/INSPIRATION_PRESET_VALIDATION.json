@@ -1,0 +1,176 @@
+{
+  "method": "SciPy resample_poly 32x Kaiser beta 10; one deterministic stereo bass/mid/treble/noise test, not universal certification",
+  "seed": 20261113,
+  "sourceSha256": "4880a84a0ae06c1958fe2d21b76ce6fa4f58bbb69a08b642f7d8db7ceeb55744",
+  "sourceIntact": true,
+  "renders": [
+    {
+      "preset": "rap-jaycen-impact",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.366578459739685,
+      "peak32xDbtp": -1.2760576002150357
+    },
+    {
+      "preset": "rap-jaycen-impact",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3738484382629395,
+      "peak32xDbtp": -1.2767673637976862
+    },
+    {
+      "preset": "rap-jaycen-impact",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3735809326171875,
+      "peak32xDbtp": -1.2767634772738055
+    },
+    {
+      "preset": "rap-ali-texture",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2754406483942629
+    },
+    {
+      "preset": "rap-ali-texture",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.275895375781251
+    },
+    {
+      "preset": "rap-ali-texture",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.275901138464239
+    },
+    {
+      "preset": "electro-luca-punch",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3616094589233398,
+      "peak32xDbtp": -1.2730804443352184
+    },
+    {
+      "preset": "electro-luca-punch",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3837578296661377,
+      "peak32xDbtp": -1.2736956882207333
+    },
+    {
+      "preset": "electro-luca-punch",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.383556842803955,
+      "peak32xDbtp": -1.2736780715316671
+    },
+    {
+      "preset": "electro-wez-open",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2734005334234266
+    },
+    {
+      "preset": "electro-wez-open",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2738732199215994
+    },
+    {
+      "preset": "electro-wez-open",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2738853039953422
+    },
+    {
+      "preset": "newrock-zakk-impact",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.264641488304721
+    },
+    {
+      "preset": "newrock-zakk-impact",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2643036893793134
+    },
+    {
+      "preset": "newrock-zakk-impact",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2642973868911622
+    },
+    {
+      "preset": "newrock-wallace-glue",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2617490954605446
+    },
+    {
+      "preset": "newrock-wallace-glue",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.261319832944525
+    },
+    {
+      "preset": "newrock-wallace-glue",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.261326610520569
+    },
+    {
+      "preset": "trap-tumay-808",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2740453094408701
+    },
+    {
+      "preset": "trap-tumay-808",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3686097860336304,
+      "peak32xDbtp": -1.274666752821338
+    },
+    {
+      "preset": "trap-tumay-808",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3717644214630127,
+      "peak32xDbtp": -1.274679648176523
+    },
+    {
+      "preset": "trap-dean-synth",
+      "rate": 48000,
+      "oversampling": 2,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.269337867361332
+    },
+    {
+      "preset": "trap-dean-synth",
+      "rate": 48000,
+      "oversampling": 4,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2697782821846988
+    },
+    {
+      "preset": "trap-dean-synth",
+      "rate": 48000,
+      "oversampling": 8,
+      "samplePeakDbfs": -1.3500001430511475,
+      "peak32xDbtp": -1.2697781378537845
+    }
+  ]
+}

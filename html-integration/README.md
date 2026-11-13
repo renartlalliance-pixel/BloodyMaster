@@ -1,3 +1,13 @@
+# Édition HTML 0.3.6 — presets User et inspirations
+
+**Sauver** ouvre la saisie du nom ; les réglages rejoignent la section **User** du sélecteur. Ils persistent après réouverture et mise à jour. Le bouton ↻ actualise les presets d'une autre instance. Un nom existant crée une copie numérotée. [Mode d'emploi et stockage](docs/USER_PRESETS_FR.md).
+
+La banque compte 17 presets, dont huit nouvelles inspirations originales réparties en Rap, Electro, New Rock et Trap. Les ingénieurs cités n'ont ni fourni ni validé ces réglages : [inspirations et sources](docs/ENGINEER_INSPIRATIONS_2026_FR.md).
+
+Windows vérifié : 14/14 CTest, 29 vérifications WebView2 natives, 31 tests WAV et installateur. [Télécharger la 0.3.6](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.6-test-43442449010). Essai FL Studio et écoute humaine encore à effectuer. Consulter [STATUS.md](docs/STATUS.md) pour les preuves. Les informations 0.3.5 ci-dessous décrivent la version précédente. Les paramètres et les deux HTML originaux restent préservés.
+
+---
+
 # Édition HTML 0.3.5 — état actuel
 
 Lire [docs/STATUS.md](docs/STATUS.md). Atmosphere EQ M/S (quatre profils), Mid Pan centre seul, mesures LUFS intégré/court terme 3 s/true peak estimé et comparaison A/B compensée sont raccordés. Onze suites DSP locales, vérification indépendante SciPy et navigateur testés. Workflow Windows HTML 43437863780 réussi : 14/14 CTest, 24 vérifications WebView2 natives, 31 tests WAV et tests installateur. [Télécharger la version de test](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.5-test-43437863780). Validation FL Studio et écoute humaine encore à effectuer.

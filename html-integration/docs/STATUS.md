@@ -1,8 +1,8 @@
-# BloodyMaster — 0.3.6 en validation
+# BloodyMaster — 0.3.6, version de test Windows vérifiée
 
 Ajoute la sauvegarde nommée dans User, persistante hors installation, avec rappel des 50 paramètres, noms accentués, copies numérotées, actualisation et validation complète avant rappel. Huit presets originaux d'inspiration rap/electro/new rock/trap ajoutés : 17 Factory au total, indices historiques 0..8 inchangés. Lire USER_PRESETS_FR.md et ENGINEER_INSPIRATIONS_2026_FR.md.
 
-Tests locaux : 204 rendus de presets (17 × 4 Fs × 3 OS), 31 tests WAV, navigateur (groupes, dialogue, noms, rappel, erreurs, dimensions), vérification syntaxique JUCE 8.0.4 des tests et de l'éditeur. Tests natifs User et WebView2 étendus ; workflow Windows à vérifier avant de valider cette release. HTML originaux inchangés.
+Tests locaux : 204 rendus de presets (17 × 4 Fs × 3 OS), 31 tests WAV, navigateur (groupes, dialogue, noms, rappel, erreurs, dimensions), vérification syntaxique JUCE 8.0.4 des tests et de l'éditeur. Tests natifs User et WebView2 réussis ; voir validation Windows 0.3.6 ci-dessous. HTML originaux inchangés.
 
 La demande de potard reste une tâche ultérieure non précisée ; ne pas en inventer le rôle. L'utilisateur a demandé les presets avant de préciser ce potard.
 
@@ -39,3 +39,13 @@ Workflow HTML 43437863780, commit e96d2a7 : succès, 14/14 CTest, 24 vérificati
 Installateur téléchargé et SHA-256 comparé au fichier publié : 172892efd9f4aa385dbc3b22c827b30e4542aca41a209962e1b7697318d97eee. Rapport WebView2 téléchargé : passed=24, backend=WebView2 native Windows. Le workflow Windows de la racine 43437863633 est également réussi, mais porte sur l'édition historique ; la référence pour les ajouts est le workflow HTML ci-dessus.
 
 Restent écoute humaine et validation FL Studio. Les commits de documentation après e96d2a7 ne changent pas les sources compilées de cet installateur.
+
+## Validation Windows 0.3.6
+
+Workflow HTML 43442449010 réussi, commit 0fbeadf : 14/14 CTest, dont les tests User (persistance, noms accentués, doublons, fichiers invalides, droits et rappel de session) ; 29 vérifications WebView2 natives, 31 tests WAV et tests installation/réinstallation/désinstallation réussis.
+
+Release : https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.6-test-43442449010
+
+Installateur téléchargé et SHA-256 comparé au fichier publié : ddd2b17e7765edded6b99e3afdfa88ab043e1ae59f27658409aecee7ac2d9266. Rapport WebView2 téléchargé : passed=29, backend=WebView2 native Windows.
+
+Les 24 exports indépendants supplémentaires des nouveaux presets passent la reconstruction de crêtes SciPy 32× ; voir INSPIRATION_PRESET_VALIDATION.json. Les commits de documentation suivant 0fbeadf ne changent pas le code compilé de l'installateur. Restent écoute comparative humaine et validation FL Studio.

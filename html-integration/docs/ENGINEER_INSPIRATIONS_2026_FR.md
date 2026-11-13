@@ -31,3 +31,5 @@ Tous ont un plafond −1 dB, ISP actif, suréchantillonnage 8×, pan centré et 
 ## Validation
 
 Les 17 presets sont rendus à 44,1/48/96/192 kHz et en 2×/4×/8× (204 rendus stéréo), avec contrôle de finitude et du plafond d'échantillons. Les tests plugin vérifient les plages APVTS, le rappel et la sauvegarde de session. Cela ne constitue pas une écoute comparative humaine de ces ingénieurs ni une validation FL Studio.
+
+Validation indépendante additionnelle : 24 exports des huit nouveaux presets à 48 kHz, en 2×/4×/8×, signal stéréo déterministe grave/médium/aigu/bruit. Source intacte, durée/canaux conservés, sorties finies ; reconstruction SciPy 32× Kaiser β10. Pire crête observée −1,26132 dBTP pour plafond −1 dB. Rapport INSPIRATION_PRESET_VALIDATION.json. Ce résultat porte sur ce signal et ne constitue pas une garantie universelle.
