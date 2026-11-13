@@ -129,7 +129,7 @@
     if(monitor){
       monitor.textContent=next.monitorMatch?(next.monitorReady?`Comp. écoute ${(next.monitorGainDb||0).toFixed(1)} dB`:'Comp. écoute : apprentissage'):'Comp. écoute OFF';
       monitor.classList.toggle('btn-active',!!next.monitorMatch);monitor.setAttribute('aria-pressed',String(!!next.monitorMatch));
-      monitor.title='Écoute temporaire : atténue le plus fort (maximum 12 dB). Mesures avant compensation. COUPER avant export temps réel ; désactivée lors du rendu hors ligne signalé par l’hôte.';
+      monitor.title='Écoute temporaire : atténue le plus fort (maximum 12 dB). Mesures après compensation et protection. COUPER avant export temps réel ; désactivée lors du rendu hors ligne signalé par l’hôte.';
     }
     const readout=document.getElementById('loudnessReadout');if(readout)readout.textContent=loudnessText(next.loudness);
     const users=next.userPresets||[],categories=next.presetCategories||[];

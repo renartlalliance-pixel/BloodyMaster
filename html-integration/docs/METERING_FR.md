@@ -1,3 +1,9 @@
+# Mise à jour 0.3.7
+
+Les mesures et le scope de sortie sont maintenant après la compensation d'écoute et la protection globale. L'apprentissage A/B utilise un mesureur distinct en amont ; son matching peut être limité si la protection réduit différemment les deux états. Le bypass conserve la protection et la latence totale à 48 kHz est 848 échantillons. Voir OUTPUT_SAFETY_FR.md. Les paragraphes ci-dessous décrivent la version 0.3.5 et leurs indications « avant compensation » sont historiques.
+
+---
+
 # Mesures et comparaison d'écoute — 0.3.5
 
 Choix utilisateur A : LUFS intégré + court terme (3 s) + true peak, remise à zéro manuelle. Comparaison A/B compensée désactivée par défaut. Réponses A données dans le chat ; à l'avenir A par défaut, question seulement si un arbitrage important le nécessite.
