@@ -91,7 +91,7 @@ int run(std::vector<std::string> args) {
         for(const auto& p:bm::factoryPresets()) {
             if(!first) std::cout<<",\n";
             first=false;
-            std::cout<<"  {\"slug\":\""<<p.slug<<"\",\"name\":\""<<p.name<<"\",\"parameters\":{";
+            std::cout<<"  {\"slug\":\""<<p.slug<<"\",\"name\":\""<<p.name<<"\",\"category\":\""<<p.category<<"\",\"parameters\":{";
             bool parameterFirst=true;
             for(const auto& [id,value]:bm::presetParameters(p.settings)) {
                 if(!parameterFirst) std::cout<<',';

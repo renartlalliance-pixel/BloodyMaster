@@ -8,6 +8,7 @@
 #include "PluginProcessor.h"
 #include "Parameters/ParameterIDs.h"
 #include "Presets/FactoryPresets.h"
+#include "Presets/UserPresets.h"
 #if BM_HTML_UI
 #include "../UI/WebUiSmoke.h"
 #endif
@@ -37,6 +38,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         testState();
         testLiveOversampling();
         testFactoryPrograms();
+        testUserPresets();
         testHostBypassAndMeters();
         testEditor();
     }
@@ -177,7 +179,7 @@ struct BloodyMasterTests final : public juce::UnitTest
     {
         beginTest("Presets : plages physiques, rappel et sauvegarde");
         BloodyMasterProcessor p;
-        expectEquals(p.getNumPrograms(),9);
+        expectEquals(p.getNumPrograms(),17);
         for(int i=0;i<p.getNumPrograms();++i) {
             p.setCurrentProgram(i);
             expectEquals(p.getCurrentProgram(),i);
@@ -193,6 +195,43 @@ struct BloodyMasterTests final : public juce::UnitTest
             BloodyMasterProcessor restored;restored.setStateInformation(state.getData(),static_cast<int>(state.getSize()));
             expectEquals(restored.getCurrentProgram(),i);
         }
+    }
+
+    void testUserPresets()
+    {
+        beginTest("User presets: persistence, Unicode, duplicates and atomic validation");
+        const auto directory=juce::File::getSpecialLocation(juce::File::tempDirectory).getNonexistentChildFile("BloodyMaster-user-tests","",false);
+        struct Cleanup {juce::File dir;~Cleanup(){dir.deleteRecursively();}} cleanup{directory};
+        BloodyMasterProcessor p;p.setCurrentProgram(16);
+        auto* drive=p.apvts.getParameter(bm::id::drive);drive->setValueNotifyingHost(drive->convertTo0to1(3.25f));
+        bm::UserPresets store(directory);juce::String id,duplicate;
+        expect(store.save(juce::String::fromUTF8("Mon piège / 808 <test>"),p.apvts,id).wasOk());
+        expectEquals(static_cast<int>(store.entries().size()),1);
+        expect(store.save(juce::String::fromUTF8("Mon piège / 808 <test>"),p.apvts,duplicate).wasOk());
+        expect(id!=duplicate);expectEquals(static_cast<int>(store.entries().size()),2);
+        bool numbered=false;for(const auto& e:store.entries())numbered|=e.name.endsWith(" (2)");expect(numbered);
+        bm::UserPresets reopened(directory);expect(reopened.refresh(p.apvts).wasOk());
+        p.setCurrentProgram(0);expect(reopened.load(id,p.apvts).wasOk());
+        expectWithinAbsoluteError(p.apvts.getRawParameterValue(bm::id::drive)->load(),3.25f,1e-5f);
+        for(const auto& e:reopened.entries())if(e.id==id){expectEquals(static_cast<int>(e.parameters.size()),50);expect(bm::UserPresets::matches(e,p.apvts));}
+        const auto presetFile=directory.getChildFile(id+".bmpreset");const auto original=presetFile.loadFileAsString();
+        auto doc=juce::JSON::parse(original);auto* params=doc["parameters"].getDynamicObject();
+        params->setProperty(bm::id::drive,9.f);params->setProperty(bm::id::width,999.f);
+        expect(presetFile.replaceWithText(juce::JSON::toString(doc)));
+        const auto before=p.apvts.getRawParameterValue(bm::id::drive)->load();
+        expect(reopened.load(id,p.apvts).failed());
+        expectWithinAbsoluteError(p.apvts.getRawParameterValue(bm::id::drive)->load(),before,0.f);
+        expect(reopened.load("../../other",p.apvts).failed());
+        expect(reopened.refresh(p.apvts).failed());expectEquals(static_cast<int>(reopened.entries().size()),1);
+        expect(presetFile.replaceWithText(original));expect(reopened.refresh(p.apvts).wasOk());
+        doc=juce::JSON::parse(original);doc.getDynamicObject()->setProperty("version",999);
+        expect(presetFile.replaceWithText(juce::JSON::toString(doc)));expect(reopened.load(id,p.apvts).failed());
+        expect(presetFile.deleteFile());expect(reopened.load(id,p.apvts).failed());
+        juce::String ignored;expect(store.save("  ",p.apvts,ignored).failed());
+        const auto blocked=directory.getChildFile("file-not-folder");expect(blocked.replaceWithText("preserve"));
+        bm::UserPresets unwritable(blocked);expect(unwritable.save("Test",p.apvts,ignored).failed());expectEquals(blocked.loadFileAsString(),juce::String("preserve"));
+        juce::MemoryBlock session;p.getStateInformation(session);BloodyMasterProcessor restored;restored.setStateInformation(session.getData(),static_cast<int>(session.getSize()));
+        expectWithinAbsoluteError(restored.apvts.getRawParameterValue(bm::id::drive)->load(),before,1e-5f);
     }
 
     void testHostBypassAndMeters()

@@ -83,7 +83,24 @@
     const v=Number(btn.dataset.prof)-1;send('profile',v,'begin');send('profile',v);send('profile',v,'end');
   }));
   const selector=document.getElementById('presetSelector');
-  selector?.addEventListener('change',()=>{if(selector.value!=='')emit('bmAction',{action:'preset',index:Number(selector.value)});});
+  selector?.addEventListener('change',()=>{
+    if(selector.value.startsWith('user:'))emit('bmAction',{action:'loadUserPreset',id:selector.value.slice(5)});
+    else if(selector.value!=='')emit('bmAction',{action:'preset',index:Number(selector.value)});
+  });
+  const userDialog=document.getElementById('userPresetDialog'),userName=document.getElementById('userPresetName');
+  let presetListKey='',feedbackSerial=0,savePending=false,noticeTimer=null;
+  document.getElementById('saveUserPresetBtn')?.addEventListener('click',()=>{
+    if(!userDialog||savePending)return;userName.value='';document.getElementById('userPresetError').textContent='';userDialog.showModal();userName.focus();
+  });
+  document.getElementById('cancelUserPresetBtn')?.addEventListener('click',()=>{if(!savePending)userDialog.close();});
+  userDialog?.addEventListener('cancel',e=>{if(savePending)e.preventDefault();});
+  document.getElementById('userPresetForm')?.addEventListener('submit',e=>{
+    e.preventDefault();if(savePending)return;const name=userName.value.trim();
+    if(!name||name.length>80){document.getElementById('userPresetError').textContent='Choisir un nom de 1 à 80 caractères.';return;}
+    savePending=true;document.getElementById('confirmUserPresetBtn').disabled=true;document.getElementById('cancelUserPresetBtn').disabled=true;
+    emit('bmAction',{action:'saveUserPreset',name});
+  });
+  document.getElementById('refreshUserPresetsBtn')?.addEventListener('click',()=>emit('bmAction',{action:'refreshUserPresets'}));
   document.getElementById('abBtn')?.addEventListener('click',()=>emit('bmAction',{action:'ab'}));
   const target=document.getElementById('lufsTargetSelector');
   if(target){target.disabled=true;target.title='Repère visuel uniquement : normalisation LUFS non implémentée.';}
@@ -112,11 +129,29 @@
       monitor.title='Écoute temporaire : atténue le plus fort (maximum 12 dB). Mesures avant compensation. COUPER avant export temps réel ; désactivée lors du rendu hors ligne signalé par l’hôte.';
     }
     const readout=document.getElementById('loudnessReadout');if(readout)readout.textContent=loudnessText(next.loudness);
-    if(!selector.dataset.native){
-      selector.replaceChildren(new Option('Réglages personnalisés',''),...next.presets.map((name,i)=>new Option(name,String(i))));
-      selector.dataset.native='true';
+    const users=next.userPresets||[],categories=next.presetCategories||[];
+    const listKey=JSON.stringify([next.presets,categories,users]);
+    if(presetListKey!==listKey){
+      const groups=new Map();selector.replaceChildren(new Option('Réglages personnalisés',''));
+      next.presets.forEach((name,i)=>{
+        const category=categories[i]||'Factory';
+        if(!groups.has(category)){const group=document.createElement('optgroup');group.label=category;groups.set(category,group);selector.append(group);}
+        groups.get(category).append(new Option(name,String(i)));
+      });
+      const user=document.createElement('optgroup');user.label='User';
+      users.forEach(p=>user.append(new Option(p.name,'user:'+p.id)));
+      if(!users.length){const empty=new Option('Aucun preset enregistré','');empty.disabled=true;user.append(empty);}
+      selector.append(user);presetListKey=listKey;
     }
-    selector.value=next.preset>=0?String(next.preset):'';
+    selector.value=next.selectedUserPreset?'user:'+next.selectedUserPreset:next.preset>=0?String(next.preset):'';
+    const feedback=next.userPresetFeedback;
+    if(feedback&&feedback.serial>feedbackSerial){
+      feedbackSerial=feedback.serial;
+      if(savePending){savePending=false;document.getElementById('confirmUserPresetBtn').disabled=false;document.getElementById('cancelUserPresetBtn').disabled=false;
+        if(feedback.ok)userDialog.close();else document.getElementById('userPresetError').textContent=feedback.message;
+      }
+      const notice=document.getElementById('presetNotice');if(notice){notice.textContent=feedback.message;notice.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>notice.hidden=true,6000);}
+    }
     for(const [id,p] of Object.entries(next.parameters)) {
       const knob=byParam.get(id);
       if(knob){
@@ -175,7 +210,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.5';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.6';
     }
     draw();
   }

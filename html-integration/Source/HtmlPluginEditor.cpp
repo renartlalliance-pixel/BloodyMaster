@@ -27,8 +27,10 @@ std::optional<juce::WebBrowserComponent::Resource> resource(const juce::String& 
     return juce::WebBrowserComponent::Resource{{begin,begin+size},mime};
 }
 }
-BloodyMasterEditor::BloodyMasterEditor(BloodyMasterProcessor& p):AudioProcessorEditor(&p),processor(p) {
+BloodyMasterEditor::BloodyMasterEditor(BloodyMasterProcessor& p,juce::File directory):AudioProcessorEditor(&p),processor(p),userPresets(std::move(directory)) {
     processor.setComparisonIndex(0);
+    const auto userScan=userPresets.refresh(processor.apvts);
+    if(userScan.failed()){userFeedback=userScan.getErrorMessage();userFeedbackOk=false;++userFeedbackSerial;}
     for(const auto& [id,value]:bm::presetParameters(bm::factoryPresets()[0].settings)) {
         juce::ignoreUnused(value);activeIds.insert(id);
     }
@@ -73,7 +75,24 @@ void BloodyMasterEditor::parameterEvent(const juce::var& event) {
 void BloodyMasterEditor::actionEvent(const juce::var& event) {
     if(!event.isObject())return;
     const auto action=event["action"].toString();
-    if(action=="preset" && event["index"].isInt())processor.setCurrentProgram(static_cast<int>(event["index"]));
+    if(action=="preset" && event["index"].isInt()) {
+        const int index=static_cast<int>(event["index"]);
+        if(index>=0&&index<processor.getNumPrograms()){processor.setCurrentProgram(index);preferredUser.clear();preferFactory=true;}
+    }
+    else if(action=="saveUserPreset" && event["name"].isString()) {
+        juce::String id;const auto result=userPresets.save(event["name"].toString(),processor.apvts,id);
+        userFeedbackOk=result.wasOk();userFeedback=result.wasOk()?"Preset enregistré dans User.":result.getErrorMessage();++userFeedbackSerial;
+        if(result.wasOk()){preferredUser=id;preferFactory=false;}
+    }
+    else if(action=="loadUserPreset" && event["id"].isString()) {
+        const auto result=userPresets.load(event["id"].toString(),processor.apvts);
+        userFeedbackOk=result.wasOk();userFeedback=result.wasOk()?"Preset User chargé.":result.getErrorMessage();++userFeedbackSerial;
+        if(result.wasOk()){preferredUser=event["id"].toString();preferFactory=false;}
+    }
+    else if(action=="refreshUserPresets") {
+        const auto result=userPresets.refresh(processor.apvts);userFeedbackOk=result.wasOk();
+        userFeedback=result.wasOk()?"Liste User actualisée.":result.getErrorMessage();++userFeedbackSerial;
+    }
     else if(action=="monitorMatch")processor.setMonitorMatch(!processor.isMonitorMatchEnabled());
     else if(action=="resetMeters")processor.requestMeterReset();
     else if(action=="ab") {
@@ -118,14 +137,25 @@ juce::var BloodyMasterEditor::makeState() {
     const auto loudness=processor.getLoudnessValues();auto measurement=object();
     property(measurement,"integrated",loudness.integrated);property(measurement,"shortTerm",loudness.shortTerm);
     property(measurement,"truePeak",loudness.truePeak);property(result,"loudness",measurement);
-    juce::Array<juce::var> presets;int selected=-1;
+    juce::Array<juce::var> presets,categories;int selected=-1;
     const auto& bank=bm::factoryPresets();
     for(size_t i=0;i<bank.size();++i) {
-        presets.add(bank[i].name);bool matches=true;
+        presets.add(bank[i].name);categories.add(bank[i].category);bool matches=true;
         for(const auto& [id,value]:bm::presetParameters(bank[i].settings))
             if(std::abs(processor.apvts.getRawParameterValue(id)->load(std::memory_order_relaxed)-value)>1.e-3f){matches=false;break;}
         if(matches)selected=static_cast<int>(i);
     }
+    juce::Array<juce::var> users;juce::String selectedUser;
+    for(const auto& entry:userPresets.entries()) {
+        auto item=object();property(item,"id",entry.id);property(item,"name",entry.name);users.add(item);
+        if((!preferFactory||selected<0)&&bm::UserPresets::matches(entry,processor.apvts))
+            if(selectedUser.isEmpty()||entry.id==preferredUser)selectedUser=entry.id;
+    }
+    if(selectedUser.isNotEmpty())selected=-1;
+    property(result,"userPresets",juce::var(users));property(result,"selectedUserPreset",selectedUser);
+    property(result,"presetCategories",juce::var(categories));
+    auto feedback=object();property(feedback,"serial",userFeedbackSerial);property(feedback,"ok",userFeedbackOk);property(feedback,"message",userFeedback);
+    property(result,"userPresetFeedback",feedback);
     property(result,"presets",juce::var(presets));property(result,"preset",selected);property(result,"ab",comparisonIndex==0?"A":"B");
     const double rate=processor.getDspSampleRate();property(result,"sampleRate",rate);property(result,"latency",processor.getLatencySamples());
     const auto tone=processor.getToneSettingsForUi();

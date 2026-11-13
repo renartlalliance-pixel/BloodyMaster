@@ -3,10 +3,11 @@
 #if BM_HTML_UI
 #include <juce_gui_extra/juce_gui_extra.h>
 #include <set>
+#include "Presets/UserPresets.h"
 class BloodyMasterEditor final : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
-    explicit BloodyMasterEditor(BloodyMasterProcessor&);
+    explicit BloodyMasterEditor(BloodyMasterProcessor&,juce::File userDirectory=bm::UserPresets::defaultDirectory());
     ~BloodyMasterEditor() override;
     void resized() override;
 #if BM_UI_TESTING
@@ -21,6 +22,10 @@ private:
     std::set<juce::String> activeIds,gestures;
     juce::ValueTree comparison[2];
     int comparisonIndex=0;
+    bm::UserPresets userPresets;
+    juce::String preferredUser,userFeedback;
+    bool preferFactory=false,userFeedbackOk=true;
+    int userFeedbackSerial=0;
     bool uiReady=false;
     bm::dsp::Settings lastTone{};
     double lastCurveRate=-1;

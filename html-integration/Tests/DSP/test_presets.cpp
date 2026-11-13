@@ -25,5 +25,5 @@ int main() {
             }
         }
     }
-    std::puts("PASS 9 presets x 4 rates x 3 oversampling modes (108 stereo renders)");
+    std::puts("PASS 17 presets x 4 rates x 3 oversampling modes (204 stereo renders)");
 }

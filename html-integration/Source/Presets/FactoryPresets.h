@@ -9,11 +9,12 @@ struct FactoryPreset {
     const char* slug;
     const char* name;
     dsp::EngineSettings settings;
+    const char* category="Factory";
 };
 // Original starting points, not settings supplied or endorsed by named engineers.
-inline const std::array<FactoryPreset,9>& factoryPresets() {
+inline const std::array<FactoryPreset,17>& factoryPresets() {
     static const auto bank=[] {
-        std::array<FactoryPreset,9> p{};
+        std::array<FactoryPreset,17> p{};
         const auto base=[] {
             dsp::EngineSettings s;
             s.tone.hpf=15; s.dynamics.ratio=1.5; s.dynamics.releaseMs=150;
@@ -66,6 +67,54 @@ inline const std::array<FactoryPreset,9>& factoryPresets() {
         d.tone.atmosphere=10;d.tone.profile=3;d.peaks.color.tape=12;
         e.tone.atmosphere=8;e.tone.profile=2;e.peaks.color.tape=6;
         c.tone.atmosphere=10;c.tone.profile=0;c.peaks.color.tape=10;
+        // Eight original 2026 inspiration presets, not engineers' own settings.
+        // Existing indices 0..8 stay stable for DAW sessions and automation.
+        p[9]={"rap-jaycen-impact","Rap - Jaycen Joshua (inspire)",base(),"Rap"};
+        auto& jj=p[9].settings;jj.dynamics.drive=1.8;jj.dynamics.ratio=1.8;
+        jj.dynamics.releaseMs=110;jj.dynamics.mix=90;jj.dynamics.glue=.6;jj.dynamics.optical=false;
+        jj.peaks.clipDb=1.6;jj.peaks.pushDb=.8;jj.peaks.color.tape=8;
+        jj.tone.hpf=20;jj.tone.bass=.5;jj.tone.mid=-.25;jj.tone.high=.25;
+        jj.tone.freq[1]=2000;jj.tone.gain[1]=.3;jj.tone.monoBass=105;jj.tone.atmosphere=6;
+        p[10]={"rap-ali-texture","Rap - MixedByAli (inspire)",base(),"Rap"};
+        auto& ali=p[10].settings;ali.dynamics.drive=.7;ali.dynamics.ratio=1.5;
+        ali.dynamics.releaseMs=190;ali.dynamics.mix=90;ali.dynamics.glue=.4;ali.dynamics.optical=false;
+        ali.peaks.clipDb=.6;ali.peaks.pushDb=.4;ali.peaks.color.tape=16;ali.peaks.color.thdDb=-48;
+        ali.tone.hpf=20;ali.tone.mid=-.2;ali.tone.monoBass=100;ali.tone.width=102;ali.tone.atmosphere=5;ali.tone.profile=3;
+        p[11]={"electro-luca-punch","Electro - Luca Pretolesi (inspire)",base(),"Electro"};
+        auto& lp=p[11].settings;lp.dynamics.drive=1.2;lp.dynamics.ratio=1.7;
+        lp.dynamics.releaseMs=110;lp.dynamics.mix=85;lp.dynamics.glue=.4;lp.dynamics.optical=false;
+        lp.peaks.clipDb=1.8;lp.peaks.pushDb=1;lp.peaks.color.tape=6;lp.peaks.color.xl=8;lp.peaks.color.xlMode=2;
+        lp.tone.hpf=22;lp.tone.bass=.3;lp.tone.monoBass=125;lp.tone.width=105;lp.tone.atmosphere=10;lp.tone.profile=2;
+        p[12]={"electro-wez-open","Electro - Wez Clarke (inspire)",base(),"Electro"};
+        auto& wc=p[12].settings;wc.dynamics.drive=.6;wc.dynamics.ratio=1.5;
+        wc.dynamics.releaseMs=180;wc.dynamics.mix=95;wc.dynamics.glue=.7;wc.dynamics.optical=false;
+        wc.peaks.clipDb=.6;wc.peaks.pushDb=.4;wc.peaks.color.tape=5;
+        wc.tone.hpf=22;wc.tone.bass=.25;wc.tone.high=.4;wc.tone.presence=.3;
+        wc.tone.monoBass=100;wc.tone.width=104;wc.tone.atmosphere=12;wc.tone.profile=0;
+        p[13]={"newrock-zakk-impact","New Rock - Zakk Cervini (inspire)",base(),"New Rock"};
+        auto& zc=p[13].settings;zc.dynamics.drive=1.4;zc.dynamics.ratio=2;
+        zc.dynamics.releaseMs=100;zc.dynamics.glue=.7;zc.dynamics.optical=false;
+        zc.peaks.clipDb=1.5;zc.peaks.pushDb=.7;zc.peaks.color.tape=6;
+        zc.tone.hpf=25;zc.tone.mid=.3;zc.tone.freq[1]=1800;zc.tone.gain[1]=.3;
+        zc.tone.monoBass=90;zc.tone.width=102;zc.tone.atmosphere=5;zc.cleanup.amount=10;zc.cleanup.harshHz=6500;
+        p[14]={"newrock-wallace-glue","New Rock - Andy Wallace (inspire)",base(),"New Rock"};
+        auto& aw=p[14].settings;aw.dynamics.drive=.8;aw.dynamics.ratio=1.6;
+        aw.dynamics.releaseMs=180;aw.dynamics.mix=90;aw.dynamics.glue=.6;aw.dynamics.optical=false;
+        aw.peaks.clipDb=.5;aw.peaks.pushDb=.3;aw.peaks.color.tape=8;
+        aw.tone.hpf=25;aw.tone.bass=.2;aw.tone.mid=-.2;aw.tone.monoBass=80;aw.tone.width=102;
+        p[15]={"trap-tumay-808","Trap - Alex Tumay (inspire)",base(),"Trap"};
+        auto& at=p[15].settings;at.dynamics.drive=.5;at.dynamics.ratio=1.4;
+        at.dynamics.releaseMs=220;at.dynamics.mix=85;at.dynamics.glue=.3;at.dynamics.optical=false;
+        at.peaks.clipDb=.3;at.peaks.pushDb=.4;at.peaks.color.tape=5;
+        at.tone.hpf=18;at.tone.bass=.25;at.tone.mid=-.25;at.tone.monoBass=115;at.tone.width=101;
+        at.tone.atmosphere=5;at.tone.profile=2;
+        p[16]={"trap-dean-synth","Trap - Mike Dean (inspire)",base(),"Trap"};
+        auto& md=p[16].settings;md.dynamics.drive=1.4;md.dynamics.ratio=1.6;
+        md.dynamics.releaseMs=160;md.dynamics.mix=90;md.dynamics.glue=.5;md.dynamics.optical=false;
+        md.peaks.clipDb=1.8;md.peaks.pushDb=1;md.peaks.color.tape=16;md.peaks.color.thdDb=-44;
+        md.peaks.color.xl=6;md.peaks.color.xlMode=0;
+        md.tone.hpf=18;md.tone.bass=.5;md.tone.presence=.3;md.tone.monoBass=120;
+        md.tone.width=104;md.tone.atmosphere=10;md.tone.profile=0;
         for(auto& preset:p)preset.settings.peaks.color.valve=preset.settings.dynamics.optical;
         return p;
     }();

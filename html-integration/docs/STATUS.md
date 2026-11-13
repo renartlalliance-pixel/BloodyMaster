@@ -1,3 +1,13 @@
+# BloodyMaster — 0.3.6 en validation
+
+Ajoute la sauvegarde nommée dans User, persistante hors installation, avec rappel des 50 paramètres, noms accentués, copies numérotées, actualisation et validation complète avant rappel. Huit presets originaux d'inspiration rap/electro/new rock/trap ajoutés : 17 Factory au total, indices historiques 0..8 inchangés. Lire USER_PRESETS_FR.md et ENGINEER_INSPIRATIONS_2026_FR.md.
+
+Tests locaux : 204 rendus de presets (17 × 4 Fs × 3 OS), 31 tests WAV, navigateur (groupes, dialogue, noms, rappel, erreurs, dimensions), vérification syntaxique JUCE 8.0.4 des tests et de l'éditeur. Tests natifs User et WebView2 étendus ; workflow Windows à vérifier avant de valider cette release. HTML originaux inchangés.
+
+La demande de potard reste une tâche ultérieure non précisée ; ne pas en inventer le rôle. L'utilisateur a demandé les presets avant de préciser ce potard.
+
+---
+
 # BloodyMaster — 0.3.5, version de test Windows vérifiée
 
 Branche codex/html-webview2, implémentation html-integration. Lire AGENTS.md, docs/STEREO_DESIGN_FR.md et docs/METERING_FR.md.

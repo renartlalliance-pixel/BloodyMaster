@@ -1,9 +1,7 @@
-# BloodyMaster 0.3.5 — version de test HTML
+# BloodyMaster 0.3.6 — User et banque d'inspirations
 
-Ajoute Atmosphere, EQ sur le Side avec quatre profils et dosage, centre préservé, grave très peu modifié, sans latence supplémentaire. Mid Pan déplace désormais le centre en gardant les côtés fixes ; les anciens réglages de pan non nuls peuvent changer de rendu. Voir STEREO_DESIGN_FR.md.
+Ajoute Sauver : donner un nom, puis retrouver ses réglages dans la section User. Les fichiers persistent dans les données utilisateur ; un nom existant crée une copie numérotée. Le bouton ↻ recharge la liste. Tous les paramètres sont validés avant rappel, sans accès disque dans l'audio.
 
-Conserve Tape Color indépendant (Discret/Marqué), THD/XL, nettoyages, compression et limiteur. HTML originaux conservés.
+Ajoute huit presets originaux : Rap (inspiration Jaycen Joshua, MixedByAli), Electro (Luca Pretolesi, Wez Clarke), New Rock (Zakk Cervini, Andy Wallace), Trap (Alex Tumay, Mike Dean). Les neuf presets précédents et leurs indices sont conservés. Ce ne sont pas des presets officiels de ces ingénieurs. Sources et décisions : ENGINEER_INSPIRATIONS_2026_FR.md ; usage : USER_PRESETS_FR.md.
 
-Ajoute les mesures réelles LUFS intégré/court terme 3 s et true peak estimé 4×, RAZ manuelle et comparaison A/B compensée. Écouter les deux états au moins 3 s ; atténuation seule jusqu'à 12 dB. **Couper la compensation avant export temps réel.** Elle est désactivée par défaut et ignorée au rendu hors ligne signalé par l'hôte. Mesures avant compensation. Presets de genre enrichis légèrement. Voir METERING_FR.md pour limites, gates et protocole de vérification. TARGET ne normalise pas le fichier.
-
-Reste la validation FL Studio et l'écoute comparative humaine. Installateur non signé, version de test. Fermer FL Studio avant installation et rescanner les plugins. WebView2 installé si nécessaire avec une connexion dans ce cas.
+Conserve les DSP de la 0.3.5, ses mesures et la comparaison A/B. Couper Comp. écoute avant export temps réel. Les HTML originaux restent intacts. Installateur non signé, version de test. Fermer FL Studio avant installation, puis rescanner les plugins. Validation FL Studio et écoute humaine restant à effectuer.

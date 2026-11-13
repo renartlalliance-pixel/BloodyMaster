@@ -43,6 +43,19 @@ meter_controls='<div class="flex items-center justify-center gap-3" style="posit
 canvas='<canvas id="precisionMeterCanvas" class="w-full h-full block"></canvas>'
 if html.count(canvas)!=1:raise SystemExit('Meter canvas placeholder not found')
 html=html.replace(canvas,canvas.replace('class=', 'style="height:calc(100% - 44px)" class=')+meter_controls)
+# User presets: controls only in the generated page; approved HTML unchanged.
+preset_controls='<button id="saveUserPresetBtn" class="tascam-btn px-2 py-1 text-xs" title="Enregistrer les réglages dans User">Sauver</button><button id="refreshUserPresetsBtn" class="tascam-btn px-2 py-1 text-xs" title="Actualiser les presets User" aria-label="Actualiser User">↻</button>'
+html,count=re.subn(r'(<select id="presetSelector".*?</select>)',lambda m:m[0]+preset_controls,html,count=1,flags=re.S)
+if count!=1:raise SystemExit('Preset selector placeholder not found')
+html=html.replace('id="presetSelector"','id="presetSelector" style="max-width:240px"')
+dialog='''<dialog id="userPresetDialog" style="background:#151718;color:#ddd;border:1px solid #555;border-radius:8px;padding:20px;width:360px;max-width:90vw">
+<form id="userPresetForm"><label for="userPresetName">Enregistrer dans User</label>
+<input id="userPresetName" name="name" type="text" maxlength="80" required autocomplete="off" placeholder="Nom du preset" style="display:block;width:100%;margin:12px 0;background:#090909;color:#eee;border:1px solid #555;padding:8px">
+<p id="userPresetError" role="alert" style="font-size:12px;color:#fca5a5"></p>
+<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px"><button id="cancelUserPresetBtn" type="button" class="tascam-btn px-2 py-1">Annuler</button><button id="confirmUserPresetBtn" type="submit" class="tascam-btn px-2 py-1">Enregistrer</button></div>
+<p style="font-size:11px;color:#aaa;margin-top:12px">Un nom existant crée une copie numérotée.</p></form></dialog>
+<div id="presetNotice" role="status" aria-live="polite" hidden style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#151718;border:1px solid #555;border-radius:4px;padding:8px 12px;z-index:1000;font-size:12px;max-width:90vw"></div>'''
+html=html.replace('<script src="bridge.js"></script>',dialog+'<script src="bridge.js"></script>')
 output=pathlib.Path(sys.argv[1]);output.mkdir(parents=True,exist_ok=True)
 (output/'index.html').write_text(html,encoding='utf-8')
 print('Runtime HTML generated; approved HTML unchanged.')
