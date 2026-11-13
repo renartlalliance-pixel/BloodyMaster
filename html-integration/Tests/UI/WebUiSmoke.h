@@ -98,7 +98,13 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(wait([&]{return static_cast<bool>(evaluate("window.bloodyMasterUi.getState().safetyReductionDb>0 && document.querySelector('#outputSafetyReadout').textContent.includes('Protection sortie') && window.bloodyMasterUi.getState().meters.outputL<0.751"));}),"Global protection and protected output meters reach HTML during host bypass"))return 30;
     const auto deltaSettings=p.apvts.copyState().toXmlString();
     evaluate("document.querySelector('#deltaBtn').click();true");
-    if(!verify(wait([&]{return p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn').getAttribute('aria-pressed')==='true' && document.querySelector('#deltaBtn').title==='Écouter la différence entre le signal original et le signal traité.'"));}),"DELTA button controls transient audition with exact tooltip"))return 31;
+    const bool deltaActivated=wait([&]{return p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn')?.getAttribute('aria-pressed')==='true'"));});
+    if(!verify(deltaActivated,"DELTA button controls transient audition")){
+        std::printf("Delta native=%d; browser=%s\n",int(p.isDeltaEnabled()),evaluate("JSON.stringify({delta:window.bloodyMasterUi?.getState()?.delta,button:document.querySelector('#deltaBtn')?.outerHTML})").toString().toRawUTF8());return 31;
+    }
+    if(!verify(static_cast<bool>(evaluate("document.querySelector('#deltaBtn').title==='\\u00c9couter la diff\\u00e9rence entre le signal original et le signal trait\\u00e9.'")),"DELTA tooltip matches exact French text")){
+        std::printf("Delta tooltip: %s\n",evaluate("JSON.stringify(document.querySelector('#deltaBtn').title)").toString().toRawUTF8());return 35;
+    }
     if(!verify(p.apvts.copyState().toXmlString()==deltaSettings,"DELTA does not modify processing parameters"))return 32;
     evaluate("document.querySelector('#presetSelector').value='0';document.querySelector('#presetSelector').dispatchEvent(new Event('change'));true");
     if(!verify(wait([&]{return !p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn').getAttribute('aria-pressed')==='false'"));}),"Factory recall disables DELTA"))return 33;
