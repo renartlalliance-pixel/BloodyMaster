@@ -1,4 +1,4 @@
-BLOODYMASTER 0.3.7 - VERSION DE TEST WINDOWS X64
+BLOODYMASTER 0.3.8 - VERSION DE TEST WINDOWS X64
 
 1. Fermer FL Studio puis lancer l'installateur.
 2. Le VST3 est copie dans :
@@ -42,3 +42,9 @@ Protection globale active aussi en bypass et apres Comp. ecoute.
 Plafond global -2 dBTP avec reserve ; regulation d'energie pour l'objectif -5 LUFS.
 Verifier les LUFS integres du fichier complet ; aucune garantie universelle des encodeurs.
 Latence a 48 kHz : 848 echantillons declares au DAW.
+
+DELTA : ecoute entree alignee moins sortie de toute la chaine.
+Transition 20 ms, latence inchangee ; parametres DSP inchanges.
+Desactive par defaut et au rappel des presets/sessions.
+Difference diagnostique brute : elle peut depasser le plafond du master.
+Couper DELTA avant export temps reel. Force OFF en rendu hors ligne reconnu.

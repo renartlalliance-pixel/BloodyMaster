@@ -50,6 +50,7 @@ const juce::String BloodyMasterProcessor::getProgramName(int index) {
 }
 void BloodyMasterProcessor::setCurrentProgram(int index) {
     if(index<0 || index>=getNumPrograms()) return;
+    setDeltaEnabled(false);
     for(const auto& [id,value]:bm::presetParameters(bm::factoryPresets()[static_cast<size_t>(index)].settings))
         if(auto* parameter=apvts.getParameter(id)) parameter->setValueNotifyingHost(parameter->convertTo0to1(value));
     currentProgram.store(index,std::memory_order_relaxed);
@@ -101,8 +102,9 @@ bm::dsp::EngineSettings BloodyMasterProcessor::readDspSettings() const
     return settings;
 }
 
-void BloodyMasterProcessor::prepareToPlay(double sampleRate, int)
+void BloodyMasterProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+    setDeltaEnabled(false);
     preparedRate.store(sampleRate,std::memory_order_relaxed);
     const auto settings=readDspSettings();
     mastering.prepare(sampleRate,settings.oversampling);
@@ -114,6 +116,7 @@ void BloodyMasterProcessor::prepareToPlay(double sampleRate, int)
     meterReset.store(false);
     mastering.update(settings);
     setLatencySamples(mastering.latency()+finalSafety.latency());
+    deltaMonitor.prepare(sampleRate,getLatencySamples(),samplesPerBlock);
 }
 
 bool BloodyMasterProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -124,33 +127,40 @@ bool BloodyMasterProcessor::isBusesLayoutSupported(const BusesLayout& layouts) c
     return out == juce::AudioChannelSet::mono() || out == juce::AudioChannelSet::stereo();
 }
 
-void BloodyMasterProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
-{
+void BloodyMasterProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {processAudio(buffer,false);}
+void BloodyMasterProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {processAudio(buffer,true);}
+void BloodyMasterProcessor::processAudio(juce::AudioBuffer<float>& buffer,bool hostBypass) {
     juce::ScopedNoDenormals noDenormals;
-
-    // Les canaux de sortie sans entree correspondante sont mis a zero (pas de bruit residuel).
-    for (int ch = getTotalNumInputChannels(); ch < getTotalNumOutputChannels(); ++ch)
-        buffer.clear(ch, 0, buffer.getNumSamples());
-
-    const auto settings=readDspSettings();
+    const int channels=buffer.getNumChannels();if(channels<1||channels>2)return;
+    for(int ch=getTotalNumInputChannels();ch<getTotalNumOutputChannels();++ch)buffer.clear(ch,0,buffer.getNumSamples());
+    const bool offline=isNonRealtime();if(offline)setDeltaEnabled(false);
+    auto settings=readDspSettings();if(hostBypass)settings.bypass=true;
+    // Global Delta supersedes cleanup-only solo without editing its parameter.
+    if(!offline&&(isDeltaEnabled()||deltaMonitor.isAuditioning()))settings.cleanup.listen=false;
     mastering.update(settings);
     captureScope(buffer,true);
-    mastering.process(buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
-    measureOutput(buffer,settings.bypass,settings.peaks.ceilingDb);
-    publishMeters();
-    captureScope(buffer,false);
-}
-
-void BloodyMasterProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
-{
-    juce::ScopedNoDenormals noDenormals;
-    auto s=readDspSettings(); s.bypass=true;
-    mastering.update(s);
-    captureScope(buffer,true);
-    mastering.process(buffer.getArrayOfWritePointers(),buffer.getNumChannels(),buffer.getNumSamples());
-    measureOutput(buffer,true,s.peaks.ceilingDb);
-    publishMeters();
-    captureScope(buffer,false);
+    bm::dsp::MeterValues sum{};std::array<double,5> outputSum{};double protectionPeak=0;
+    for(int offset=0;offset<buffer.getNumSamples();){
+        const int frames=std::min(deltaMonitor.maximumFrames(),buffer.getNumSamples()-offset);
+        // JUCE uses its inline channel-pointer array for mono/stereo views.
+        juce::AudioBuffer<float> chunk(buffer.getArrayOfWritePointers(),channels,offset,frames);
+        deltaMonitor.capture(chunk.getArrayOfReadPointers(),channels,frames);
+        deltaMonitor.update(isDeltaEnabled(),offline);
+        mastering.process(chunk.getArrayOfWritePointers(),channels,frames);
+        measureOutput(chunk,settings.bypass,settings.peaks.ceilingDb);
+        const auto& m=mastering.meters;
+        sum.inputPeak=std::max(sum.inputPeak,m.inputPeak);sum.inputL=std::max(sum.inputL,m.inputL);sum.inputR=std::max(sum.inputR,m.inputR);
+        sum.compressorGr=std::max(sum.compressorGr,m.compressorGr);sum.glueGr=std::max(sum.glueGr,m.glueGr);
+        sum.clipGr=std::max(sum.clipGr,m.clipGr);sum.limiterGr=std::max(sum.limiterGr,m.limiterGr);
+        for(size_t i=0;i<3;++i)outputSum[i]=std::max(outputSum[i],finalOutput[i]);
+        for(size_t i=3;i<5;++i)outputSum[i]+=finalOutput[i]*finalOutput[i]*frames;
+        protectionPeak=std::max(protectionPeak,safetyReduction.load(std::memory_order_relaxed));
+        offset+=frames;
+    }
+    mastering.meters=sum;finalOutput=outputSum;
+    if(buffer.getNumSamples()>0)for(size_t i=3;i<5;++i)finalOutput[i]=std::sqrt(finalOutput[i]/buffer.getNumSamples());
+    safetyReduction.store(protectionPeak,std::memory_order_relaxed);
+    publishMeters();captureScope(buffer,false);
 }
 
 juce::AudioProcessorEditor* BloodyMasterProcessor::createEditor()
@@ -173,6 +183,7 @@ void BloodyMasterProcessor::getStateInformation(juce::MemoryBlock& destData)
 
 void BloodyMasterProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
+    setDeltaEnabled(false);
     if (auto xml = getXmlFromBinary(data, sizeInBytes))
         if (xml->hasTagName(apvts.state.getType())) {
             currentProgram.store(juce::jlimit(0,getNumPrograms()-1,xml->getIntAttribute("factoryProgram",0)),std::memory_order_relaxed);
@@ -201,8 +212,11 @@ void BloodyMasterProcessor::measureOutput(juce::AudioBuffer<float>& buffer,bool 
     auto* left=buffer.getWritePointer(0);auto* right=buffer.getWritePointer(channels==2?1:0);
     for(int i=0;i<buffer.getNumSamples();++i){
         double a=left[i],b=right[i];finalSafety.process(a,b,channels);
-        left[i]=static_cast<float>(a);if(channels==2)right[i]=static_cast<float>(b);
-        outputMeter.process(left[i],right[i],channels);
+        float heardL=static_cast<float>(a),heardR=static_cast<float>(b);
+        deltaMonitor.process(heardL,heardR,i);
+        left[i]=heardL;if(channels==2)right[i]=heardR;
+        a=heardL;b=heardR;
+        outputMeter.process(heardL,heardR,channels);
         safetyGr=std::max(safetyGr,finalSafety.reductionDb);
         finalOutput[1]=std::max(finalOutput[1],std::abs(a));finalOutput[2]=std::max(finalOutput[2],std::abs(b));
         finalOutput[3]+=a*a;finalOutput[4]+=b*b;

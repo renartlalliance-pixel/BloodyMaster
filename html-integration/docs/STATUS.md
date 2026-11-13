@@ -1,3 +1,13 @@
+# 0.3.8 — Delta global en validation
+
+DELTA implémenté : entrée avant DSP retardée de la latence complète (848 échantillons à 48 kHz) moins sortie après gain et protection, transitions 20 ms, aucun ajout de latence. État temporaire non sauvegardé, remis à zéro aux rappels Factory/User/session/A-B, à prepare et au rendu hors ligne. Les 50 paramètres de traitement et presets User restent inchangés. Voir DELTA_FR.md.
+
+Différence brute diagnostique après le master protégé : le plafond de protection ne s'applique pas une seconde fois au signal Delta. Indication explicite dans le HUD. Spike Listen est suspendu sans modifier son paramètre pendant Delta. Mesures et scope reflètent l'écoute.
+
+Tests DSP et ASan/UBSan réussis, tests navigateur (commande, état, infobulle, préséance du solo, disposition et non-régression User) réussis. Tests JUCE de soustraction réelle, annulation neutre, blocs surdimensionnés et resets ajoutés. Vérifier le workflow Windows avant de valider cette release. HTML originaux inchangés.
+
+---
+
 # 0.3.7 — protection globale, version de test Windows vérifiée
 
 Protection finale implémentée, indépendante de LoudnessWar (potard non ajouté). Voir OUTPUT_SAFETY_FR.md et OUTPUT_SAFETY_VALIDATION.json. Active après bypass interne/hôte, delta et compensation ; aucune hausse de gain ; crêtes −2 dBTP avec réserve et régulation prudente d'énergie K pour l'objectif global −5 LUFS. Cette régulation n'est pas une garantie mathématique de tout intégré futur : vérifier le fichier complet.

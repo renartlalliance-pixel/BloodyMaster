@@ -50,7 +50,9 @@ BloodyMasterEditor::BloodyMasterEditor(BloodyMasterProcessor& p)
     for(size_t i=0;i<bank.size();++i) presets.addItem(bank[i].name,static_cast<int>(i)+1);
     presets.setTextWhenNothingSelected("Choisir un preset");
     presets.onChange=[this] { processor.setCurrentProgram(presets.getSelectedId()-1); };
-    addAndMakeVisible(presets);
+    addAndMakeVisible(presets);addAndMakeVisible(deltaButton);
+    deltaButton.setTooltip(juce::String::fromUTF8("Écouter la différence entre le signal original et le signal traité."));
+    deltaButton.onClick=[this]{processor.setDeltaEnabled(!processor.isDeltaEnabled());};
     viewport.setViewedComponent(&parameterList,false);addAndMakeVisible(viewport);
     for(const auto& [id,value]:bm::presetParameters(bank[0].settings)) {
         juce::ignoreUnused(value);
@@ -62,7 +64,7 @@ BloodyMasterEditor::BloodyMasterEditor(BloodyMasterProcessor& p)
 void BloodyMasterEditor::resized() {
     auto area=getLocalBounds().reduced(12);
     title.setBounds(area.removeFromTop(28));
-    presets.setBounds(area.removeFromTop(32));
+    auto presetRow=area.removeFromTop(32);deltaButton.setBounds(presetRow.removeFromRight(80));presets.setBounds(presetRow);
     status.setBounds(area.removeFromTop(28));
     meters.setBounds(area.removeFromTop(30));
     viewport.setBounds(area);
@@ -71,6 +73,7 @@ void BloodyMasterEditor::resized() {
     for(size_t i=0;i<rows.size();++i) rows[i]->setBounds(0,static_cast<int>(i)*38,width,38);
 }
 void BloodyMasterEditor::timerCallback() {
+    deltaButton.setToggleState(processor.isDeltaEnabled(),juce::dontSendNotification);
     const auto m=processor.getMeterValues();
     const auto db=[](double gain){return juce::String(juce::Decibels::gainToDecibels(gain,-120.),1);};
     meters.setText("IN "+db(m.inputPeak)+" / OUT "+db(m.outputPeak)+" dBFS   GR comp "+juce::String(m.compressorGr,1)+" / lim "+juce::String(m.limiterGr,1)+" dB",juce::dontSendNotification);

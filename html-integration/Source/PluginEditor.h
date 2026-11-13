@@ -51,6 +51,7 @@ private:
     BloodyMasterProcessor& processor;
     juce::Label title, status, meters;
     juce::ComboBox presets;
+    juce::TextButton deltaButton{"DELTA"};
     juce::Viewport viewport;
     juce::Component parameterList;
     std::vector<std::unique_ptr<juce::Component>> rows;

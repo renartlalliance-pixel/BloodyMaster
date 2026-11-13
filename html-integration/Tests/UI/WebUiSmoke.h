@@ -96,6 +96,15 @@ inline int runWebUiSmoke(const juce::String& reportPath) {
     if(!verify(static_cast<bool>(evaluate("['Rap','Electro','New Rock','Trap'].every(label=>[...document.querySelectorAll('#presetSelector optgroup')].some(g=>g.label===label&&g.children.length===2))")),"Eight inspiration presets appear in four genre sections"))return 29;
     for(int block=0;block<64;++block){for(int i=0;i<512;++i){audio.setSample(0,i,10);audio.setSample(1,i,-10);}p.processBlockBypassed(audio,midi);}
     if(!verify(wait([&]{return static_cast<bool>(evaluate("window.bloodyMasterUi.getState().safetyReductionDb>0 && document.querySelector('#outputSafetyReadout').textContent.includes('Protection sortie') && window.bloodyMasterUi.getState().meters.outputL<0.751"));}),"Global protection and protected output meters reach HTML during host bypass"))return 30;
+    const auto deltaSettings=p.apvts.copyState().toXmlString();
+    evaluate("document.querySelector('#deltaBtn').click();true");
+    if(!verify(wait([&]{return p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn').getAttribute('aria-pressed')==='true' && document.querySelector('#deltaBtn').title==='Écouter la différence entre le signal original et le signal traité.'"));}),"DELTA button controls transient audition with exact tooltip"))return 31;
+    if(!verify(p.apvts.copyState().toXmlString()==deltaSettings,"DELTA does not modify processing parameters"))return 32;
+    evaluate("document.querySelector('#presetSelector').value='0';document.querySelector('#presetSelector').dispatchEvent(new Event('change'));true");
+    if(!verify(wait([&]{return !p.isDeltaEnabled()&&static_cast<bool>(evaluate("document.querySelector('#deltaBtn').getAttribute('aria-pressed')==='false'"));}),"Factory recall disables DELTA"))return 33;
+    p.setDeltaEnabled(true);
+    evaluate("document.querySelector('#presetSelector').value='user:'+window.bloodyMasterUi.getState().userPresets[0].id;document.querySelector('#presetSelector').dispatchEvent(new Event('change'));true");
+    if(!verify(wait([&]{return !p.isDeltaEnabled();}),"User recall disables DELTA"))return 34;
     editor->setVisible(false);editor->removeFromDesktop();editor.reset();
     auto* result=new juce::DynamicObject;result->setProperty("passed",checks);result->setProperty("backend","WebView2 native Windows");
     if(reportPath.isNotEmpty())juce::File(reportPath).replaceWithText(juce::JSON::toString(juce::var(result)));

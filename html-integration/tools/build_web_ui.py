@@ -47,7 +47,7 @@ html=html.replace(canvas,canvas.replace('class=', 'style="height:calc(100% - 62p
 preset_controls='<button id="saveUserPresetBtn" class="tascam-btn px-2 py-1 text-xs" title="Enregistrer les réglages dans User">Sauver</button><button id="refreshUserPresetsBtn" class="tascam-btn px-2 py-1 text-xs" title="Actualiser les presets User" aria-label="Actualiser User">↻</button>'
 html,count=re.subn(r'(<select id="presetSelector".*?</select>)',lambda m:m[0]+preset_controls,html,count=1,flags=re.S)
 if count!=1:raise SystemExit('Preset selector placeholder not found')
-html=html.replace('id="presetSelector"','id="presetSelector" style="max-width:240px"')
+html=html.replace('id="presetSelector"','id="presetSelector" style="max-width:180px"')
 dialog='''<dialog id="userPresetDialog" style="background:#151718;color:#ddd;border:1px solid #555;border-radius:8px;padding:20px;width:360px;max-width:90vw">
 <form id="userPresetForm"><label for="userPresetName">Enregistrer dans User</label>
 <input id="userPresetName" name="name" type="text" maxlength="80" required autocomplete="off" placeholder="Nom du preset" style="display:block;width:100%;margin:12px 0;background:#090909;color:#eee;border:1px solid #555;padding:8px">
@@ -56,6 +56,11 @@ dialog='''<dialog id="userPresetDialog" style="background:#151718;color:#ddd;bor
 <p style="font-size:11px;color:#aaa;margin-top:12px">Un nom existant crée une copie numérotée.</p></form></dialog>
 <div id="presetNotice" role="status" aria-live="polite" hidden style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#151718;border:1px solid #555;border-radius:4px;padding:8px 12px;z-index:1000;font-size:12px;max-width:90vw"></div>'''
 html=html.replace('<script src="bridge.js"></script>',dialog+'<script src="bridge.js"></script>')
+# Transient global Delta audition, separate from the existing cleanup solo.
+delta_button='<button id="deltaBtn" class="tascam-btn px-2 py-1 text-xs font-bold" aria-pressed="false" title="Écouter la différence entre le signal original et le signal traité.">DELTA</button>'
+html,count=re.subn(r'(<button id="abBtn".*?</button>)',lambda m:m[0]+delta_button,html,count=1,flags=re.S)
+if count!=1:raise SystemExit('A/B button placeholder not found for Delta')
+html=html.replace('</head>','<style>#deltaBtn[aria-pressed="true"]{background:#78350f;color:#fef3c7;border-color:#f59e0b;box-shadow:0 0 8px #f59e0b88}</style></head>')
 output=pathlib.Path(sys.argv[1]);output.mkdir(parents=True,exist_ok=True)
 (output/'index.html').write_text(html,encoding='utf-8')
 print('Runtime HTML generated; approved HTML unchanged.')

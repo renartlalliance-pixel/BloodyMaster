@@ -87,15 +87,17 @@ void BloodyMasterEditor::actionEvent(const juce::var& event) {
     else if(action=="loadUserPreset" && event["id"].isString()) {
         const auto result=userPresets.load(event["id"].toString(),processor.apvts);
         userFeedbackOk=result.wasOk();userFeedback=result.wasOk()?"Preset User chargé.":result.getErrorMessage();++userFeedbackSerial;
-        if(result.wasOk()){preferredUser=event["id"].toString();preferFactory=false;}
+        if(result.wasOk()){processor.setDeltaEnabled(false);preferredUser=event["id"].toString();preferFactory=false;}
     }
     else if(action=="refreshUserPresets") {
         const auto result=userPresets.refresh(processor.apvts);userFeedbackOk=result.wasOk();
         userFeedback=result.wasOk()?"Liste User actualisée.":result.getErrorMessage();++userFeedbackSerial;
     }
+    else if(action=="delta")processor.setDeltaEnabled(!processor.isDeltaEnabled());
     else if(action=="monitorMatch")processor.setMonitorMatch(!processor.isMonitorMatchEnabled());
     else if(action=="resetMeters")processor.requestMeterReset();
     else if(action=="ab") {
+        processor.setDeltaEnabled(false);
         comparison[comparisonIndex]=processor.apvts.copyState();
         const int next=1-comparisonIndex;
         if(!comparison[next].isValid())comparison[next]=comparison[comparisonIndex].createCopy();
@@ -132,6 +134,7 @@ juce::var BloodyMasterEditor::makeState() {
         property(item,"active",activeIds.count(id)!=0);property(parameters,id.substring(3),item);
     }
     property(result,"parameters",parameters);
+    property(result,"delta",processor.isDeltaEnabled());
     property(result,"safetyReductionDb",processor.getSafetyReductionDb());
     property(result,"monitorMatch",processor.isMonitorMatchEnabled());property(result,"monitorReady",processor.isMonitorMatchReady());
     property(result,"monitorGainDb",processor.getMonitorGainDb());

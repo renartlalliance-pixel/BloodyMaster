@@ -3,6 +3,7 @@
 #include "DSP/Engine.h"
 #include "DSP/AudioMeter.h"
 #include "DSP/MonitorMatch.h"
+#include "DSP/DeltaMonitor.h"
 #include <array>
 #include <atomic>
 #include <optional>
@@ -43,6 +44,8 @@ public:
     bm::dsp::MeterValues getMeterValues() const;
     double getSafetyReductionDb() const { return safetyReduction.load(std::memory_order_relaxed); }
     bm::dsp::LoudnessValues getLoudnessValues() const;
+    void setDeltaEnabled(bool enabled) { deltaEnabled.store(enabled,std::memory_order_relaxed); }
+    bool isDeltaEnabled() const { return deltaEnabled.load(std::memory_order_relaxed); }
     void setMonitorMatch(bool enabled) { monitorEnabled.store(enabled,std::memory_order_relaxed); }
     bool isMonitorMatchEnabled() const { return monitorEnabled.load(std::memory_order_relaxed); }
     void setComparisonIndex(int index) { comparisonIndex.store(index,std::memory_order_relaxed); }
@@ -55,6 +58,9 @@ public:
     bm::dsp::Settings getToneSettingsForUi() const { return readDspSettings().tone; }
 
 private:
+    std::atomic<bool> deltaEnabled{false};
+    bm::dsp::DeltaMonitor deltaMonitor;
+    void processAudio(juce::AudioBuffer<float>&,bool hostBypass);
     std::atomic<double> safetyReduction{0};
     std::atomic<int> currentProgram{0};
     std::array<std::atomic<float>,12> meterValues{};

@@ -40,6 +40,7 @@ struct BloodyMasterTests final : public juce::UnitTest
         testFactoryPrograms();
         testUserPresets();
         testGlobalOutputProtection();
+        testDeltaAudition();
         testHostBypassAndMeters();
         testEditor();
     }
@@ -245,6 +246,51 @@ struct BloodyMasterTests final : public juce::UnitTest
         }
         const auto values=p.getLoudnessValues();expect(values.integrated>-70&&values.integrated<=-5);
         expect(p.getSafetyReductionDb()>0);expect(p.getMeterValues().outputPeak<=.751);
+    }
+
+    void testDeltaAudition() {
+        beginTest("Global Delta: full-chain subtraction, neutral null, oversized buffers and reset");
+        for(double fs:{44100.,48000.,96000.,192000.})for(int nch:{1,2})for(int mode=0;mode<3;++mode)for(bool neutral:{true,false}){
+            BloodyMasterProcessor normal,delta;
+            const auto layout=nch==1?AudioChannelSet::mono():AudioChannelSet::stereo();
+            expect(normal.setBusesLayout(layoutOf(layout,layout)));expect(delta.setBusesLayout(layoutOf(layout,layout)));
+            for(auto* p:{&normal,&delta}){
+                auto* os=p->apvts.getParameter(bm::id::oversampling);os->setValueNotifyingHost(os->convertTo0to1(float(mode)));
+                p->apvts.getParameter(bm::id::bypass)->setValueNotifyingHost(neutral?1.f:0.f);
+                p->prepareToPlay(fs,64); // exercise host blocks larger than prepare's hint
+            }
+            expect(!delta.isDeltaEnabled());
+            const auto before=delta.apvts.copyState().toXmlString();delta.setDeltaEnabled(true);
+            expectEquals(delta.apvts.copyState().toXmlString(),before);
+            bm::dsp::StereoDelay reference;reference.prepare(normal.getLatencySamples());
+            juce::MidiBuffer midi;const int blocks=static_cast<int>(fs*.09/257)+5;
+            bool null=true,formula=true;
+            for(int block=0;block<blocks;++block){
+                juce::AudioBuffer<float> a(nch,257),b(nch,257);float expected[2][257]{};
+                for(int i=0;i<257;++i){const double phase=(block*257+i)*.071;
+                    const float l=.025f*static_cast<float>(std::sin(phase)),r=.02f*static_cast<float>(std::cos(phase*.51));
+                    a.setSample(0,i,l);b.setSample(0,i,l);if(nch==2){a.setSample(1,i,r);b.setSample(1,i,r);}
+                    const auto raw=reference.push(l,nch==2?r:l);expected[0][i]=float(raw[0]);expected[1][i]=float(raw[1]);
+                }
+                normal.processBlock(a,midi);delta.processBlock(b,midi);
+                if(block*257>fs*.025)for(int c=0;c<nch;++c)for(int i=0;i<257;++i){
+                    null&=b.getSample(c,i)==0;
+                    formula&=std::abs(b.getSample(c,i)-(expected[c][i]-a.getSample(c,i)))<1.e-7f;
+                }
+            }
+            expect(formula,"Delta includes complete mastering output and declared latency");if(neutral)expect(null,"neutral protected bypass nulls exactly");
+            delta.setDeltaEnabled(false);
+            bool returned=true;
+            for(int block=0;block<static_cast<int>(fs*.03/257)+2;++block){juce::AudioBuffer<float> a(nch,257),b(nch,257);a.clear();b.clear();normal.processBlock(a,midi);delta.processBlock(b,midi);
+                if(block*257>fs*.021)for(int c=0;c<nch;++c)returned&=std::memcmp(a.getReadPointer(c),b.getReadPointer(c),257*sizeof(float))==0;
+            }
+            expect(returned,"normal audio is bit-exact after disabling Delta");
+            delta.setDeltaEnabled(true);delta.setNonRealtime(true);juce::AudioBuffer<float> audio(nch,257);audio.clear();delta.processBlock(audio,midi);expect(!delta.isDeltaEnabled());
+        }
+        BloodyMasterProcessor p;p.prepareToPlay(48000,64);p.setDeltaEnabled(true);p.setCurrentProgram(3);expect(!p.isDeltaEnabled());
+        p.setDeltaEnabled(true);juce::MemoryBlock state;p.getStateInformation(state);p.setStateInformation(state.getData(),static_cast<int>(state.getSize()));expect(!p.isDeltaEnabled());
+        p.setDeltaEnabled(true);p.prepareToPlay(96000,128);expect(!p.isDeltaEnabled());
+        BloodyMasterProcessor restored;restored.setStateInformation(state.getData(),static_cast<int>(state.getSize()));expect(!restored.isDeltaEnabled());
     }
 
     void testHostBypassAndMeters()

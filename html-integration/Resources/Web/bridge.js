@@ -101,6 +101,7 @@
     emit('bmAction',{action:'saveUserPreset',name});
   });
   document.getElementById('refreshUserPresetsBtn')?.addEventListener('click',()=>emit('bmAction',{action:'refreshUserPresets'}));
+  document.getElementById('deltaBtn')?.addEventListener('click',()=>emit('bmAction',{action:'delta'}));
   document.getElementById('abBtn')?.addEventListener('click',()=>emit('bmAction',{action:'ab'}));
   const target=document.getElementById('lufsTargetSelector');
   if(target){target.disabled=true;target.title='Repère visuel uniquement : normalisation LUFS non implémentée.';}
@@ -122,8 +123,11 @@
   function apply(next) {
     if(!next.scope && state?.scope)next.scope=state.scope;
     state=next;
+    const delta=document.getElementById('deltaBtn');
+    if(delta){delta.setAttribute('aria-pressed',String(!!next.delta));delta.classList.toggle('btn-active',!!next.delta);}
+
     const protection=document.getElementById('outputSafetyReadout');
-    if(protection)protection.textContent=`Protection sortie : −${Math.max(0,next.safetyReductionDb||0).toFixed(1)} dB`;
+    if(protection){protection.textContent=next.delta?'DELTA — écoute diagnostique':`Protection sortie : −${Math.max(0,next.safetyReductionDb||0).toFixed(1)} dB`;protection.title=next.delta?'Différence brute après comparaison au master protégé ; le niveau Delta peut dépasser le plafond du master':'Protection globale du master, active aussi en bypass';}
     const bypassControl=document.getElementById('bypassBtn');if(bypassControl)bypassControl.title='Bypass des traitements ; protection de sortie toujours active';
     const monitor=document.getElementById('monitorMatchBtn');
     if(monitor){
@@ -173,7 +177,7 @@
       button.disabled=!p.active;button.title=p.active?'':'Fonction non raccordée au DSP';
       button.classList.toggle(element==='modeToggle'?'toggle-active':'btn-active',p.value>.5);
       button.setAttribute('aria-pressed',String(p.value>.5));
-      if(element==='deSoloBtn')button.title='Écouter le signal retiré par De-Harsh, Mud Trap et Ring Trap';
+      if(element==='deSoloBtn'){button.disabled=!p.active||!!next.delta;button.title=next.delta?'Écoute Spike suspendue pendant DELTA':'Écouter le signal retiré par De-Harsh, Mud Trap et Ring Trap';}
       if(element==='modeToggle')button.title='Valve : récupération optical du compresseur et légère coloration à lampes';
       if(element==='thdColorBtn'){
         button.textContent=p.value>.5?'THD : Dense':'THD : Warm';
@@ -214,7 +218,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.7';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.8';
     }
     draw();
   }
