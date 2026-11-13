@@ -1,3 +1,13 @@
+# Édition HTML 0.3.7 — protection globale vérifiée sous Windows
+
+La sortie est protégée après les traitements, le bypass et la compensation d'écoute. Plafond de crêtes −2 dBTP avec réserve interne, atténuation stéréo liée et régulation prudente de l'énergie pondérée K pour la limite souhaitée de −5 LUFS. Les mesures affichent désormais la sortie réellement délivrée. [Méthode, latence et limites](docs/OUTPUT_SAFETY_FR.md).
+
+Le bypass conserve la protection : un signal faible reste transparent après délai ; un signal trop fort peut être réduit. Latence à 48 kHz : 848 échantillons, déclarée au DAW. Vérifier l'intégré du morceau complet ; la régulation ne garantit pas toutes les fenêtres LUFS ni toutes les conversions des plateformes. Les paramètres, presets User et HTML originaux sont conservés.
+
+[Télécharger la 0.3.7](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.7-test-43452301612). Windows : 15/15 CTest, 30 vérifications WebView2, 31 tests WAV et installateur réussis ; SHA-256 du téléchargement vérifié. Voir [STATUS.md](docs/STATUS.md) pour les preuves de validation. Les rubriques ci-dessous décrivent les versions précédentes.
+
+---
+
 # Édition HTML 0.3.6 — presets User et inspirations
 
 **Sauver** ouvre la saisie du nom ; les réglages rejoignent la section **User** du sélecteur. Ils persistent après réouverture et mise à jour. Le bouton ↻ actualise les presets d'une autre instance. Un nom existant crée une copie numérotée. [Mode d'emploi et stockage](docs/USER_PRESETS_FR.md).

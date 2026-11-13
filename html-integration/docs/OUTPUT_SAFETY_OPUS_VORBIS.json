@@ -1,0 +1,194 @@
+[
+  {
+    "source": "44100-dense_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -8.55897087201696
+  },
+  {
+    "source": "44100-dense_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -8.564636842789144
+  },
+  {
+    "source": "44100-dense_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -11.447538396317405
+  },
+  {
+    "source": "44100-dense_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -11.627995816951405
+  },
+  {
+    "source": "44100-intersample_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -9.405886020369588
+  },
+  {
+    "source": "44100-intersample_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -9.42300794170656
+  },
+  {
+    "source": "44100-intersample_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -9.455883335712954
+  },
+  {
+    "source": "44100-intersample_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -9.522668867171658
+  },
+  {
+    "source": "44100-noise_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -5.594918866958246
+  },
+  {
+    "source": "44100-noise_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -4.652694139134662
+  },
+  {
+    "source": "44100-noise_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -5.49836764533512
+  },
+  {
+    "source": "44100-noise_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -7.17128692729177
+  },
+  {
+    "source": "44100-step_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -2.534592676062406
+  },
+  {
+    "source": "44100-step_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -3.1895632339749542
+  },
+  {
+    "source": "44100-step_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -2.798008238117541
+  },
+  {
+    "source": "44100-step_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 44100,
+    "peak32x": -2.8352901543523092
+  },
+  {
+    "source": "48000-dense_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -8.506609791986566
+  },
+  {
+    "source": "48000-dense_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -8.500586493241753
+  },
+  {
+    "source": "48000-dense_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -11.337209753079641
+  },
+  {
+    "source": "48000-dense_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -11.527888669025945
+  },
+  {
+    "source": "48000-intersample_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -8.953615151299097
+  },
+  {
+    "source": "48000-intersample_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -9.271206403635322
+  },
+  {
+    "source": "48000-intersample_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -9.205856907681218
+  },
+  {
+    "source": "48000-intersample_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -9.353577205260386
+  },
+  {
+    "source": "48000-noise_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -5.411760608548062
+  },
+  {
+    "source": "48000-noise_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -4.877193322814542
+  },
+  {
+    "source": "48000-noise_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -5.252074135064523
+  },
+  {
+    "source": "48000-noise_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -6.958171004453796
+  },
+  {
+    "source": "48000-step_BloodyMaster_bypass.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -2.5817383920657804
+  },
+  {
+    "source": "48000-step_BloodyMaster_bypass.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -3.2073987239928847
+  },
+  {
+    "source": "48000-step_BloodyMaster_trap-dean-synth.wav",
+    "codec": "opus",
+    "decodedRate": 48000,
+    "peak32x": -2.957396112176691
+  },
+  {
+    "source": "48000-step_BloodyMaster_trap-dean-synth.wav",
+    "codec": "vorbis",
+    "decodedRate": 48000,
+    "peak32x": -2.611411673294954
+  }
+]

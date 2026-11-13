@@ -1,3 +1,9 @@
+# Mise à jour de reprise — 0.3.7
+
+Protection globale implémentée et vérifiée Windows : workflow HTML 43452301612, 15/15 CTest, 30 vérifications WebView2 et installateur téléchargé/hash vérifié. Lire STATUS.md et OUTPUT_SAFETY_FR.md. Bypass désormais protégé, latence 848 échantillons à 48 kHz ; 50 paramètres et anciens presets conservés. LoudnessWar n'est pas encore un potard implémenté. Les sections ci-dessous sont historiques.
+
+---
+
 # Mise à jour de reprise — 0.3.6
 
 User presets et huit presets d'inspiration sont implémentés et vérifiés sous Windows, workflow HTML 43442449010. Lire docs/STATUS.md, USER_PRESETS_FR.md et ENGINEER_INSPIRATIONS_2026_FR.md. Installateur 0.3.6 téléchargé et SHA-256 vérifié ; les deux HTML originaux sont intacts. La demande future de potard reste non précisée.

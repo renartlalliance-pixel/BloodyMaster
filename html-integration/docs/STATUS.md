@@ -1,8 +1,8 @@
-# 0.3.7 — protection globale en validation Windows
+# 0.3.7 — protection globale, version de test Windows vérifiée
 
 Protection finale implémentée, indépendante de LoudnessWar (potard non ajouté). Voir OUTPUT_SAFETY_FR.md et OUTPUT_SAFETY_VALIDATION.json. Active après bypass interne/hôte, delta et compensation ; aucune hausse de gain ; crêtes −2 dBTP avec réserve et régulation prudente d'énergie K pour l'objectif global −5 LUFS. Cette régulation n'est pas une garantie mathématique de tout intégré futur : vérifier le fichier complet.
 
-Latence 848 échantillons à 48 kHz, déclarée au DAW. Le bypass conserve désormais la protection ; signal faible inchangé après délai. Presets User et 50 paramètres inchangés. HTML originaux préservés. Tests dédiés quatre Fs et tests indépendants 16 rendus/SRC/AAC/MP3 réussis. Vérifier le workflow Windows avant validation de la release.
+Latence 848 échantillons à 48 kHz, déclarée au DAW. Le bypass conserve désormais la protection ; signal faible inchangé après délai. Presets User et 50 paramètres inchangés. HTML originaux préservés. Tests dédiés quatre Fs et tests indépendants 16 rendus/SRC/AAC/MP3 réussis. Workflow Windows réussi ; voir preuve 0.3.7 ci-dessous.
 
 La note LOUDNESSWAR_DESIGN_FR.md ci-dessous était la conception initiale ; OUTPUT_SAFETY_FR.md décrit l'implémentation actuelle et ses limites. La 0.3.6 reste la version précédente vérifiée.
 
@@ -65,3 +65,17 @@ Release : https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/blo
 Installateur téléchargé et SHA-256 comparé au fichier publié : ddd2b17e7765edded6b99e3afdfa88ab043e1ae59f27658409aecee7ac2d9266. Rapport WebView2 téléchargé : passed=29, backend=WebView2 native Windows.
 
 Les 24 exports indépendants supplémentaires des nouveaux presets passent la reconstruction de crêtes SciPy 32× ; voir INSPIRATION_PRESET_VALIDATION.json. Les commits de documentation suivant 0fbeadf ne changent pas le code compilé de l'installateur. Restent écoute comparative humaine et validation FL Studio.
+
+## Validation Windows 0.3.7
+
+Workflow HTML 43452301612, commit 90eeb18 : succès. 15/15 CTest, 30 vérifications WebView2 natives, 31 tests WAV, installation/réinstallation/désinstallation et conservation des fichiers tiers réussies.
+
+Release : https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.7-test-43452301612
+
+Installateur téléchargé et SHA-256 comparé au fichier publié : 0abaf2dfe73ccaaf896c01296ec5985232cb0911f3c837cec76d2f62148ab135. Rapport WebView2 téléchargé : passed=30, backend=WebView2 native Windows.
+
+Un premier test de bypass démarrait avec une transition des traitements encore active ; son initialisation a été corrigée. Une exécution suivante a échoué au démarrage de WebView2 avant chargement de la page ; la nouvelle exécution complète ci-dessus passe sans contourner les tests.
+
+Vérifications indépendantes : 60 vecteurs à quatre Fs et trois modes OS (pire crête 32× −2,42463 dBTP), 16 rendus de protection avec mesure LUFS à 48 kHz, SRC 44,1/48 kHz et AAC/MP3, puis 32 décodages Opus/Vorbis. Les plafonds et limites sont décrits dans OUTPUT_SAFETY_FR.md ; aucune garantie universelle sur les LUFS d'un programme futur ni tous les traitements des plateformes. Vérifier le fichier complet et effectuer l'essai FL Studio/écoute humaine.
+
+Les commits de documentation après 90eeb18 ne modifient pas les sources compilées de cet installateur. Deux HTML originaux conservés, SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff.
