@@ -1,0 +1,53 @@
+{
+  "probe": "Same benchmark_dsp.cpp with fs=44100; g++ -O3 -DNDEBUG; Linux only, not FL Studio",
+  "results": [
+    {
+      "rate": 44100,
+      "os": 4,
+      "audioSeconds": 3,
+      "timesSeconds": {
+        "before": [
+          0.918776,
+          0.943238,
+          0.893932,
+          0.919157,
+          1.085209
+        ],
+        "after": [
+          0.606993,
+          0.623555,
+          0.661926,
+          0.778866,
+          0.912673
+        ]
+      },
+      "medianBefore": 0.919157,
+      "medianAfter": 0.661926,
+      "reductionPercent": 27.98553457135179
+    },
+    {
+      "rate": 44100,
+      "os": 8,
+      "audioSeconds": 3,
+      "timesSeconds": {
+        "before": [
+          1.878353,
+          1.490602,
+          1.313623,
+          1.235765,
+          1.234643
+        ],
+        "after": [
+          1.142398,
+          0.935677,
+          0.972451,
+          0.93715,
+          0.925771
+        ]
+      },
+      "medianBefore": 1.313623,
+      "medianAfter": 0.93715,
+      "reductionPercent": 28.65913584034384
+    }
+  ]
+}

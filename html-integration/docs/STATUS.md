@@ -1,6 +1,6 @@
-# 0.3.10 — optimisation CPU en validation
+# 0.3.10 — optimisation CPU, version Windows vérifiée
 
-Retour utilisateur : environ 50 % du budget de traitement dans FL Studio même au buffer maximal. FIR optimisés par historiques contigus et coefficients par phase, sans changer le traitement, les paramètres ni la latence. Bench Linux : temps de calcul réduit de 28 % en 8×, 30 % en 4× et 33 % en 2× ; aucun résultat FL Studio revendiqué. Voir PERFORMANCE_FR.md et les rapports. 36 WAV avant/après bit-exacts, suites DSP locales et test FIR indépendant réussis. Installateur Windows en préparation.
+Retour utilisateur : environ 50 % du budget de traitement dans FL Studio même au buffer maximal. FIR optimisés par historiques contigus et coefficients par phase, sans changer le traitement, les paramètres ni la latence. Bench Linux : temps de calcul réduit de 28 % en 8×, 30 % en 4× et 33 % en 2× ; aucun résultat FL Studio revendiqué. Voir PERFORMANCE_FR.md et les rapports. 36 WAV avant/après bit-exacts, suites DSP locales et test FIR indépendant réussis. Installateur Windows vérifié ; voir preuve ci-dessous.
 
 ---
 
@@ -134,3 +134,14 @@ Installateur téléchargé (4 333 125 octets) ; SHA-256 local comparé au fichie
 Mesure indépendante du beat synthétique (entrée −22 LUFS, Drive 12/Hammer 6 inchangés, plafond −3) : LoudnessWar 0/6/12/18 → −11,80/−9,83/−7,68/−6,41 LUFS. Crêtes brutes reconstruites 32× sous −3 dBTP sur ces quatre sorties. AAC du cas +12 remonte à +0,012 dBTP ; un bruit dense de stress à +0,42 : limites explicitement enregistrées, aucune garantie codec universelle. Voir LOUDNESS_GAIN_VALIDATION.json et OUTPUT_SAFETY_039_STRESS.json.
 
 Régression indépendante de 60 vecteurs, quatre Fs/trois OS : pire crête 32× −2,42461 dBTP ; voir OUTPUT_SAFETY_039_60_VECTORS.json. Tests DSP locaux, vérification syntaxique JUCE, navigateur et ASan/UBSan de protection réussis. HTML originaux inchangés, SHA-256 c48de97f75130c18aa8aef1f766e5be5652254fbf0da1a96fcf91d37761a83ff. Les commits de documentation après 6ec0e12 ne modifient pas les sources de cet installateur ; écoute humaine/FL Studio à faire.
+
+
+## Validation Windows 0.3.10
+
+Workflow HTML 43625462716, commit abbc58bb9eff81abafee3094ce017de84590a652 : succès. 18/18 CTest, dont FIR équivalence, audio et Delta ; 37 vérifications WebView2 natives, 31 tests WAV ; installation répétée/désinstallation/réinstallation et fichiers tiers conservés.
+
+Release : https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.10-test-43625462716
+
+Installateur téléchargé (4 333 062 octets), SHA-256 local comparé au fichier publié : 3262622e70bdf5cfae616f9852f4a93f4e2f915662dd59ce7fc41ce7f8d966fc. Rapport téléchargé : passed=37, backend=WebView2 native Windows.
+
+Utilisateur à 44,1 kHz : banc Linux complémentaire −28,0 % de temps de calcul en 4× et −28,7 % en 8× ; PERFORMANCE_0310_44100.json. Les pourcentages de FL Studio restent à mesurer sur son PC, même projet/passage/Fs/buffer/OS. Trois suites mémoire ASan/UBSan réussies (FIR, mesureur, protection), 36 WAV avant/après bit-exacts localement et 60 vecteurs indépendants (pire crête 32× −2,42461 dBTP). Paramètres, protections, latence et deux HTML originaux inchangés. Les commits de documentation suivant abbc58b ne modifient pas le binaire livré.

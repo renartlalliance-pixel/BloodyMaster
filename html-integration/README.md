@@ -1,3 +1,11 @@
+# Édition HTML 0.3.10 — calcul audio optimisé
+
+Les filtres FIR utilisent des historiques contigus et des coefficients regroupés par phase. Aucun changement des réglages, DSP, protections ou de la latence. La notice 0.3.9 reste valable. [Méthode et mesures](docs/PERFORMANCE_FR.md).
+
+Banc Linux à 44,1 kHz : environ 28 % de temps de calcul en moins en 4×/8× ; à confirmer dans le projet FL Studio. 36 WAV avant/après identiques octet par octet localement. Windows : 18/18 CTest, 37 contrôles WebView2, 31 tests WAV et installation réussis ; téléchargement/SHA-256 vérifiés. [Télécharger la 0.3.10](https://github.com/renartlalliance-pixel/BloodyMaster/releases/tag/bloodymaster-html-0.3.10-test-43625462716), [preuves](docs/STATUS.md).
+
+---
+
 # Édition HTML 0.3.9 — LoudnessWar, IN GAIN et notice complète
 
 [Notice française — PDF](docs/NOTICE_BLOODYMASTER_FR.pdf) · [Version à lire en ligne](docs/NOTICE_BLOODYMASTER_FR.md) · [HTML autonome](docs/NOTICE_BLOODYMASTER_FR.html)

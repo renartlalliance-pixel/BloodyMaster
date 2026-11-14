@@ -26,6 +26,11 @@ Les mesures fluctuent avec l'environnement ; données brutes dans PERFORMANCE_03
 
 36 WAV comparés octet par octet entre les outils avant/après compilés avec les mêmes options : quatre Fs, trois OS, Clean/Trap/Bypass, entrée stéréo avec bruit et crête, IN GAIN +3 et LoudnessWar +6. Tous identiques ; voir PERFORMANCE_0310_EQUIVALENCE.json. Ceci prouve ces cas sous ce compilateur, pas tous les signaux et compilateurs futurs.
 
-Nouveau test FIR contre une convolution de référence à registre décalé indépendant : 2×/4×/8×, stéréo, plusieurs tours de tampon, queue silencieuse et nouvelle préparation. Tests existants de latence, transitions OS, protections, loudness, Delta et presets conservés. Validation Windows à constater dans STATUS.md avant de déclarer l'installateur livré.
+Nouveau test FIR contre une convolution de référence à registre décalé indépendant : 2×/4×/8×, stéréo, plusieurs tours de tampon, queue silencieuse et nouvelle préparation. Tests existants de latence, transitions OS, protections, loudness, Delta et presets conservés. Validation Windows 43625462716 réussie : 18/18 CTest, 37 vérifications WebView2, 31 tests WAV et tests d’installation. Voir STATUS.md pour le téléchargement et le SHA-256.
 
 Contrôle ASan/UBSan du nouveau test FIR réussi. Les 31 tests WAV passent ; 60 vecteurs indépendants passent également (pire crête reconstruite 32× −2,42461 dBTP). Aucun essai FL Studio réalisé ici.
+
+
+Complément à la fréquence du projet utilisateur, 44,1 kHz : même sonde avec fs=44100 et cinq passages alternés par mode. Médianes 4× : 0,919157 → 0,661926 s (−28,0 %) ; 8× : 1,313623 → 0,937150 s (−28,7 %). Voir PERFORMANCE_0310_44100.json pour les fluctuations ; ces chiffres Linux ne sont pas une mesure du compteur FL Studio.
+
+ASan/UBSan réussit aussi les suites du mesureur AudioMeter et de la protection OutputSafety après modification de leurs anneaux.
