@@ -10,7 +10,10 @@ namespace bm::dsp {
 class Interpolator {
     int factor=8,pos=0;
     std::vector<double> taps;
-    std::array<std::array<double,129>,2> history{};
+    // Mirrored rings make each FIR read contiguous, without a wrap branch per tap.
+    std::array<std::array<double,258>,2> history{};
+    std::array<std::array<double,129>,8> phaseTaps{};
+    std::array<int,8> phaseLengths{};
 public:
     static constexpr int span=128;
     void prepare(int f) {
@@ -22,25 +25,30 @@ public:
             taps[i]=(x==0?2*fc:std::sin(2*pi*fc*x)/(pi*x))*win; sum+=taps[i];
         }
         for(auto& t:taps) t/=sum;
+        phaseLengths={};
+        for(int phase=0;phase<factor;++phase)
+            for(int k=phase;k<=n;k+=factor)
+                phaseTaps[static_cast<size_t>(phase)][static_cast<size_t>(phaseLengths[static_cast<size_t>(phase)]++)]=taps[static_cast<size_t>(k)];
     }
     const std::vector<double>& coefficients() const { return taps; }
-    void push(double l,double r) { pos=(pos+1)%129; history[0][pos]=l; history[1][pos]=r; }
+    void push(double l,double r) { if(--pos<0)pos=128;history[0][pos]=history[0][pos+129]=l;history[1][pos]=history[1][pos+129]=r; }
     double phase(int c,int phase) const {
-        double y=0; int j=pos;
-        for(int k=phase;k<static_cast<int>(taps.size());k+=factor) { y+=taps[k]*history[c][j]; if(--j<0) j=128; }
+        double y=0;const auto* input=history[static_cast<size_t>(c)].data()+pos;
+        const auto* coefficients=phaseTaps[static_cast<size_t>(phase)].data();
+        for(int i=0;i<phaseLengths[static_cast<size_t>(phase)];++i)y+=coefficients[i]*input[i];
         return y*factor;
     }
 };
 class Decimator {
     std::vector<double> h;
     std::array<std::vector<double>,2> ring;
-    int pos=0;
+    int pos=0,length=0;
 public:
-    void prepare(const std::vector<double>& coefficients) { h=coefficients; for(auto& r:ring) r.assign(h.size(),0); pos=0; }
-    void push(double l,double r) { if(++pos==static_cast<int>(h.size())) pos=0; ring[0][pos]=l; ring[1][pos]=r; }
+    void prepare(const std::vector<double>& coefficients) { h=coefficients;length=static_cast<int>(h.size());for(auto& r:ring)r.assign(h.size()*2,0);pos=0; }
+    void push(double l,double r) { if(--pos<0)pos=length-1;ring[0][pos]=ring[0][pos+length]=l;ring[1][pos]=ring[1][pos+length]=r; }
     double output(int c) const {
-        double y=0; int j=pos;
-        for(size_t k=0;k<h.size();++k) { y+=h[k]*ring[c][j]; if(--j<0) j=static_cast<int>(h.size())-1; }
+        double y=0;const auto* input=ring[static_cast<size_t>(c)].data()+pos;
+        for(int k=0;k<length;++k)y+=h[static_cast<size_t>(k)]*input[k];
         return y;
     }
 };

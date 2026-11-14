@@ -1,0 +1,70 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "compiler": "g++ -std=c++20 -O3 -DNDEBUG",
+  "probe": "tools/benchmark_dsp.cpp; audio only, 48k stereo, 512 samples; Linux, not FL Studio",
+  "results": [
+    {
+      "os": 2,
+      "audioSeconds": 3,
+      "beforeSeconds": [
+        0.811804,
+        0.780454,
+        0.79573,
+        0.787068,
+        0.812292
+      ],
+      "afterSeconds": [
+        0.634892,
+        0.532316,
+        0.532797,
+        0.545814,
+        0.523119
+      ],
+      "medianBefore": 0.79573,
+      "medianAfter": 0.532797,
+      "reductionPercent": 33.042991969637946
+    },
+    {
+      "os": 4,
+      "audioSeconds": 3,
+      "beforeSeconds": [
+        0.986531,
+        1.000946,
+        0.965813,
+        0.958941,
+        1.385241
+      ],
+      "afterSeconds": [
+        0.654398,
+        0.67921,
+        0.686471,
+        0.748442,
+        0.768683
+      ],
+      "medianBefore": 0.986531,
+      "medianAfter": 0.686471,
+      "reductionPercent": 30.415668640924608
+    },
+    {
+      "os": 8,
+      "audioSeconds": 3,
+      "beforeSeconds": [
+        1.31562,
+        1.344555,
+        1.324792,
+        1.313958,
+        1.349186
+      ],
+      "afterSeconds": [
+        0.948505,
+        0.944512,
+        0.957467,
+        0.946479,
+        0.960661
+      ],
+      "medianBefore": 1.324792,
+      "medianAfter": 0.948505,
+      "reductionPercent": 28.403477678005295
+    }
+  ]
+}

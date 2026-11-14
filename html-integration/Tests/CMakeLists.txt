@@ -81,3 +81,7 @@ add_test(NAME delta_monitor COMMAND bm_test_delta)
 add_executable(bm_test_loudness_gain DSP/test_loudness_gain.cpp)
 target_include_directories(bm_test_loudness_gain PRIVATE ../Source)
 add_test(NAME loudness_gain COMMAND bm_test_loudness_gain)
+
+add_executable(bm_test_fir_equivalence DSP/test_fir_equivalence.cpp)
+target_include_directories(bm_test_fir_equivalence PRIVATE ../Source)
+add_test(NAME fir_equivalence COMMAND bm_test_fir_equivalence)

@@ -17,7 +17,7 @@ class AudioMeter {
     std::vector<uint64_t> counts;
     std::array<double,30> blocks{};
     std::array<std::array<double,65>,4> taps{};
-    std::array<std::array<double,65>,2> history{};
+    std::array<std::array<double,130>,2> history{};
     Biquad shelf,rlb;
     int position=0,blockPosition=0,blockSamples=4800,samples=0,filled=0;
     double partial=0;
@@ -67,13 +67,14 @@ public:
         double power=0;
         for(int c=0;c<channels;++c){const auto ch=static_cast<size_t>(c);const double x=std::isfinite(input[ch])?input[ch]:0;
             const double weighted=rlb.process(shelf.process(x,c),c);power+=weighted*weighted;
-            history[ch][static_cast<size_t>(position)]=x;
+            history[ch][static_cast<size_t>(position)]=history[ch][static_cast<size_t>(position+65)]=x;
             values.truePeak=std::max(values.truePeak,std::abs(x));
-            if(analysePeak)for(const auto& phase:taps){double y=0;int index=position;
-                for(size_t i=0;i<phase.size();++i){y+=phase[i]*history[ch][static_cast<size_t>(index)];if(--index<0)index=64;}
+            const auto* inputHistory=history[ch].data()+position;
+            if(analysePeak)for(const auto& phase:taps){double y=0;
+                for(int i=0;i<65;++i)y+=phase[static_cast<size_t>(i)]*inputHistory[i];
                 values.truePeak=std::max(values.truePeak,std::abs(y));}
         }
-        if(++position==65)position=0;
+        if(--position<0)position=64;
         partial+=power;
         if(++samples==blockSamples){
             blocks[static_cast<size_t>(blockPosition)]=partial/blockSamples;partial=0;samples=0;

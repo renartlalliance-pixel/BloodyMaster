@@ -1,3 +1,9 @@
+# 0.3.10 — optimisation CPU en validation
+
+Retour utilisateur : environ 50 % du budget de traitement dans FL Studio même au buffer maximal. FIR optimisés par historiques contigus et coefficients par phase, sans changer le traitement, les paramètres ni la latence. Bench Linux : temps de calcul réduit de 28 % en 8×, 30 % en 4× et 33 % en 2× ; aucun résultat FL Studio revendiqué. Voir PERFORMANCE_FR.md et les rapports. 36 WAV avant/après bit-exacts, suites DSP locales et test FIR indépendant réussis. Installateur Windows en préparation.
+
+---
+
 # 0.3.9 — version de test Windows vérifiée
 
 IN GAIN indépendant (−18/+18 dB) et LoudnessWar dans le panneau doré final (0/+18 dB) implémentés. Blood Drive/Dynamics.h inchangés. Correction de la protection trop conservatrice : énergie K glissante 400 ms, gains crêtes/loudness séparés. Lire LOUDNESS_GAIN_FR.md. Objectif global −5 LUFS conservé, plafond utilisateur prioritaire avec réserve interne. Compatibilité anciens presets/sessions par gains à zéro ; User v2, 52 paramètres/51 DSP actifs, Delta inclut les gains, latence inchangée. HTML originaux conservés.

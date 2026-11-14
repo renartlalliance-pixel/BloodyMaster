@@ -1,4 +1,4 @@
-BLOODYMASTER 0.3.9 - VERSION DE TEST WINDOWS X64
+BLOODYMASTER 0.3.10 - VERSION DE TEST WINDOWS X64
 
 1. Fermer FL Studio puis lancer l'installateur.
 2. Le VST3 est copie dans :
@@ -56,3 +56,5 @@ Couper DELTA avant export temps reel. Force OFF en rendu hors ligne reconnu.
 IN GAIN : -18 a +18 dB. LoudnessWar : 0 a +18 dB, protection finale prioritaire.
 La 0.3.9 corrige une surattenuation de la protection precedente.
 Un AAC tres pousse peut encore depasser zero : verifier le fichier encode.
+
+0.3.10 : calculs FIR optimises, filtres/protections et latence inchanges.

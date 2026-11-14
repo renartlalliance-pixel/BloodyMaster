@@ -220,7 +220,7 @@
       if(span.textContent.startsWith('SAMPLE RATE:'))span.textContent=`SAMPLE RATE: ${(next.sampleRate/1000).toFixed(1)} kHz / CALCUL DSP 64-BIT`;
       else if(span.textContent.startsWith('LATENCY:'))span.textContent=`LATENCY: ${next.latency} SAMPLES`;
       else if(span.textContent==='● VST3 / AU / AAX')span.textContent='● VST3 WINDOWS';
-      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.9';
+      else if(span.textContent==='bloody Master v1.0.0')span.textContent='bloody Master v0.3.10';
     }
     draw();
   }

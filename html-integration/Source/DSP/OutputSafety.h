@@ -8,7 +8,7 @@ namespace bm::dsp {
 class OutputSafety {
     Biquad shelf,highpass;
     std::array<std::array<double,65>,8> taps{};
-    std::array<std::array<double,65>,2> history{};
+    std::array<std::array<double,130>,2> history{};
     int pos=0,lookahead=480;
     StereoDelay align,delay;
     SlidingMaximum peakMaximum,loudnessMaximum;
@@ -44,10 +44,11 @@ public:
         shelf.tick();highpass.tick();double power=0,tp=std::max(std::abs(l),std::abs(r));
         const std::array<double,2> input{l,r};
         for(int c=0;c<channels;++c){const auto ch=static_cast<size_t>(c);const double x=highpass.process(shelf.process(input[ch],c),c);power+=x*x;
-            history[ch][static_cast<size_t>(pos)]=input[ch];
-            for(const auto& phase:taps){double y=0;int index=pos;for(size_t i=0;i<65;++i){y+=phase[i]*history[ch][static_cast<size_t>(index)];if(--index<0)index=64;}tp=std::max(tp,std::abs(y));}
+            history[ch][static_cast<size_t>(pos)]=history[ch][static_cast<size_t>(pos+65)]=input[ch];
+            const auto* samples=history[ch].data()+pos;
+            for(const auto& phase:taps){double y=0;for(int i=0;i<65;++i)y+=phase[static_cast<size_t>(i)]*samples[i];tp=std::max(tp,std::abs(y));}
         }
-        if(++pos==65)pos=0;
+        if(--pos<0)pos=64;
         const double change=power-powers[energyPosition];powers[energyPosition]=power;
         if(++energyPosition==powers.size())energyPosition=0;
         const double corrected=change-energyCompensation,next=energySum+corrected;

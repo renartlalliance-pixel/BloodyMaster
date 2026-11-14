@@ -1,0 +1,218 @@
+[
+  {
+    "rate": 44100,
+    "os": 2,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 2,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 2,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 4,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 4,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 4,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 8,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 8,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 44100,
+    "os": 8,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 2,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 2,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 2,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 4,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 4,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 4,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 8,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 8,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 48000,
+    "os": 8,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 2,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 2,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 2,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 4,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 4,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 4,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 8,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 8,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 96000,
+    "os": 8,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 2,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 2,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 2,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 4,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 4,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 4,
+    "preset": "bypass",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 8,
+    "preset": "clean",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 8,
+    "preset": "trap-dean-synth",
+    "wavBitExact": true
+  },
+  {
+    "rate": 192000,
+    "os": 8,
+    "preset": "bypass",
+    "wavBitExact": true
+  }
+]
